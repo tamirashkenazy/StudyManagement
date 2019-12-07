@@ -1,14 +1,23 @@
 import React from 'react';
 import logo from './logo.svg';
-import './App.css';
-import 'bootstrap/dist/css/bootstrap.min.css'
+import './styles/App.scss';
+// import 'bootstrap/dist/css/bootstrap.min.css'
+import { BrowserRouter as Router, Route} from 'react-router-dom';
+
+import CreateUser from './components/create-user.component'
+import LandingPage from './components/LandingPage..component';
 
 function App() {
   return (
-    <div className="container">
-      hello world
-    </div>
+    <Router>
+      <div id="land-page" className="land_page bg">
+        <LandingPage />
+      </div>
+    </Router>
   );
 }
-
+/* <br/>
+       <Route path="/" exact component={UsersList}/>
+        <Route path="/create" component={CreateUser}/> 
+*/
 export default App;
