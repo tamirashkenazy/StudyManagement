@@ -1,9 +1,10 @@
 
 import React, { Component } from 'react'
-// import {Form , Button} from 'react-bootstrap'
-import {Form , Button, Checkbox, FormField} from 'semantic-ui-react'
+import {Link} from 'react-router-dom'
+import {Form , Button, Checkbox} from 'semantic-ui-react'
 import axios from 'axios'
 import '../styles/login-form.scss'
+import '../styles/general.scss'
 
 class FormLogin extends Component  {
     constructor(props) {
@@ -29,8 +30,10 @@ class FormLogin extends Component  {
         const {username} = this.state
         console.log(username);
         axios.get('http://localhost:5000/users/'+ username)
-        .then(res => console.log("data: " + res.data.map(user => user.id_number)));
+        .then(res => console.log("data: " + res.data.map(user => user.id_number))).catch(err=>console.log(err))
     }
+
+
     WelcomeHeader = () => {
         return (
             <div>
@@ -46,8 +49,8 @@ class FormLogin extends Component  {
         return (
             <div className="right-align">
                 <this.WelcomeHeader/>
-                <Form onSubmit={this.onSubmit}>
-                    <FormField>
+                <Form className="login-form">
+                    <Form.Field>
                         <label>שם משתמש</label>
                         <Form.Input
                             placeholder='ת.ז'
@@ -55,9 +58,9 @@ class FormLogin extends Component  {
                             value={username}
                             onChange={this.handleChange}
                         />
-                    </FormField>
+                    </Form.Field>
                     
-                    <FormField>
+                    <Form.Field>
                         <label>סיסמה</label>
                         <Form.Input
                             type="password"
@@ -66,14 +69,19 @@ class FormLogin extends Component  {
                             value={password}
                             onChange={this.handleChange}
                         />
-                    </FormField>
+                    </Form.Field>
                     
                     <Form.Field
                             control={Checkbox}
                             label='שכחתי סיסמה'
                         />
-                    <Form.Field control={Button}>התחבר</Form.Field>
-                    {/* <Button onClick={this.handlePrint}>print state</Button>  */}
+
+                    <Form.Field>
+                        <Link to="/signup">
+                            <Button color="teal">להרשמה</Button>
+                        </Link>
+                        <Button onClick={this.onSubmit} primary>התחבר</Button>
+                    </Form.Field>
                 </Form>
                 
             </div>
