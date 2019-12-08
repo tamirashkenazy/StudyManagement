@@ -1,16 +1,11 @@
-.right-align {
-    text-align: right;
-    margin: 10% 5% 0% 0%;
-}
-
-  /* webkit solution */
-  ::-webkit-input-placeholder { text-align:right; }
-  /* mozilla solution */
-  input:-moz-placeholder { text-align:right; }
 
   #forgotPasswordCheckBox {
       margin-left: 10px;
   }
   .check {
       margin-right: 10%;
+  }
+
+  .login-form {
+    margin-left: 50%;
   }
