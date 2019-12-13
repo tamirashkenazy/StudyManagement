@@ -15,11 +15,13 @@ class FormLogin extends Component  {
             forgotPassword : false,
         }
         this.onSubmit = this.onSubmit.bind(this);
+        // TODO - read on function binding
     }
 
     handleChange = (e, { name, value }) => {
         this.setState({ [name]: value })
     }
+    
 
     // handleSubmit = (e) => {
     //     const { username, password } = this.state
@@ -46,9 +48,11 @@ class FormLogin extends Component  {
 
     render() {
         const { username, password } = this.state
+        
         return (
             <div className="right-align">
                 <this.WelcomeHeader/>
+
                 <Form className="login-form">
                     <Form.Field>
                         <label>שם משתמש</label>
