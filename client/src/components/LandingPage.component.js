@@ -5,19 +5,27 @@ import '../styles/App.scss'
 import login_people_books from '../images/background_images/login_people_books.jpg'
 import study_management from '../images/background_images/study_management.png'
 import FormLogin from './loginForm.component'
+
+
+function ImagesLogin() {
+    return (
+            <Container>
+                <Row>
+                    <Image src={study_management} fluid="true"  className="study-photo"></Image>
+                </Row>
+                <Row>
+                    <Image src={login_people_books} fluid="true"  className="people-photo"></Image>
+                </Row>
+            </Container>
+    )
+}
+
 function LoginBox() {
     return(
         <Container className="login-box">
-            <Row > {/**noGutters={true} */}
+            <Row >
                 <Col className="images-login">
-                    <Container>
-                        <Row>
-                            <Image src={study_management} fluid="true"  className="study-photo"></Image>
-                        </Row>
-                        <Row>
-                            <Image src={login_people_books} fluid="true"  className="people-photo"></Image>
-                        </Row>
-                    </Container>
+                    <ImagesLogin></ImagesLogin>
                 </Col>
                 <Col>
                     <FormLogin></FormLogin>

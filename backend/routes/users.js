@@ -26,7 +26,10 @@ router.route('/add').post((req, res) => {
     newUser.save().then(()=>res.json("user added!")).catch(err=>res.status(400).json('Error: ' + err))
 })
 const filter_id = (req)=> { 
-    return({"id_number" : req.params.id})
+    return({
+        // TODO - check if this id is the /:id object
+        "id_number" : req.params.id
+    })
 }
 
 // the /:id is like a variable
