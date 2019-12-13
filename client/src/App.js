@@ -4,14 +4,14 @@ import './styles/App.scss';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 // import {Button } from 'semantic-ui-react'
 import LandingPage from './components/LandingPage.component';
-import SignupForm from './components/signupForm';
+import signupConatainer from './components/signup/signupForm.component';
 
 function App() {
   return (
     <Router>
       <div id="land-page" className="land_page bg">
         <Switch>
-          <Route path="/signup" component={SignupForm}/>
+          <Route path="/signup" component={signupConatainer}/>
           <Route path="/" exact component={LandingPage}/>
         </Switch>
       </div>

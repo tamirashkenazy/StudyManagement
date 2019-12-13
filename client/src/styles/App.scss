@@ -15,9 +15,9 @@
     align-items: center;     
 }
 
-.login-box {
-    height: 50%;
-    width: 70%;
+#login-box {
+    // height: 50%;
+    // width: 70%;
     box-shadow:5px 5px 5px 5px #888888;
     background-color: white ;
     // border: 4px thin rgb(64, 64, 65); - doesnt listen to this property
@@ -32,11 +32,11 @@
     .study-photo {
         width: 40%;
     }
-    .people-photo {
-        width: 70%;
-    }
+    // .people-photo {
+    //     width: 70%;
+    // }
 }
-.images-login {
+#images-login {
     padding-top:  2% ;
     padding-bottom: 2%;;
 }
