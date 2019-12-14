@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Container} from 'react-bootstrap'
 import { Form,  Label, Dropdown, Button, Radio, Checkbox, Icon} from 'semantic-ui-react';
 import axios from 'axios'
-import {Link } from 'react-router-dom'
+import {Link , Redirect } from 'react-router-dom'
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
 import {validateForm, check_and_assign_errors, errors_messages}  from './validationFields'
@@ -32,13 +32,15 @@ class SignupForm extends Component {
                 gender : errors_messages.gender,
                 role : errors_messages.role,
             },
-            isLoading : true
+            isLoading : true,
+            redirect : false
         }
         
         this.onSignUp = this.onSignUp.bind(this);
+        // let history = useHistory();
     }
     
-
+    
     handleChange = (event, { name, value }) => {
         let temp_errors = this.state.errors
         temp_errors = check_and_assign_errors(name, value, temp_errors)
@@ -79,10 +81,8 @@ class SignupForm extends Component {
     onSignUp = (e) => {
         e.preventDefault();
         const { first_name, last_name, id_number, tel_number, password, year, email, gender, isStudent, isTeacher} = this.state
-        // console.log(first_name, last_name, id_number, tel_number, password, year, email, gender, isStudent, isTeacher);
-        // this.setState({isLoading: true})
         const new_user = {  
-                        id_number : id_number,
+                        _id : id_number,
                         password : password,
                         email: email,
                         first_name : first_name, 
@@ -103,6 +103,7 @@ class SignupForm extends Component {
             if (response.data.success) {
                 this.setState({
                     isLoading : false,
+                    redirect : true
                 });
                 console.log("success " + response.data.message);
                
@@ -275,8 +276,10 @@ class SignupForm extends Component {
         )
     }
     render() {
-        const {valid_form} = this.state
-        
+        const {valid_form, redirect} = this.state
+        if (redirect) {
+            return <Redirect to="/"></Redirect>
+        }
         return (
             <Form style={{margin:"2%"}}>
                 <Form.Group widths='equal'>

@@ -14,7 +14,6 @@ const UserSchema = new Schema({
     isStudent : { type : Boolean, required : true},
     isAdmin: { type : Boolean, required : true },
     study_year : {type : String, required : true},
-    isDeleted : {type: Boolean, default : false},
 }, { timestamps:true }, 
 );
 
