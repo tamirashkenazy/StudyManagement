@@ -14,20 +14,14 @@ class FormLogin extends Component  {
             password: '', 
             forgotPassword : false,
         }
-        this.onSubmit = this.onSubmit.bind(this);
-        // TODO - read on function binding
+        this.onSignIn = this.onSignIn.bind(this);
     }
 
     handleChange = (e, { name, value }) => {
         this.setState({ [name]: value })
     }
     
-
-    // handleSubmit = (e) => {
-    //     const { username, password } = this.state
-    //     console.log(username, password)
-    // }
-    onSubmit(e) {
+    onSignIn(e) {
         e.preventDefault();
         const {username} = this.state
         console.log(username);
@@ -48,7 +42,6 @@ class FormLogin extends Component  {
 
     render() {
         const { username, password } = this.state
-        
         return (
             <div className="right-align">
                 <this.WelcomeHeader/>
@@ -84,7 +77,7 @@ class FormLogin extends Component  {
                         <Link to="/signup">
                             <Button color="teal">להרשמה</Button>
                         </Link>
-                        <Button onClick={this.onSubmit} primary>התחבר</Button>
+                        <Button onClick={this.onSignIn} primary>התחבר</Button>
                     </Form.Field>
                 </Form>
                 

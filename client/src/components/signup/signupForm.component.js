@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Row, Container} from 'react-bootstrap'
-import {  Form,  Label, Dropdown, Button, Radio, Checkbox, Icon} from 'semantic-ui-react';
+import { Container} from 'react-bootstrap'
+import { Form,  Label, Dropdown, Button, Radio, Checkbox, Icon} from 'semantic-ui-react';
 import axios from 'axios'
 import {Link } from 'react-router-dom'
 import '../../styles/signup-form.scss'
@@ -32,13 +32,14 @@ class SignupForm extends Component {
                 gender : errors_messages.gender,
                 role : errors_messages.role,
             },
+            isLoading : true
         }
         
-        this.onSubmit = this.onSubmit.bind(this);
+        this.onSignUp = this.onSignUp.bind(this);
     }
     
 
-    handleChange = (e, { name, value }) => {
+    handleChange = (event, { name, value }) => {
         let temp_errors = this.state.errors
         temp_errors = check_and_assign_errors(name, value, temp_errors)
         let valid = validateForm(temp_errors)
@@ -75,29 +76,44 @@ class SignupForm extends Component {
         )
     }
     
-    onSubmit(e) {
+    onSignUp = (e) => {
         e.preventDefault();
-        const {first_name, last_name, id_number, tel_number, password, year, email, gender, isStudent, isTeacher} = this.state
-        console.log(first_name, last_name, id_number, tel_number, password, year, email, gender, isStudent, isTeacher);
-    
+        const { first_name, last_name, id_number, tel_number, password, year, email, gender, isStudent, isTeacher} = this.state
+        // console.log(first_name, last_name, id_number, tel_number, password, year, email, gender, isStudent, isTeacher);
+        // this.setState({isLoading: true})
         const new_user = {  
+                        id_number : id_number,
+                        password : password,
+                        email: email,
                         first_name : first_name, 
                         last_name: last_name, 
-                        id_number: id_number,
                         tel_number : tel_number,
-                        password : password,
-                        year: year,
-                        email: email,
                         gender : gender,
-                        isStudent: isStudent,
                         isTeacher : isTeacher,
-                        isAdmin : false}
-                        // isAdmin : false}
+                        isStudent: isStudent,
+                        isAdmin : false,
+                        study_year: year,
+                    }
    
-        // const {username} = this.state
         console.log(new_user);
         axios.post('http://localhost:5000/users/add', new_user)
-        .then(res => console.log('ok')).catch(err=>console.log("error: " + err))
+        .then((response)=>{
+            console.log("success: " + (response.data.success));
+            console.log("message: " + (response.data.message));
+            if (response.data.success) {
+                this.setState({
+                    isLoading : false,
+                });
+                console.log("success " + response.data.message);
+               
+            } else {
+                this.setState({
+                    isLoading : false,
+                });
+                console.log(response.data.message);
+                console.log("not succ " + response.data.message);
+           }
+        })
     }
     email_field = () => {
         const { email } = this.state
@@ -280,7 +296,7 @@ class SignupForm extends Component {
                 </Form.Group>
                 <Form.Group>
                     <Form.Field>
-                        <Button onClick={this.onSubmit} primary disabled={!valid_form}>הירשם</Button>
+                        <Button onClick={this.onSignUp} primary disabled={!valid_form}>הירשם</Button>
                     </Form.Field>
                 </Form.Group>
             </Form>

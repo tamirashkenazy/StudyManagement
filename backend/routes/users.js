@@ -1,5 +1,9 @@
 const router = require('express').Router();
 let User = require('../models/user.model');
+//https://stackoverflow.com/questions/34546272/cannot-find-module-bcrypt/41878322
+//npm install -g windows-build-tools, npm install -g node-gyp
+//npm install bcrypt
+var bcrypt = require('bcrypt')
 
 router.route('/').get((req, res) => {
     //mongoose method to find all the users
@@ -7,30 +11,41 @@ router.route('/').get((req, res) => {
     .then(users => res.json(users))
     .catch(err => res.status(400).json("Error: " + err));
 });
-
+// should see this, validation in the backend, https://medium.com/@Keithweaver_/building-a-log-in-system-for-a-mern-stack-39411e9513bd
 router.route('/add').post((req, res) => {
-    const id_number = req.body.id_number;
-    const first_name = req.body.first_name;
-    const last_name = req.body.last_name;
-    const isTeacher = req.body.isTeacher;
-    const isStudent = req.body.isStudent;
-    const isAdmin = req.body.isAdmin;
-    const newUser = new User({
-        id_number,
-        first_name,
-        last_name,
-        isTeacher,
-        isStudent,
-        isAdmin,
-    })
-    newUser.save().then(()=>res.json("user added!")).catch(err=>res.status(400).json('Error: ' + err))
+    const { body } = req;
+    const { id_number, first_name, last_name,tel_number, gender, isStudent, isTeacher, isAdmin, study_year } = body
+    let {email, password} = body
+    email = email.toLowerCase()
+    email = email.trim()
+    User.find({ $or:[{_id : id_number}, {email : email}] }, (err, previousUser)=>{
+        if(err) {
+            return res.send({success:false, message:"Error: Server Error"})
+        } else if (previousUser && previousUser.length > 0) {
+            return res.send({success:false, message:"Error: Account Already Exist"})
+        }
+        const newUser = new User({
+            email,
+            first_name,
+            last_name,
+            tel_number,
+            gender,
+            isTeacher,
+            isStudent,
+            isAdmin,
+            study_year, 
+        })
+        newUser._id = id_number
+        newUser.password = newUser.generateHash(password)
+        console.log(newUser)
+        newUser.save((err, user)=> {
+            if (err) {
+                return res.send({success:false, message:"Error: Couldn't Save " + err})
+            }
+            return res.send({success:true, message:"Success: Signed Up, " + JSON.stringify(newUser)})
+        })
+    });
 })
-const filter_id = (req)=> { 
-    return({
-        // TODO - check if this id is the /:id object
-        "id_number" : req.params.id
-    })
-}
 
 // the /:id is like a variable
 router.route('/:id').get((req,res) => {
