@@ -20,9 +20,9 @@ router.route('/add').post((req, res) => {
     email = email.trim()
     User.find({ $or:[{_id : _id}, {email : email}] }, (err, previousUser)=>{
         if(err) {
-            return res.send({success:false, message:"Error: Server Error"})
+            return res.send({success : false, message:"Error: Server Error"})
         } else if (previousUser && previousUser.length > 0) {
-            return res.send({success:false, message:"Error: Account Already Exist"})
+            return res.send({success : false, message:"Error: Account Already Exist"})
         }
         const newUser = new User({
             email,
