@@ -1,18 +1,20 @@
 
 import React, { Component } from 'react'
-import {Link} from 'react-router-dom'
+import {Link, Redirect} from 'react-router-dom'
 import {Form , Button, Checkbox} from 'semantic-ui-react'
 import axios from 'axios'
 import '../styles/login-form.scss'
 import '../styles/general.scss'
 
 class FormLogin extends Component  {
+    _isMounted = false;
     constructor(props) {
         super(props)
         this.state = { 
             username: '', 
             password: '', 
             forgotPassword : false,
+            redirect : false,
         }
         this.onSignIn = this.onSignIn.bind(this);
     }
@@ -23,12 +25,35 @@ class FormLogin extends Component  {
     
     onSignIn(e) {
         e.preventDefault();
-        const {username} = this.state
-        console.log(username);
-        axios.get('http://localhost:5000/users/'+ username)
-        .then(res => console.log("data: " + res.data.map(user => user.id_number))).catch(err=>console.log(err))
+        const {username, password} = this.state
+        const login_user = {  
+            _id : username,
+            password : password,
+        }
+        axios.post('http://localhost:5000/sign_in/', login_user).then((response)=> {
+            console.log("success: " + (response.data.success));
+            console.log("message: " + (response.data.message));
+            if (response.data.success) {
+                // setInStorage('study-management-app', {token : response.data.token_id});
+                this.setState({
+                    isLoading : false,
+                    redirect : true,
+                })
+                // console.log("success " + response.data.message);
+                // this.props.history.push("/main");
+            } else {
+                console.log(response.data.message);
+                console.log("not succ " + response.data.message);
+           }
+        }).then(()=>{
+            this.setState({
+                isLoading : false,
+            });
+        })
     }
-
+    componentWillUnmount() {
+        this._isMounted = false;
+    }
 
     WelcomeHeader = () => {
         return (
@@ -41,7 +66,12 @@ class FormLogin extends Component  {
     }
 
     render() {
-        const { username, password } = this.state
+        const { username, password, redirect } = this.state
+        if (redirect) {
+            return (
+                <Redirect to='/main'></Redirect>
+            )
+        }
         return (
             <div className="right-align">
                 <this.WelcomeHeader/>
@@ -80,7 +110,6 @@ class FormLogin extends Component  {
                         <Button onClick={this.onSignIn} primary>התחבר</Button>
                     </Form.Field>
                 </Form>
-                
             </div>
         )
     }

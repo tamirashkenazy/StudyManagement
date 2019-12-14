@@ -25,7 +25,9 @@ connection.once('open', () => {
 
 // the http requests for users located in ./routes/users
 const usersRouter = require('./routes/users');
+const signinRouter = require('./routes/sign_in');
 app.use('/users', usersRouter);
+app.use('/sign_in', signinRouter);
 
 app.listen(port, () => {
     console.log('Server is running on port: ' + port);
