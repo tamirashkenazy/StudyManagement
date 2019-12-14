@@ -14,11 +14,11 @@ router.route('/').get((req, res) => {
 // should see this, validation in the backend, https://medium.com/@Keithweaver_/building-a-log-in-system-for-a-mern-stack-39411e9513bd
 router.route('/add').post((req, res) => {
     const { body } = req;
-    const { id_number, first_name, last_name,tel_number, gender, isStudent, isTeacher, isAdmin, study_year } = body
+    const { _id, first_name, last_name, tel_number, gender, isStudent, isTeacher, isAdmin, study_year } = body
     let {email, password} = body
     email = email.toLowerCase()
     email = email.trim()
-    User.find({ $or:[{_id : id_number}, {email : email}] }, (err, previousUser)=>{
+    User.find({ $or:[{_id : _id}, {email : email}] }, (err, previousUser)=>{
         if(err) {
             return res.send({success:false, message:"Error: Server Error"})
         } else if (previousUser && previousUser.length > 0) {
@@ -35,7 +35,7 @@ router.route('/add').post((req, res) => {
             isAdmin,
             study_year, 
         })
-        newUser._id = id_number
+        newUser._id = _id
         newUser.password = newUser.generateHash(password)
         console.log(newUser)
         newUser.save((err, user)=> {
@@ -62,28 +62,36 @@ router.route('/:id').delete((req,res) => {
     .catch(err => res.status(400).json('Error: ' + err))
 })
 
-// router.route('/update/:id').post((req,res) => {
-//     User.find(filter_id(req), function(err, user) {
-//         if(!user) {
-//             console.log("No user found")
-//             // return res.redirect('/')
-//         }
-//         var id_number = req.body.id_number.trim();
-//         var first_name = req.body.first_name.trim();
-//         var last_name = req.body.last_name.trim();
-//         var isAdmin = req.body.isAdmin.trim();
-//         var isTeacher = req.body.isTeacher.trim();
-//         var isStudent = req.body.isStudent.trim();
-//         user.id_number = id_number;
-//         user.first_name = first_name;
-//         user.last_name = last_name;
-//         user.isAdmin = isAdmin;
-//         user.isTeacher = isTeacher;
-//         user.isStudent = isStudent;
-//         user.save(function(err) {
-//             console.log(err)
-//         })
-
-//     }); 
-// });
+router.route('/update/:id').post((req,res) => {
+    User.findById((req.params.id)).then((user) => {
+        if (!user) {
+            return res.send({
+                success : false,
+                message : "Error: no such user"
+            })
+        }
+        user._id = req.body._id.trim();
+        user.password = generateHash(req.body.password)
+        user.email = req.body.email.trim();
+        user.first_name = req.body.first_name.trim();
+        user.last_name = req.body.last_name.trim();
+        user.tel_number = req.body.tel_number;
+        user.gender = req.body.gender;
+        user.isTeacher = req.body.isTeacher;
+        user.isStudent = req.body.isStudent;
+        user.isAdmin = req.body.isAdmin;
+        user.study_year = req.body.study_year.trim();
+        user.save((err, doc)=> {
+            if(err) {
+                console.log('Error: ' + err);
+                return res.send({
+                    success : false, message : err.errmsg
+                });
+            }
+            return res.send({
+                success : true, message : 'Updated successfuly',
+            });
+        })
+    }); 
+});
 module.exports = router;
