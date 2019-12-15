@@ -8,7 +8,7 @@ import '../styles/general.scss'
 // form creatiom = https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
 function FormLogin ()  {
     let history = useHistory()
-    const postRequestToValidate = () => {
+    const httpPostRequestToGetUser = () => {
         const login_user = {  
             _id : inputs.username,
             password : inputs.password,
@@ -35,62 +35,14 @@ function FormLogin ()  {
             }
             
         }
-        const handleInputChange = (event) => {
+        const handleInputChange = (event, {name, value}) => {
             event.persist();
-            setInputs(inputs => ({...inputs, [event.target.name] : event.target.value}));
+            setInputs(inputs => ({...inputs, [name] : value}));
         }
-        return {
-            handleSubmit,
-            handleInputChange,
-            inputs
-        };
+        return { handleSubmit, handleInputChange,  inputs};
     }
 
-    const consoleFunc = () => {
-        console.log("the user is: " + inputs.username + " " + inputs.password);
-    }
-    const {inputs, handleInputChange, handleSubmit} = useSignInForm(postRequestToValidate);
-    
-/**
-handleChange = (e, { name, value }) => {
-        this.setState({ [name]: value })
-    }
- */
-   /**
-    *
-    onSignIn(e) {
-        e.preventDefault();
-        const {username, password} = this.state
-        const login_user = {  
-            _id : username,
-            password : password,
-        }
-        axios.post('http://localhost:5000/sign_in/', login_user).then((response)=> {
-            console.log("success: " + (response.data.success));
-            console.log("message: " + (response.data.message));
-            if (response.data.success) {
-                this.setState({
-                    isLoading : false,
-                    redirect : true,
-                })
-            } else {
-                console.log(response.data.message);
-                console.log("not succ " + response.data.message);
-           }
-        }).then(()=>{
-            this.setState({
-                isLoading : false,
-            });
-        })
-    }
-    */ 
-    
-    /**
-     *     componentWillUnmount() {
-        this._isMounted = false;
-    }
-     */
-
+    const {inputs, handleInputChange, handleSubmit} = useSignInForm(httpPostRequestToGetUser);
 
     const WelcomeHeader = () => {
         return (
@@ -144,19 +96,7 @@ handleChange = (e, { name, value }) => {
             </Form>
         </div>
     )
-    /**
-     render() {
-        const { username, password, redirect } = this.state
-        if (redirect) {
-            return (
-                <Redirect to={{pathname:'/main', state:{first_name:username} }}></Redirect>
-            )
-        }
-    }
-
-     */
     
-        
 }
 
 export default FormLogin;

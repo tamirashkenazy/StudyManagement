@@ -5,7 +5,7 @@ import axios from 'axios'
 import {Link , Redirect } from 'react-router-dom'
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
-import {validateForm, check_and_assign_errors, errors_messages}  from './validationFields'
+import {validateForm, check_and_assign_errors, error_default_messages}  from './validationFields'
 
 class SignupForm extends Component {
     constructor(props) {
@@ -22,15 +22,15 @@ class SignupForm extends Component {
             isStudent : false,
             isTeacher : false,
             errors : {
-                first_name: errors_messages.first_name,
-                last_name: errors_messages.last_name,
-                id_number:errors_messages.id_number,
-                tel_number:  errors_messages.tel_number,
-                password:  errors_messages.password,
-                year :errors_messages.year,
-                email :  errors_messages.email,
-                gender : errors_messages.gender,
-                role : errors_messages.role,
+                first_name: error_default_messages.first_name,
+                last_name: error_default_messages.last_name,
+                id_number:error_default_messages.id_number,
+                tel_number:  error_default_messages.tel_number,
+                password:  error_default_messages.password,
+                year :error_default_messages.year,
+                email :  error_default_messages.email,
+                gender : error_default_messages.gender,
+                role : error_default_messages.role,
             },
             isLoading : true,
             redirect : false
@@ -67,7 +67,7 @@ class SignupForm extends Component {
             break;
         }
         if(!role_valid){
-            errors.role =errors_messages.role
+            errors.role =error_default_messages.role
         }
         this.setState(prevState => ({
                 [name] : !prevState[name],
