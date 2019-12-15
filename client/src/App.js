@@ -4,7 +4,7 @@ import './styles/App.scss';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 // import {Button } from 'semantic-ui-react'
 import LandingPage from './components/LandingPage.component';
-import signupConatainer from './components/signup/functionalSignUpForm.component';
+import signupConatainer from './components/signup/signUpForm.component';
 import Main from './components/main/main.component';
 
 function App() {
