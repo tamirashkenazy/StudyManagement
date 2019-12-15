@@ -11,6 +11,19 @@ router.route('/').get((req, res) => {
     .then(users => res.json(users))
     .catch(err => res.status(400).json("Error: " + err));
 });
+
+// the /:id is like a variable
+router.route('/:id').get((req,res) => {
+    User.findById((req.params.id), (err,user) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (user) {
+            // const user = users[0]
+            return res.send({success : true, message:"The user is: " + JSON.stringify(user), user: user})
+        }
+    })
+})
+
 // should see this, validation in the backend, https://medium.com/@Keithweaver_/building-a-log-in-system-for-a-mern-stack-39411e9513bd
 router.route('/add').post((req, res) => {
     const { body } = req;
@@ -47,14 +60,7 @@ router.route('/add').post((req, res) => {
     });
 })
 
-// the /:id is like a variable
-router.route('/:id').get((req,res) => {
-    User.find(filter_id(req))
-    .then(user => {
-        res.json(user)
-    })
-    .catch(err => res.status(400).json('Error: ' + err))
-})
+
 
 router.route('/:id').delete((req,res) => {
     User.deleteOne(filter_id(req))
