@@ -37,7 +37,6 @@ class SignupForm extends Component {
         }
         
         this.onSignUp = this.onSignUp.bind(this);
-        // let history = useHistory();
     }
     
     
@@ -105,14 +104,10 @@ class SignupForm extends Component {
                     isLoading : false,
                     redirect : true
                 });
-                console.log("success " + response.data.message);
-               
             } else {
                 this.setState({
                     isLoading : false,
                 });
-                console.log(response.data.message);
-                console.log("not succ " + response.data.message);
            }
         })
     }

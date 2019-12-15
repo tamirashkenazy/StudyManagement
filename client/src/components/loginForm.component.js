@@ -34,13 +34,10 @@ class FormLogin extends Component  {
             console.log("success: " + (response.data.success));
             console.log("message: " + (response.data.message));
             if (response.data.success) {
-                // setInStorage('study-management-app', {token : response.data.token_id});
                 this.setState({
                     isLoading : false,
                     redirect : true,
                 })
-                // console.log("success " + response.data.message);
-                // this.props.history.push("/main");
             } else {
                 console.log(response.data.message);
                 console.log("not succ " + response.data.message);
@@ -69,7 +66,7 @@ class FormLogin extends Component  {
         const { username, password, redirect } = this.state
         if (redirect) {
             return (
-                <Redirect to='/main'></Redirect>
+                <Redirect to={{pathname:'/main', state:{first_name:username} }}></Redirect>
             )
         }
         return (
