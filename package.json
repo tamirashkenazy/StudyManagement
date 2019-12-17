@@ -1,0 +1,24 @@
+{
+  "name": "study-management-app",
+  "version": "1.0.0",
+  "description": "This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "preinstall": "cd client && npm install && cd ../backend && npm install",
+    "start": "concurrently \"cd client && npm start\" \"cd backend && nodemon ./server.js\" "
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/tamirashkenazy/StudyManagement.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/tamirashkenazy/StudyManagement/issues"
+  },
+  "homepage": "https://github.com/tamirashkenazy/StudyManagement#readme",
+  "dependencies": {
+    "concurrently": "^5.0.1"
+  }
+}
