@@ -3,9 +3,9 @@ import './styles/App.scss';
 // import 'bootstrap/dist/css/bootstrap.min.css'
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 // import {Button } from 'semantic-ui-react'
-import LandingPage from './components/LandingPage.component';
+import LandingPage from './components/login/LandingPage.component';
 import signupConatainer from './components/signup/signUpForm.component';
-import Main from './components/main/main.component';
+import Main from './components/main/dashboard.component';
 
 function App() {
   return (

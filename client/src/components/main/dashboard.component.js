@@ -31,7 +31,7 @@ export default function Main(props) {
         console.log("id: " + (props.location.state._id));
         fetchDataById(_id)
     },[]);
-//{props.location.state._id}
+
     return (
         <div>
             {!isLoading ?<h1> Hello  {userDetails.first_name + " " + userDetails.last_name}</h1> : <h2>Loading</h2>}
