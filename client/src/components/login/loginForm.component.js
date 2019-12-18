@@ -1,10 +1,12 @@
-
+//useState - hooks in react
 import React, { useState } from 'react'
+//REST
 import {Link , useHistory} from 'react-router-dom'
 import {Form , Button, Checkbox} from 'semantic-ui-react'
+//TALKS to the backend, sends https requests
 import axios from 'axios'
-import '../styles/login-form.scss'
-import '../styles/general.scss'
+import '../../styles/login-form.scss'
+import '../../styles/general.scss'
 // form creatiom = https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
 function FormLogin ()  {
     let history = useHistory()
