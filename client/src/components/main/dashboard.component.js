@@ -2,8 +2,6 @@ import React, {useEffect, useState} from 'react'
 import {useHistory} from 'react-router-dom'
 import axios from 'axios'
 
-// import { useState } from 'react'
-
 export default function Main(props) {
     let history = useHistory();
 
@@ -18,6 +16,12 @@ export default function Main(props) {
             if (response.data.success) {
                 let user = response.data.user
                 console.log(JSON.stringify(response.data.user));
+                if (user.isStudent) {
+                    history.push("/main/student");
+                }
+                else if (user.isTeacher) {
+                    history.push("/main/teacher");
+                }
                 setUserDetails({ first_name: user.first_name, last_name: user.last_name })
                 setIsLoading(false)
             } else {
@@ -27,10 +31,12 @@ export default function Main(props) {
     }
 
     useEffect(()=>{
+        console.log(Object.keys(props))
+        console.log(JSON.stringify(props))
         const _id = props.location.state._id;
-        console.log("id: " + (props.location.state._id));
+        console.log("id: " + (_id));
         fetchDataById(_id)
-    },[]);
+    });
 
     return (
         <div>

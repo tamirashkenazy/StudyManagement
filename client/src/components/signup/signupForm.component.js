@@ -55,7 +55,7 @@ function SignupForm() {
                 setValidForm(valid_form && (userState.isStudent || userState.isTeacher))
                 setErrors(temp_errors)
             } else {
-                if (checked || (name==='isStudent' && userState.isTeacher || name==='isTeacher' && userState.isStudent)) {
+                if (checked || ((name==='isStudent' && userState.isTeacher) || (name==='isTeacher' && userState.isStudent))) {
                     valid_form = true
                 }
                 let role_error= null

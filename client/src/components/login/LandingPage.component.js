@@ -1,8 +1,8 @@
 import React from 'react';
 import {Container, Row, Col, Image} from 'react-bootstrap'
-import '../styles/App.scss'
-import login_people_books from '../images/background_images/login_people_books.jpg'
-import study_management from '../images/background_images/study_management.png'
+import '../../styles/App.scss'
+import login_people_books from '../../images/background_images/login_people_books.jpg'
+import study_management from '../../images/background_images/study_management.png'
 import FormLogin from './loginForm.component'
 
 
