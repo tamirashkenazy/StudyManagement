@@ -60,10 +60,8 @@ router.route('/add').post((req, res) => {
     });
 })
 
-
-
 router.route('/:id').delete((req,res) => {
-    User.deleteOne(filter_id(req))
+    User.deleteOne(req.params.id)
     .then(user => res.json(user))
     .catch(err => res.status(400).json('Error: ' + err))
 })
