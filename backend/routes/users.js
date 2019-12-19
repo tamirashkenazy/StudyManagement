@@ -29,39 +29,44 @@ router.route('/add').post((req, res) => {
     const { body } = req;
     const { _id, first_name, last_name, tel_number, gender, isStudent, isTeacher, isAdmin, study_year } = body
     let {email, password} = body
+   //  User.find({ $or:[{_id : _id}, {email : email}] }, (err, previousUser)=>{
+    //    if(err) {
+    //        return res.send({success : false, message:"Error: Server Error"})
+    //    } else if (previousUser && previousUser.length > 0) {
+    //        return res.send({success : false, message:"Error: Account Already Exist"})
+     //  }
+    const newUser = new User({
+        _id,
+        first_name,
+        last_name,
+        tel_number,
+        gender,
+        isTeacher,
+        isStudent,
+        isAdmin,
+        study_year,
+        password
+    })
+    //newUser._id = _id
     email = email.toLowerCase()
     email = email.trim()
-    User.find({ $or:[{_id : _id}, {email : email}] }, (err, previousUser)=>{
-        if(err) {
-            return res.send({success : false, message:"Error: Server Error"})
-        } else if (previousUser && previousUser.length > 0) {
-            return res.send({success : false, message:"Error: Account Already Exist"})
-        }
-        const newUser = new User({
-            email,
-            first_name,
-            last_name,
-            tel_number,
-            gender,
-            isTeacher,
-            isStudent,
-            isAdmin,
-            study_year, 
-        })
-        newUser._id = _id
+    newUser.email = email
+    if (newUser.checkPassword(password)){
         newUser.password = newUser.generateHash(password)
-        console.log(newUser)
-        newUser.save((err, user)=> {
-            if (err) {
-                return res.send({success:false, message:"Error: Couldn't Save " + err})
-            }
-            return res.send({success:true, message:"Success: Signed Up, " + JSON.stringify(newUser)})
-        })
-    });
+    }else{
+        return res.send({success : false, message:"Error: password is too short!"})
+    }
+    console.log(newUser)
+    newUser.save((err, user)=> {
+        if (err) {
+            return res.send({success:false, message:"Error: Couldn't Save " + err})
+        }
+        return res.send({success:true, message:"Success: Signed Up, " + JSON.stringify(newUser)})
+    })
 })
 
 router.route('/:id').delete((req,res) => {
-    User.deleteOne(req.params.id)
+    User.deleteOne({_id: req.params.id})
     .then(user => res.json(user))
     .catch(err => res.status(400).json('Error: ' + err))
 })
@@ -74,8 +79,14 @@ router.route('/update/:id').post((req,res) => {
                 message : "Error: no such user"
             })
         }
+        if (!user.checkPassword(req.body.password)){
+            return res.send({
+                success : false,
+                message : "Error: password is too short!"
+            })
+        }
         user._id = req.body._id.trim();
-        user.password = generateHash(req.body.password)
+        user.password = user.generateHash(req.body.password)
         user.email = req.body.email.trim();
         user.first_name = req.body.first_name.trim();
         user.last_name = req.body.last_name.trim();
