@@ -8,7 +8,7 @@ validEmailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<
 onlyEnglishAndHebrew = /^[A-Za-z\u0590-\u05fe]+$/i
 
 const UserSchema = new Schema({
-    _id :  {type : String, default : '', unique: true, required : true, match: onlyNumbers, minlength: 9, maxlength: 9},
+    _id :  {type : String, default : '', required : true, match: onlyNumbers, minlength: 9, maxlength: 9},
     password : {type : String, required : true, minlength: 4},
     email : { type: String, required : true, unique: true, match: validEmailRegex},
     first_name : {type : String,  required : true, match: onlyEnglishAndHebrew},

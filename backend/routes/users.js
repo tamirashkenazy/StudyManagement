@@ -18,8 +18,9 @@ router.route('/:id').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (user) {
-            // const user = users[0]
             return res.send({success : true, message:"The user is: " + JSON.stringify(user), user: user})
+        } else {
+            return res.send({success : false, message:"user does not exist!" })
         }
     })
 })
