@@ -2,7 +2,7 @@ const router = require('express').Router();
 let Lesson = require('../models/lesson.model');
 
 router.route('/').get((req, res) => {
-    //mongoose method to find all the users
+    //mongoose method to find all the lessons
     Lesson.find()
     .then(lessons => res.json(lessons))
     .catch(err => res.status(400).json("Error: " + err));
