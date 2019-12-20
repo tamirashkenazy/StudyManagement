@@ -5,7 +5,7 @@ const mongoose = require('mongoose');
 require('dotenv').config();
 
 const app = express()
-const port = process.env.PORT || 5000;
+const port = process.env.PORT || 4000;
 
 app.use(cors());
 app.use(express.json());
@@ -27,11 +27,14 @@ connection.once('open', () => {
 const usersRouter = require('./routes/users');
 const signinRouter = require('./routes/sign_in');
 const lessonsRouter = require('./routes/lessons');
-const coursesRouter = require('./routes/courses')
+const coursesRouter = require('./routes/courses');
+const teachersRouter = require('./routes/teachers');
+
 app.use('/users', usersRouter);
 app.use('/sign_in', signinRouter);
 app.use('/lessons', lessonsRouter);
 app.use('/courses', coursesRouter);
+app.use('/teachers', teachersRouter);
 
 app.listen(port, () => {
     console.log('Server is running on port: ' + port);

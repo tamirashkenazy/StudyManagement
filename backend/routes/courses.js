@@ -19,7 +19,7 @@ router.route('/:number').get((req,res) => {
         } else if (course.length > 0) {
             return res.send({success : true, message:"course exists: " + JSON.stringify({course} ), course: course})
         }else{
-            return res.send({success : false, message:"course does no exist! "})
+            return res.send({success : false, message:"course does not exist! "})
         }
     })
 })

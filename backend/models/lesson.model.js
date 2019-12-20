@@ -6,8 +6,7 @@ const status = 'report done cancel'.split(' ')
 
 const Schema = mongoose.Schema;
 const LessonSchema = new Schema({
-    course : { course_name : { type : String, required : true, match: onlyEnglishAndHebrew },
-               course_id : { type : String, required : true, match:  onlyNumbers} },
+    //course : CoursesSchema,
     date : { type: Date, required : true },
     teacher : { teacher_id : {type : String,  required : true, match: onlyNumbers, minlength: 9, maxlength: 9 },
                 teacher_name :  {type : String,  required : true,  match: onlyEnglishAndHebrew }},
