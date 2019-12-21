@@ -39,7 +39,7 @@ router.route('/byStatus/:status').get((req,res) => {
     })
 })
 
-router.route('/find_one').post((req,res) => {
+router.route('/findOne').post((req,res) => {
     const {teacherId, courseNumber} = req.body
     TeacherRequests.find({"teacherId": teacherId, "courseNumber": courseNumber}, (err, teacherRequests)=>{
         if (err) {
