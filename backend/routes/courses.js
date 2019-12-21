@@ -10,9 +10,9 @@ router.route('/').get((req, res) => {
 });
 
 // the /:id is like a variable
-router.route('/:number').get((req,res) => {
-    console.log(req.params.number)
-    Course.find({ number : req.params.number }, (err,course) => {
+router.route('/:_id').get((req,res) => {
+    console.log(req.params._id)
+    Course.find({ _id : req.params._id }, (err,course) => {
         console.log(course)
         if(err) {
             return res.send({success : false, message:"Error: " + err})
@@ -27,10 +27,10 @@ router.route('/:number').get((req,res) => {
 // should see this, validation in the backend, https://medium.com/@Keithweaver_/building-a-log-in-system-for-a-mern-stack-39411e9513bd
 router.route('/add').post((req, res) => {
     const { body } = req;
-    const { name, number } = body
+    const { name, _id } = body
     const newCourse = new Course({
         name,
-        number
+        _id
     })
     console.log(newCourse)
     newCourse.save((err, course)=> {
@@ -41,8 +41,8 @@ router.route('/add').post((req, res) => {
     })
 })
 
-router.route('/:number').delete((req,res) => {
-    Course.deleteOne({number: req.params.number})
+router.route('/:_id').delete((req,res) => {
+    Course.deleteOne({_id: req.params._id})
     .then(course => res.json(course))
     .catch(err => res.status(400).json('Error: ' + err))
 })
