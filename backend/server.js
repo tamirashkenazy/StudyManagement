@@ -29,12 +29,15 @@ const signinRouter = require('./routes/sign_in');
 const lessonsRouter = require('./routes/lessons');
 const coursesRouter = require('./routes/courses');
 const teachersRouter = require('./routes/teachers');
+const teacherRequestsRouter = require('./routes/teacherRequests');
+
 
 app.use('/users', usersRouter);
 app.use('/sign_in', signinRouter);
 app.use('/lessons', lessonsRouter);
 app.use('/courses', coursesRouter);
 app.use('/teachers', teachersRouter);
+app.use('/teacherRequests', teacherRequestsRouter);
 
 app.listen(port, () => {
     console.log('Server is running on port: ' + port);
