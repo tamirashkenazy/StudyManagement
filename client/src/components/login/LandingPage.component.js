@@ -36,7 +36,9 @@ function LoginBox() {
 
 function LandingPage () {
     return(
-        <LoginBox></LoginBox>
+        <div id="land-page" className="bg ">
+            <LoginBox></LoginBox>
+        </div>
     )
 }
 

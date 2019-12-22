@@ -109,7 +109,7 @@ function SignupForm() {
         return (
             <Form.Field required>
                 <label>אימייל</label>
-                <Form.Input
+                <Form.Input style={{direction:"ltr"}}
                     name='email'
                     value={email}
                     placeholder='@e-mail'
@@ -144,7 +144,7 @@ function SignupForm() {
         return (
             <Form.Field required>
                 <label>ת.ז</label>
-                <Form.Input
+                <Form.Input style={{direction:"ltr"}}
                     placeholder='ת.ז - שם משתמש'
                     name='id_number'
                     value={id_number}
@@ -161,7 +161,7 @@ function SignupForm() {
         return (
             <Form.Field required>
                 <label>מס' טלפון</label>
-                <Form.Input
+                <Form.Input style={{direction:"ltr"}}
                     placeholder='05xxxxxxxx'
                     name='tel_number'
                     value={tel_number}
@@ -234,13 +234,7 @@ function SignupForm() {
         const {isStudent, isTeacher} = userState
         return (
             <>
-            <Form.Field  width={1}    
-                    name='isTeacher'
-                    control={Checkbox}
-                    label='מורה'
-                    checked={isTeacher}
-                    onChange={handleInputChange}
-                />
+            
             <Form.Field width={1}  
                 name='isStudent'
                 control={Checkbox}
@@ -248,7 +242,13 @@ function SignupForm() {
                 checked={isStudent}
                 onChange={handleInputChange}
             />
-                
+                <Form.Field  width={1}    
+                    name='isTeacher'
+                    control={Checkbox}
+                    label='מורה'
+                    checked={isTeacher}
+                    onChange={handleInputChange}
+                />
             </>
         )
 
@@ -266,7 +266,7 @@ function SignupForm() {
         return (
             <Form.Field required  width={4} >
                 <label>שנת לימודים</label>
-                <Dropdown
+                <Dropdown 
                     name='year'
                     value={year}
                     clearable 
@@ -306,20 +306,20 @@ function SignupForm() {
     return (
         <Form style={{margin:"2%"}}>
             <Form.Group widths='equal'>
-                {email_field()}
-                {password_field()}
                 {id_number_field()}
+                {password_field()}
+                {email_field()}
             </Form.Group>
             <Form.Group widths='equal'>
-                {tel_number_field()}
-                {last_name_field()}
                 {first_name_field()}
+                {last_name_field()}
+                {tel_number_field()}
             </Form.Group>
             <Form.Group  widths='equal'>
-                {genders_field()}
-                {userState.isTeacher ? bank_details_field() : <></>}
-                {roles_field()}
                 {study_year_field()}
+                {roles_field()}
+                {userState.isTeacher ? bank_details_field() : <></>}
+                {genders_field()}
             </Form.Group>
             <Form.Group>
                 <Form.Field>
@@ -332,13 +332,16 @@ function SignupForm() {
 
 export default function signupConatainer () {
     return (
-        <Container id="signup-box"  className="right-align">
-            <h3>כותרת טופס הרשמה שנראית טוב</h3>
-            <Link to="/" style={{textDecoration: 'none', color: 'black'}}>
-                <Icon size='big' name='arrow right' style={{margin:"2%"}}></Icon>
-            </Link>
-            <SignupForm/>
-        </Container>
+        <div  id="land-page" className="bg" style={{direction:"rtl"}}>
+            <Container id="signup-box"  className="right-align">
+                <h3>כותרת טופס הרשמה שנראית טוב</h3>
+                <Link to="/" style={{textDecoration: 'none', color: 'black'}}>
+                    <Icon size='big' name='arrow right' style={{margin:"2%"}}></Icon>
+                </Link>
+                <SignupForm/>
+            </Container>
+        </div>
+       
         
     )
 }
