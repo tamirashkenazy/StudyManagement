@@ -234,7 +234,6 @@ function SignupForm() {
         const {isStudent, isTeacher} = userState
         return (
             <>
-            
             <Form.Field width={1}  
                 name='isStudent'
                 control={Checkbox}
@@ -243,12 +242,13 @@ function SignupForm() {
                 onChange={handleInputChange}
             />
                 <Form.Field  width={1}    
-                    name='isTeacher'
-                    control={Checkbox}
-                    label='מורה'
-                    checked={isTeacher}
-                    onChange={handleInputChange}
-                />
+            <Form.Field  width={1}    
+                name='isTeacher'
+                control={Checkbox}
+                label='מורה'
+                checked={isTeacher}
+                onChange={handleInputChange}
+            />
             </>
         )
 
