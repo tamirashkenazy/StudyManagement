@@ -241,7 +241,6 @@ function SignupForm() {
                 checked={isStudent}
                 onChange={handleInputChange}
             />
-                <Form.Field  width={1}    
             <Form.Field  width={1}    
                 name='isTeacher'
                 control={Checkbox}
