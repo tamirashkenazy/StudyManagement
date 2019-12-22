@@ -22,18 +22,21 @@ function SignupForm() {
             gender : '',
             isStudent : false,
             isTeacher : false,
+            bank_number : '',
+            bank_branch : '',
+            bank_account : ''
         })
         const [validForm, setValidForm] = useState(false)
         const [errors, setErrors] = useState({
-            first_name_error: error_default_messages.first_name,
-            last_name_error: error_default_messages.last_name,
-            id_number_error : error_default_messages.id_number,
-            tel_number_error:  error_default_messages.tel_number,
-            password_error:  error_default_messages.password,
-            year_error :error_default_messages.year,
-            email_error :  error_default_messages.email,
-            gender_error : error_default_messages.gender,
-            role_error : error_default_messages.role,
+            first_name_error: error_default_messages.first_name_error,
+            last_name_error: error_default_messages.last_name_error,
+            id_number_error : error_default_messages.id_number_error,
+            tel_number_error:  error_default_messages.tel_number_error,
+            password_error:  error_default_messages.password_error,
+            year_error :error_default_messages.year_error,
+            email_error :  error_default_messages.email_error,
+            gender_error : error_default_messages.gender_error,
+            role_error : error_default_messages.role_error,
     })
         const handleSubmit = (event) => {
             if (event) {
@@ -60,7 +63,7 @@ function SignupForm() {
                 }
                 let role_error= null
                 if (!valid_form) {
-                     role_error = error_default_messages.role
+                     role_error = error_default_messages.role_error
                 }
                 setErrors(oldErrors => ({...oldErrors, role_error : role_error}))
                 //the validForm is validate the fields without relation to checkbox
@@ -69,6 +72,7 @@ function SignupForm() {
             }
             setUserState(inputs => ({...inputs, [name] : local_value}));
         }
+        // console.log(userState);
         return { handleSubmit, handleInputChange, userState, validForm, errors };
     }
 
@@ -97,10 +101,11 @@ function SignupForm() {
                    }
         })
     }  
-    const {userState, validForm, handleInputChange, handleSubmit} = useSignUpForm(httpPostRequestToAddUser);
+    const {handleSubmit,handleInputChange, userState, validForm, errors } = useSignUpForm(httpPostRequestToAddUser);
 
     const email_field = () => {
         const { email } = userState
+        const { email_error } = errors
         return (
             <Form.Field required>
                 <label>אימייל</label>
@@ -109,6 +114,7 @@ function SignupForm() {
                     value={email}
                     placeholder='@e-mail'
                     onChange={handleInputChange}
+                    error={ email_error ? email_error : null }
                 />
             </Form.Field>
         )
@@ -116,6 +122,7 @@ function SignupForm() {
     
     const password_field = () => {
         const { password } = userState
+        const { password_error } = errors
         return (
             <Form.Field required>
                 <label>סיסמה</label>
@@ -125,12 +132,15 @@ function SignupForm() {
                     name='password'
                     value={password}
                     onChange={handleInputChange}
+                    error={password_error ? password_error : null}
                 />
             </Form.Field>
         )
     }
     const id_number_field = () => {
         const { id_number } = userState
+        const { id_number_error } = errors
+
         return (
             <Form.Field required>
                 <label>ת.ז</label>
@@ -139,6 +149,7 @@ function SignupForm() {
                     name='id_number'
                     value={id_number}
                     onChange={handleInputChange}
+                    error={id_number_error ? id_number_error : null}
                 />
                 <Label size="tiny" pointing>שם המשתמש</Label>
             </Form.Field>
@@ -146,6 +157,7 @@ function SignupForm() {
     }
     const tel_number_field = () => {
         const { tel_number } = userState
+        const { tel_number_error } = errors
         return (
             <Form.Field required>
                 <label>מס' טלפון</label>
@@ -154,6 +166,8 @@ function SignupForm() {
                     name='tel_number'
                     value={tel_number}
                     onChange={handleInputChange}
+                    error={ tel_number_error ? tel_number_error : null}
+
                 />
             </Form.Field>
         )
@@ -162,6 +176,7 @@ function SignupForm() {
 
     const last_name_field = () => {
         const { last_name } = userState
+        const { last_name_error }= errors
         return (
             <Form.Field required>
                 <label>שם משפחה</label>
@@ -170,6 +185,7 @@ function SignupForm() {
                     name='last_name'
                     value={last_name}
                     onChange={handleInputChange}
+                    error={ last_name_error ? last_name_error : null }
                 />
             </Form.Field>
         )
@@ -177,6 +193,7 @@ function SignupForm() {
     }
     const first_name_field = () => {
         const { first_name } = userState
+        const { first_name_error } = errors
         return (
             <Form.Field required>
                 <label>שם פרטי</label>
@@ -185,15 +202,16 @@ function SignupForm() {
                     name='first_name'
                     value={first_name}
                     onChange={handleInputChange}
+                    error={ first_name_error ? first_name_error  : null }
                 />
             </Form.Field>
         )
     }
     const genders_field = () => {
-        const {gender} = userState
+        const { gender } = userState
         return (
             <>
-                <Form.Field 
+                <Form.Field  width={1} 
                     name="gender"
                     control={Radio}
                     label='נקבה'
@@ -201,7 +219,7 @@ function SignupForm() {
                     checked={gender === 'female'}
                     onChange={handleInputChange}
                 />
-                <Form.Field              
+                <Form.Field    width={1}           
                     name="gender"
                     control={Radio}
                     label='זכר'
@@ -216,20 +234,21 @@ function SignupForm() {
         const {isStudent, isTeacher} = userState
         return (
             <>
-                <Form.Field 
-                    name='isStudent'
-                    control={Checkbox}
-                    label='תלמיד'
-                    checked={isStudent}
-                    onChange={handleInputChange}
-                />
-                <Form.Field            
+            <Form.Field  width={1}    
                     name='isTeacher'
                     control={Checkbox}
                     label='מורה'
                     checked={isTeacher}
                     onChange={handleInputChange}
                 />
+            <Form.Field width={1}  
+                name='isStudent'
+                control={Checkbox}
+                label='תלמיד'
+                checked={isStudent}
+                onChange={handleInputChange}
+            />
+                
             </>
         )
 
@@ -245,7 +264,7 @@ function SignupForm() {
         ]
         const {year} = userState
         return (
-            <Form.Field required >
+            <Form.Field required  width={4} >
                 <label>שנת לימודים</label>
                 <Dropdown
                     name='year'
@@ -254,6 +273,32 @@ function SignupForm() {
                     options={options} 
                     selection 
                     onChange={handleInputChange} 
+                />
+            </Form.Field>
+        )
+    }
+    const bank_details_field = () => {
+        const {bank_number, bank_branch, bank_account} = userState
+        return (
+            <Form.Field required width={2}>
+                <label>פרטי בנק</label>
+                <Form.Input
+                    placeholder="מס' חשבון"
+                    name='bank_account'
+                    value={bank_account}
+                    onChange={handleInputChange}
+                />
+                <Form.Input
+                    placeholder="סניף"
+                    name='bank_branch'
+                    value={bank_branch}
+                    onChange={handleInputChange}
+                />
+                <Form.Input
+                    placeholder="מס' בנק"
+                    name='bank_number'
+                    value={bank_number}
+                    onChange={handleInputChange}
                 />
             </Form.Field>
         )
@@ -270,8 +315,9 @@ function SignupForm() {
                 {last_name_field()}
                 {first_name_field()}
             </Form.Group>
-            <Form.Group widths='equal'>
+            <Form.Group  widths='equal'>
                 {genders_field()}
+                {userState.isTeacher ? bank_details_field() : <></>}
                 {roles_field()}
                 {study_year_field()}
             </Form.Group>
