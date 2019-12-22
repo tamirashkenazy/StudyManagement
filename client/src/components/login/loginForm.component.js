@@ -59,7 +59,7 @@ function FormLogin ()  {
 
 
     return (
-        <div className="right-align">
+        <div className="right-align rtl-direction">
             <WelcomeHeader/>
 
             <Form className="login-form">
@@ -90,10 +90,10 @@ function FormLogin ()  {
                     />
 
                 <Form.Field>
-                    <Link to="/signup">
+                    <Button onClick={handleSubmit} primary >התחבר</Button>
+                    <Link to="/signup" style={{marginRight : '9%'}}>
                         <Button color="teal">להרשמה</Button>
                     </Link>
-                    <Button onClick={handleSubmit} primary>התחבר</Button>
                 </Form.Field>
             </Form>
         </div>
