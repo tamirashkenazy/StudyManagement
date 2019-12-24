@@ -57,7 +57,22 @@ function FormLogin ()  {
     }
 
 
-
+    const empty_user =
+            {
+                _id: '', 
+                first_name: '',
+                last_name: '',
+                tel_number: '',
+                password: '', 
+                year : '',
+                email : '',
+                gender : '',
+                isStudent : false,
+                isTeacher : false,
+                bank_number : '',
+                bank_branch : '',
+                bank_account : ''
+            }
     return (
         <div className="right-align rtl-direction">
             <WelcomeHeader/>
@@ -68,7 +83,7 @@ function FormLogin ()  {
                     <Form.Input
                         placeholder='ת.ז'
                         name='username'
-                        value={inputs.username} // || ''
+                        value={inputs.username} 
                         onChange={handleInputChange}
                     />
                 </Form.Field>
@@ -79,7 +94,7 @@ function FormLogin ()  {
                         type="password"
                         placeholder='סיסמה'
                         name='password'
-                        value={inputs.password} // || ''
+                        value={inputs.password} 
                         onChange={handleInputChange}
                     />
                 </Form.Field>
@@ -91,7 +106,7 @@ function FormLogin ()  {
 
                 <Form.Field>
                     <Button onClick={handleSubmit} primary >התחבר</Button>
-                    <Link to="/signup" style={{marginRight : '9%'}}>
+                    <Link to={{ pathname: '/signup', state: empty_user}} style={{marginRight : '9%'}}>
                         <Button color="teal">להרשמה</Button>
                     </Link>
                 </Form.Field>

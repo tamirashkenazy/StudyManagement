@@ -7,25 +7,13 @@ import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
 import {validateForm, check_and_assign_errors, error_default_messages}  from './validationFields'
 
-function SignupForm() {
+function SignupForm(props) {
     let history = useHistory()
+    // const a = props
+    // console.log(props.user)
 
     const useSignUpForm = (callback) => {
-        const [userState, setUserState] = useState({
-            first_name: '',
-            last_name: '',
-            id_number: '', 
-            tel_number: '',
-            password: '', 
-            year : '',
-            email : '',
-            gender : '',
-            isStudent : false,
-            isTeacher : false,
-            bank_number : '',
-            bank_branch : '',
-            bank_account : ''
-        })
+        const [userState, setUserState] = useState(props.user)
         const [validForm, setValidForm] = useState(false)
         const [errors, setErrors] = useState({
             first_name_error: error_default_messages.first_name_error,
@@ -37,7 +25,7 @@ function SignupForm() {
             email_error :  error_default_messages.email_error,
             gender_error : error_default_messages.gender_error,
             role_error : error_default_messages.role_error,
-    })
+        })
         const handleSubmit = (event) => {
             if (event) {
                 event.preventDefault();
@@ -45,6 +33,7 @@ function SignupForm() {
             }
             
         }
+        
         const handleInputChange = (event, {name, value, checked, type}) => {
             //If you want to access the event properties in an asynchronous way, 
             //you should call event.persist() on the event, which will remove the synthetic event from the pool  
@@ -75,11 +64,39 @@ function SignupForm() {
         // console.log(userState);
         return { handleSubmit, handleInputChange, userState, validForm, errors };
     }
+    // const [id_disable, setIdDisabled] = useState(false)
+
+
+    // const set_disabled_id = user => {
+    //     if (user._id !== '') {
+    //         setIdDisabled(true)
+    //     }
+    // }
+    // const set_errors = (user) => {
+    //     //when the props coming from the user update details - it has to check first if there are error, which is not supposed to happen, so it makes all the errors null
+    //     let temp_errors = errors;
+    //     // let valid_form = false;
+    //     Object.keys(userState).forEach(key => {
+    //         temp_errors = check_and_assign_errors(key, user[key], temp_errors)
+    //     })
+    //     // let valid_form = validateForm(temp_errors)
+    //     let temp_valid_form = false
+    //     if(user.isStudent || user.isTeacher) {
+    //         temp_errors.role_error = null
+    //         temp_valid_form = true
+    //     } 
+    //     setErrors(temp_errors)
+    //     setValidForm((validateForm(temp_errors) && (temp_valid_form)))
+    // }
+    // useEffect(()=>{
+    //     set_errors(props.user)
+    //     set_disabled_id(props.user)
+    // })
 
     const httpPostRequestToAddUser = () => {
-        const {id_number, password, email, first_name, last_name, tel_number, gender, isTeacher, isStudent, year } = userState
+        const {_id, password, email, first_name, last_name, tel_number, gender, isTeacher, isStudent, study_year } = userState
         const user_to_add = {  
-            _id : id_number,
+            _id : _id,
             password : password,
             email: email,
             first_name : first_name, 
@@ -89,7 +106,7 @@ function SignupForm() {
             isTeacher : isTeacher,
             isStudent: isStudent,
             isAdmin : false,
-            study_year: year,
+            study_year: study_year,
         }
         console.log("the user is: " + user_to_add);
         axios.post('http://localhost:5000/users/add', user_to_add)
@@ -101,7 +118,7 @@ function SignupForm() {
                    }
         })
     }  
-    const {handleSubmit,handleInputChange, userState, validForm, errors } = useSignUpForm(httpPostRequestToAddUser);
+    const {handleSubmit,handleInputChange, userState, validForm, errors  } = useSignUpForm(httpPostRequestToAddUser);
 
     const email_field = () => {
         const { email } = userState
@@ -138,16 +155,17 @@ function SignupForm() {
         )
     }
     const id_number_field = () => {
-        const { id_number } = userState
+        const { _id } = userState
         const { id_number_error } = errors
 
         return (
             <Form.Field required>
                 <label>ת.ז</label>
                 <Form.Input style={{direction:"ltr"}}
+                    // disabled = {id_disable}
                     placeholder='ת.ז - שם משתמש'
-                    name='id_number'
-                    value={id_number}
+                    name='_id'
+                    value={_id}
                     onChange={handleInputChange}
                     error={id_number_error ? id_number_error : null}
                 />
@@ -261,13 +279,13 @@ function SignupForm() {
             { key: 'd', text: 'שנה ד', value: 'year-d' },
             { key: 'e', text: 'שנה ה', value: 'year-e' },
         ]
-        const {year} = userState
+        const {study_year} = userState
         return (
             <Form.Field required  width={4} >
                 <label>שנת לימודים</label>
                 <Dropdown 
                     name='year'
-                    value={year}
+                    value={study_year}
                     clearable 
                     options={options} 
                     selection 
@@ -329,7 +347,8 @@ function SignupForm() {
     )
 }
 
-export default function signupConatainer () {
+export default function signupConatainer (props) {
+    console.log(JSON.stringify(props))
     return (
         <div  id="land-page" className="bg" style={{direction:"rtl"}}>
             <Container id="signup-box"  className="right-align">
@@ -337,7 +356,7 @@ export default function signupConatainer () {
                 <Link to="/" style={{textDecoration: 'none', color: 'black'}}>
                     <Icon size='big' name='arrow right' style={{margin:"2%"}}></Icon>
                 </Link>
-                <SignupForm/>
+                <SignupForm user={props.location.state}/>
             </Container>
         </div>
        

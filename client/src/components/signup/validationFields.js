@@ -29,13 +29,13 @@ export function check_and_assign_errors(name, value, temp_errors) {
         case 'email':
             !validEmailRegex.test(value) ? temp_errors.email_error = error_default_messages.email_error : temp_errors.email_error = null;
             break;
-        case 'id_number':
+        case '_id':
             (value.length !== 9 || !onlyNumbers.test(value)) ?  temp_errors.id_number_error = error_default_messages.id_number_error : temp_errors.id_number_error = null
             break;
         case 'password':
                 (value.length < 4) ? temp_errors.password_error = error_default_messages.password_error : temp_errors.password_error = null
                 break;
-        case 'year':
+        case 'study_year':
                 (!value) ?  temp_errors.year_error = error_default_messages.year_error :  temp_errors.year_error = null 
                 break;
         case 'tel_number':
@@ -53,6 +53,6 @@ export function check_and_assign_errors(name, value, temp_errors) {
         default:
         break;
     }
-    console.log(temp_errors);
+    // console.log(temp_errors);
     return temp_errors
 }
