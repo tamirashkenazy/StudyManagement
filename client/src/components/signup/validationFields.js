@@ -11,7 +11,6 @@ export const error_default_messages = {
     first_name_error: 'הכנס שם פרטי תקין',
     last_name_error: 'הכנס שם משפחה תקין',
     role_error : 'בחר האם הינך מורה או תלמיד או שניהם'
-    // role : 'בחר האם הינך מורה או תלמיד או שניהם'
 }
 
 export function validateForm(errors)  {
@@ -36,6 +35,7 @@ export function check_and_assign_errors(name, value, temp_errors) {
                 (value.length < 4) ? temp_errors.password_error = error_default_messages.password_error : temp_errors.password_error = null
                 break;
         case 'study_year':
+                console.log("in study year");
                 (!value) ?  temp_errors.year_error = error_default_messages.year_error :  temp_errors.year_error = null 
                 break;
         case 'tel_number':
@@ -53,6 +53,6 @@ export function check_and_assign_errors(name, value, temp_errors) {
         default:
         break;
     }
-    // console.log(temp_errors);
+    console.log(temp_errors);
     return temp_errors
 }

@@ -71,7 +71,9 @@ function FormLogin ()  {
                 isTeacher : false,
                 bank_number : '',
                 bank_branch : '',
-                bank_account : ''
+                bank_account_number : '',
+                bank_account_name : ''
+
             }
     return (
         <div className="right-align rtl-direction">

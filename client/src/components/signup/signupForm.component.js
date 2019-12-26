@@ -1,18 +1,73 @@
 import React, { useState } from 'react';
 import { Container} from 'react-bootstrap'
 import { Form,  Label, Dropdown, Button, Radio, Checkbox, Icon} from 'semantic-ui-react';
-import axios from 'axios'
-import {Link , useHistory } from 'react-router-dom'
+import {Link ,useHistory} from 'react-router-dom'
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
 import {validateForm, check_and_assign_errors, error_default_messages}  from './validationFields'
+import axios from 'axios'
+import get_mongo_api from '../mongo/paths.component'
+// import {  httpPostRequestToAddUser, httpPostAddTeacher, httpPostAddStudent} from './databaseRequests.signup.component'
 
 function SignupForm(props) {
-    let history = useHistory()
-    // const a = props
-    // console.log(props.user)
+    const history = useHistory()
 
-    const useSignUpForm = (callback) => {
+    function httpPostAddStudent() {
+        console.log("Added student")
+    }
+    function httpPostAddTeacher(){
+        const {_id, bank_account_name, bank_account_number, bank_branch, bank_number  } = userState
+        const teacher_to_add = {  
+            _id : _id,
+            bank_account_name : bank_account_name,
+            bank_account_number : bank_account_number,
+            bank_branch : bank_branch,
+            bank_name : bank_number,
+            teaching_courses : null,
+            hours_available : null,
+            teaching_requests : null,
+            lessons : null,
+            grades_file : null,
+        }
+        console.log("the teacher is: " + teacher_to_add);
+        axios.post(get_mongo_api('teachers/add'), teacher_to_add)
+        .then((response)=> {
+                    if (response.data.success) {
+                        // think about something to do
+                    } else {
+                        alert(response.data.message)
+                   }
+        })
+    }
+    
+    function httpPostRequestToAddUser() {
+        const {_id, password, email, first_name, last_name, tel_number, gender, isTeacher, isStudent, study_year } = userState
+        const user_to_add = {  
+            _id : _id,
+            password : password,
+            email: email,
+            first_name : first_name, 
+            last_name: last_name, 
+            tel_number : tel_number,
+            gender : gender,
+            isTeacher : isTeacher,
+            isStudent: isStudent,
+            isAdmin : false,
+            study_year: study_year,
+        }
+        console.log("the user is: " + user_to_add);
+        axios.post(get_mongo_api('teachers/add'), user_to_add)
+        .then((response)=> {
+                    if (response.data.success) {
+                        history.push('/')
+                    } else {
+                        alert(response.data.message)
+                   }
+        })
+    }  
+
+
+    const useSignUpForm = (addUserOnSignUp, addTeacherOnSignUp, addStudentOnSignUp) => {
         const [userState, setUserState] = useState(props.user)
         const [validForm, setValidForm] = useState(false)
         const [errors, setErrors] = useState({
@@ -21,7 +76,7 @@ function SignupForm(props) {
             id_number_error : error_default_messages.id_number_error,
             tel_number_error:  error_default_messages.tel_number_error,
             password_error:  error_default_messages.password_error,
-            year_error :error_default_messages.year_error,
+            year_error : error_default_messages.year_error,
             email_error :  error_default_messages.email_error,
             gender_error : error_default_messages.gender_error,
             role_error : error_default_messages.role_error,
@@ -29,7 +84,13 @@ function SignupForm(props) {
         const handleSubmit = (event) => {
             if (event) {
                 event.preventDefault();
-                callback()
+                if (userState.isTeacher) {
+                    addTeacherOnSignUp()
+                }
+                if (userState.isStudent) {
+                    addStudentOnSignUp()
+                }
+                addUserOnSignUp()
             }
             
         }
@@ -61,7 +122,7 @@ function SignupForm(props) {
             }
             setUserState(inputs => ({...inputs, [name] : local_value}));
         }
-        // console.log(userState);
+        console.log(userState);
         return { handleSubmit, handleInputChange, userState, validForm, errors };
     }
     // const [id_disable, setIdDisabled] = useState(false)
@@ -92,33 +153,8 @@ function SignupForm(props) {
     //     set_errors(props.user)
     //     set_disabled_id(props.user)
     // })
-
-    const httpPostRequestToAddUser = () => {
-        const {_id, password, email, first_name, last_name, tel_number, gender, isTeacher, isStudent, study_year } = userState
-        const user_to_add = {  
-            _id : _id,
-            password : password,
-            email: email,
-            first_name : first_name, 
-            last_name: last_name, 
-            tel_number : tel_number,
-            gender : gender,
-            isTeacher : isTeacher,
-            isStudent: isStudent,
-            isAdmin : false,
-            study_year: study_year,
-        }
-        console.log("the user is: " + user_to_add);
-        axios.post('http://localhost:5000/users/add', user_to_add)
-        .then((response)=> {
-                    if (response.data.success) {
-                        history.push('/')
-                    } else {
-                        alert(response.data.message)
-                   }
-        })
-    }  
-    const {handleSubmit,handleInputChange, userState, validForm, errors  } = useSignUpForm(httpPostRequestToAddUser);
+   
+    const {handleSubmit,handleInputChange, userState, validForm, errors  } = useSignUpForm(httpPostRequestToAddUser, httpPostAddTeacher, httpPostAddStudent );
 
     const email_field = () => {
         const { email } = userState
@@ -185,7 +221,6 @@ function SignupForm(props) {
                     value={tel_number}
                     onChange={handleInputChange}
                     error={ tel_number_error ? tel_number_error : null}
-
                 />
             </Form.Field>
         )
@@ -284,7 +319,7 @@ function SignupForm(props) {
             <Form.Field required  width={4} >
                 <label>שנת לימודים</label>
                 <Dropdown 
-                    name='year'
+                    name='study_year'
                     value={study_year}
                     clearable 
                     options={options} 
@@ -295,14 +330,20 @@ function SignupForm(props) {
         )
     }
     const bank_details_field = () => {
-        const {bank_number, bank_branch, bank_account} = userState
+        const {bank_number, bank_branch, bank_account_number, bank_account_name} = userState
         return (
             <Form.Field required width={2}>
                 <label>פרטי בנק</label>
                 <Form.Input
-                    placeholder="מס' חשבון"
-                    name='bank_account'
-                    value={bank_account}
+                    placeholder="שם החשבון"
+                    name='bank_account_name'
+                    value={bank_account_name}
+                    onChange={handleInputChange}
+                />
+                <Form.Input
+                    placeholder="מס' בנק"
+                    name='bank_number'
+                    value={bank_number}
                     onChange={handleInputChange}
                 />
                 <Form.Input
@@ -312,9 +353,9 @@ function SignupForm(props) {
                     onChange={handleInputChange}
                 />
                 <Form.Input
-                    placeholder="מס' בנק"
-                    name='bank_number'
-                    value={bank_number}
+                    placeholder="מס' חשבון"
+                    name='bank_account_number'
+                    value={bank_account_number}
                     onChange={handleInputChange}
                 />
             </Form.Field>
@@ -348,7 +389,7 @@ function SignupForm(props) {
 }
 
 export default function signupConatainer (props) {
-    console.log(JSON.stringify(props))
+    // console.log(JSON.stringify(props))
     return (
         <div  id="land-page" className="bg" style={{direction:"rtl"}}>
             <Container id="signup-box"  className="right-align">

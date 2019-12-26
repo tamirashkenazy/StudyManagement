@@ -34,11 +34,11 @@ export default function AccountMenu(props) {
   const handleClose = () => {
       setAnchorEl(null);
   };
-  const AccountMenuBar = () => {
-    // return (
+  // const AccountMenuBar = () => {
+  //   // return (
       
-    // )
-  }
+  //   // )
+  // }
 
   return (
     <Toolbar variant="dense" className={classes.toolbar}>
@@ -62,26 +62,26 @@ export default function AccountMenu(props) {
       >
         <StyledMenuItem>
             <ListItemIcon>
-                <Sync fontSize="medium" />
+                <Sync fontSize="large" />
             </ListItemIcon>
             <ListItemText primary="החלף תפקיד" />
         </StyledMenuItem>
 
         <StyledMenuItem onClick={onUpdateDetails}>
             <ListItemIcon>
-                <CreateOutlined fontSize="medium" />
+                <CreateOutlined fontSize="large" />
             </ListItemIcon>
             <ListItemText primary="עדכון פרטים" />
         </StyledMenuItem>
         <StyledMenuItem>
             <ListItemIcon>
-                <HelpOutlineIcon fontSize="medium" />
+                <HelpOutlineIcon fontSize="large" />
             </ListItemIcon>
             <ListItemText primary="עזרה" />
         </StyledMenuItem>
         <StyledMenuItem onClick={onLogOut}>
             <ListItemIcon>
-                <ExitToAppIcon fontSize="medium" />
+                <ExitToAppIcon fontSize="large" />
             </ListItemIcon>
             <ListItemText primary="יציאה" />
         </StyledMenuItem>
