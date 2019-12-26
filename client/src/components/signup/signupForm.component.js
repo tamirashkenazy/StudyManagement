@@ -7,7 +7,6 @@ import '../../styles/general.scss'
 import {validateForm, check_and_assign_errors, error_default_messages}  from './validationFields'
 import axios from 'axios'
 import get_mongo_api from '../mongo/paths.component'
-// import {  httpPostRequestToAddUser, httpPostAddTeacher, httpPostAddStudent} from './databaseRequests.signup.component'
 
 function SignupForm(props) {
     const history = useHistory()

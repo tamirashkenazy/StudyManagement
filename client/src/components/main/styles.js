@@ -5,17 +5,19 @@ import Menu from '@material-ui/core/Menu';
 import { withStyles } from '@material-ui/core/styles';
 export const useStyles = makeStyles(theme => ({
     AppBar : {
-        height : "8vh",
+        // height : "8vh",
         backgroundColor : "gray",
         alignItems : "right",
         direction : "rtl",
-        color : "white",
+        // color : "white", 
     },
     toolbar: { 
         flexGrow: 1,
+        alignItems : "right",
+        direction : "rtl",
     },
     menuButton: {
-      marginRight: theme.spacing(2),
+      marginRight: theme.spacing(1),
 
     },
   }));

@@ -4,10 +4,11 @@ import React, { useState } from 'react'
 import {Link , useHistory} from 'react-router-dom'
 import {Form , Button, Checkbox} from 'semantic-ui-react'
 //TALKS to the backend, sends https requests
+import get_mongo_api from '../mongo/paths.component'
 import axios from 'axios'
 import '../../styles/login-form.scss'
 import '../../styles/general.scss'
-// form creatiom = https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
+// form creation = https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
 function FormLogin ()  {
     let history = useHistory()
     const httpPostRequestToGetUser = () => {
@@ -16,7 +17,7 @@ function FormLogin ()  {
             password : inputs.password,
         }
         console.log("the user is: " + inputs.username + " " + inputs.password);
-        axios.post('http://localhost:5000/sign_in/', login_user).then((response)=> {
+        axios.post(get_mongo_api('sign_in'), login_user).then((response)=> {
                     if (response.data.success) {
                         history.push({
                             pathname: '/main',
