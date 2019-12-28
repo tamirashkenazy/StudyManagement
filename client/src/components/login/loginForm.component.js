@@ -73,9 +73,9 @@ function FormLogin ()  {
                 bank_number : '',
                 bank_branch : '',
                 bank_account_number : '',
-                bank_account_name : ''
-
+                bank_account_name : '',
             }
+
     return (
         <div className="right-align rtl-direction">
             <WelcomeHeader/>

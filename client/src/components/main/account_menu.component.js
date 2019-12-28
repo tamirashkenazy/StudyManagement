@@ -8,22 +8,27 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {Sync, CreateOutlined} from '@material-ui/icons';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-
 import {useStyles, StyledMenu, StyledMenuItem} from './styles'
 
+import Button from '@material-ui/core/Button';
+import Dialog from '@material-ui/core/Dialog';
+import DialogActions from '@material-ui/core/DialogActions';
+import DialogContent from '@material-ui/core/DialogContent';
+import DialogContentText from '@material-ui/core/DialogContentText';
+import DialogTitle from '@material-ui/core/DialogTitle';
+import {SignupForm} from '../signup/signupForm.component'
+
 export default function AccountMenu(props) {
+  const [open, setOpen] = React.useState(false);
+  const handleDialogClickOpen = () => { setOpen(true);};
+  const handleDialogClose = () => { setOpen(false); };
+  
   let history = useHistory();
   // console.log(JSON.stringify(props))
   function onLogOut() {
     history.push("/");
   }
 
-  function onUpdateDetails() {
-    history.push({
-      pathname: '/signup', 
-      state: props.userDetails
-    });
-  }
   function onChangeRole() {
     history.push({
       pathname: `/main/${props.next_role}`, 
@@ -39,6 +44,8 @@ export default function AccountMenu(props) {
   const handleClose = () => {
       setAnchorEl(null);
   };
+
+
   const accountMenuSection = () => {
     return (  
     <>
@@ -58,7 +65,7 @@ export default function AccountMenu(props) {
           : 
           <></>}
 
-          <StyledMenuItem onClick={onUpdateDetails}>
+          <StyledMenuItem onClick={handleDialogClickOpen}>
             <ListItemIcon>
                 <CreateOutlined fontSize="large" />
             </ListItemIcon>
@@ -80,10 +87,10 @@ export default function AccountMenu(props) {
           </StyledMenuItem>
 
       </StyledMenu>
-    <div  style={{margin : "1%", alignItems:"right", alignContent:"right"}}>
-      {props.userDetails.first_name} <br/>{props.userDetails.last_name}
-    </div>
-  </>
+      <div  style={{margin : "1%", alignItems:"right", alignContent:"right"}}>
+        {props.userDetails.first_name} <br/>{props.userDetails.last_name}
+      </div>
+    </>
     )
   }
 
@@ -123,6 +130,24 @@ export default function AccountMenu(props) {
   return (
     <Toolbar variant="dense" className={classes.toolbar}>
       {accountMenuSection()}
+      <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
+        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
+        <DialogContent>
+          <DialogContentText>
+            To subscribe to this website, please enter your email address here. We will send updates
+            occasionally.
+          </DialogContentText>
+          <SignupForm user={props.userDetails}/>  
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={handleDialogClose} color="primary">
+            Cancel
+          </Button>
+          <Button onClick={handleDialogClose} color="primary">
+            Subscribe
+          </Button>
+        </DialogActions>
+      </Dialog>
       {fromListToOpterationsInNavBar}
     </Toolbar>
   )

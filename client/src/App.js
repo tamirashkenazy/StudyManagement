@@ -4,7 +4,7 @@ import './styles/App.scss';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 // import {Button } from 'semantic-ui-react'
 import LandingPage from './components/login/LandingPage.component';
-import signupConatainer from './components/signup/signupForm.component';
+import {signupConatainer} from './components/signup/signupForm.component';
 import Main from './components/main/dashboard_tamir.component';
 import Student from './components/main/student.component';
 import Teacher from './components/main/teacher.component';

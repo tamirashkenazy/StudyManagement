@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Container} from 'react-bootstrap'
 import { Form,  Label, Dropdown, Button, Radio, Checkbox, Icon} from 'semantic-ui-react';
 import {Link ,useHistory} from 'react-router-dom'
@@ -10,6 +10,7 @@ import get_mongo_api from '../mongo/paths.component'
 
 function SignupForm(props) {
     const history = useHistory()
+    // console.log(JSON.stringify(props));
 
     function httpPostAddStudent() {
         console.log("Added student")
@@ -65,6 +66,7 @@ function SignupForm(props) {
         })
     }  
 
+    
 
     const useSignUpForm = (addUserOnSignUp, addTeacherOnSignUp, addStudentOnSignUp) => {
         const [userState, setUserState] = useState(props.user)
@@ -93,7 +95,22 @@ function SignupForm(props) {
             }
             
         }
-        
+        const checkForErrors = () => {
+            // console.log('errorrorororos');
+            let temp_errors = {
+                first_name_error: null,
+                last_name_error: null,
+                id_number_error : null,
+                tel_number_error:  null,
+                password_error:  error_default_messages.password_error,
+                year_error : null,
+                email_error :  null,
+                gender_error : null,
+                role_error : null,
+            }
+            setErrors(temp_errors)
+            return errors
+        }
         const handleInputChange = (event, {name, value, checked, type}) => {
             //If you want to access the event properties in an asynchronous way, 
             //you should call event.persist() on the event, which will remove the synthetic event from the pool  
@@ -121,40 +138,14 @@ function SignupForm(props) {
             }
             setUserState(inputs => ({...inputs, [name] : local_value}));
         }
-        console.log(userState);
-        return { handleSubmit, handleInputChange, userState, validForm, errors };
+        // console.log(userState);
+        return { handleSubmit, handleInputChange, userState, validForm, errors, checkForErrors };
     }
-    // const [id_disable, setIdDisabled] = useState(false)
 
-
-    // const set_disabled_id = user => {
-    //     if (user._id !== '') {
-    //         setIdDisabled(true)
-    //     }
-    // }
-    // const set_errors = (user) => {
-    //     //when the props coming from the user update details - it has to check first if there are error, which is not supposed to happen, so it makes all the errors null
-    //     let temp_errors = errors;
-    //     // let valid_form = false;
-    //     Object.keys(userState).forEach(key => {
-    //         temp_errors = check_and_assign_errors(key, user[key], temp_errors)
-    //     })
-    //     // let valid_form = validateForm(temp_errors)
-    //     let temp_valid_form = false
-    //     if(user.isStudent || user.isTeacher) {
-    //         temp_errors.role_error = null
-    //         temp_valid_form = true
-    //     } 
-    //     setErrors(temp_errors)
-    //     setValidForm((validateForm(temp_errors) && (temp_valid_form)))
-    // }
+    const {handleSubmit,handleInputChange, userState, validForm, errors, checkForErrors  } = useSignUpForm(httpPostRequestToAddUser, httpPostAddTeacher, httpPostAddStudent );
     // useEffect(()=>{
-    //     set_errors(props.user)
-    //     set_disabled_id(props.user)
+    //     checkForErrors()
     // })
-   
-    const {handleSubmit,handleInputChange, userState, validForm, errors  } = useSignUpForm(httpPostRequestToAddUser, httpPostAddTeacher, httpPostAddStudent );
-
     const email_field = () => {
         const { email } = userState
         const { email_error } = errors
@@ -387,7 +378,7 @@ function SignupForm(props) {
     )
 }
 
-export default function signupConatainer (props) {
+function signupConatainer (props) {
     // console.log(JSON.stringify(props))
     return (
         <div  id="land-page" className="bg" style={{direction:"rtl"}}>
@@ -403,3 +394,5 @@ export default function signupConatainer (props) {
         
     )
 }
+
+export { signupConatainer, SignupForm }
