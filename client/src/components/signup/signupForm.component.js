@@ -1,7 +1,7 @@
-import React, { useState, useEffect } from 'react';
-import { Container} from 'react-bootstrap'
-import { Form,  Label, Dropdown, Button, Radio, Checkbox, Icon} from 'semantic-ui-react';
-import {Link ,useHistory} from 'react-router-dom'
+import React, { useState} from 'react';
+// import { Container} from 'react-bootstrap'
+import { Form,  Label, Dropdown, Button, Radio, Checkbox} from 'semantic-ui-react';
+import {useHistory} from 'react-router-dom'
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
 import {validateForm, check_and_assign_errors, error_default_messages}  from './validationFields'
@@ -56,7 +56,7 @@ function SignupForm(props) {
             study_year: study_year,
         }
         console.log("the user is: " + user_to_add);
-        axios.post(get_mongo_api('teachers/add'), user_to_add)
+        axios.post(get_mongo_api('users/add'), user_to_add)
         .then((response)=> {
                     if (response.data.success) {
                         history.push('/')
@@ -378,21 +378,6 @@ function SignupForm(props) {
     )
 }
 
-function signupConatainer (props) {
-    // console.log(JSON.stringify(props))
-    return (
-        <div  id="land-page" className="bg" style={{direction:"rtl"}}>
-            <Container id="signup-box"  className="right-align">
-                <h3>כותרת טופס הרשמה שנראית טוב</h3>
-                <Link to="/" style={{textDecoration: 'none', color: 'black'}}>
-                    <Icon size='big' name='arrow right' style={{margin:"2%"}}></Icon>
-                </Link>
-                <SignupForm user={props.location.state}/>
-            </Container>
-        </div>
-       
-        
-    )
-}
 
-export { signupConatainer, SignupForm }
+
+export { SignupForm }

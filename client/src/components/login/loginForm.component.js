@@ -3,6 +3,7 @@ import React, { useState } from 'react'
 //REST
 import {Link , useHistory} from 'react-router-dom'
 import {Form , Button, Checkbox} from 'semantic-ui-react'
+// import HttpPostRequestToGetUser from '../httpRequests/userLogIn'
 //TALKS to the backend, sends https requests
 import get_mongo_api from '../mongo/paths.component'
 import axios from 'axios'
@@ -16,13 +17,14 @@ function FormLogin ()  {
             _id : inputs.username,
             password : inputs.password,
         }
-        console.log("the user is: " + inputs.username + " " + inputs.password);
+        // console.log("the user is: " + inputs.username + " " + inputs.password);
         axios.post(get_mongo_api('sign_in'), login_user).then((response)=> {
                     if (response.data.success) {
                         history.push({
                             pathname: '/main',
-                            state: { _id : inputs.username }
-                          })
+                            state: { _id : inputs.username },
+                            next_role : null
+                        })
                     } else {
                         alert(response.data.message)
                    }
@@ -34,7 +36,7 @@ function FormLogin ()  {
         const handleSubmit = (event) => {
             if (event) {
                 event.preventDefault();
-                callback()
+                callback(inputs)
             }
             
         }
@@ -57,25 +59,6 @@ function FormLogin ()  {
         )
     }
 
-
-    const empty_user =
-            {
-                _id: '', 
-                first_name: '',
-                last_name: '',
-                tel_number: '',
-                password: '', 
-                year : '',
-                email : '',
-                gender : '',
-                isStudent : false,
-                isTeacher : false,
-                bank_number : '',
-                bank_branch : '',
-                bank_account_number : '',
-                bank_account_name : '',
-            }
-
     return (
         <div className="right-align rtl-direction">
             <WelcomeHeader/>
@@ -84,6 +67,7 @@ function FormLogin ()  {
                 <Form.Field>
                     <label>שם משתמש</label>
                     <Form.Input
+                        style={{direction:"ltr"}}
                         placeholder='ת.ז'
                         name='username'
                         value={inputs.username} 
@@ -94,6 +78,7 @@ function FormLogin ()  {
                 <Form.Field>
                     <label>סיסמה</label>
                     <Form.Input
+                        style={{direction:"ltr"}}
                         type="password"
                         placeholder='סיסמה'
                         name='password'
@@ -109,7 +94,7 @@ function FormLogin ()  {
 
                 <Form.Field>
                     <Button onClick={handleSubmit} primary >התחבר</Button>
-                    <Link to={{ pathname: '/signup', state: empty_user}} style={{marginRight : '9%'}}>
+                    <Link to={{ pathname: '/signup'}} style={{marginRight : '9%'}}>
                         <Button color="teal">להרשמה</Button>
                     </Link>
                 </Form.Field>

@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import {useHistory} from 'react-router-dom'
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -18,21 +18,39 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import {SignupForm} from '../signup/signupForm.component'
 
-export default function AccountMenu(props) {
-  const [open, setOpen] = React.useState(false);
-  const handleDialogClickOpen = () => { setOpen(true);};
-  const handleDialogClose = () => { setOpen(false); };
-  
+import {SignupFormRedux} from '../signup/signupFormRedux'
+import {reduxForm, getFormValues } from 'redux-form'
+import {connect } from 'react-redux'
+import { check_check, validateForm, allFieldsExist } from '../signup/validationFields';
+import get_mongo_api from '../mongo/paths.component'
+import axios from 'axios'
+
+function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_operations_by_role, formSubmitButtonName}) {
+  // console.log("userDetails: " , userDetails);
+  const [open, setOpen] = useState(false);
+  const onUpdateDetailsButton = () => { 
+    setOpen(true);
+  };
+
+  const [wasUpdated, setUpdated] = useState(false)
+
+  const handleDialogClose = () => { 
+    setOpen(false); 
+    setUpdated(false);
+  };
   let history = useHistory();
-  // console.log(JSON.stringify(props))
   function onLogOut() {
     history.push("/");
   }
 
+  useEffect(()=> {
+    formValues = userDetails
+  })
   function onChangeRole() {
     history.push({
-      pathname: `/main/${props.next_role}`, 
-      state: props.userDetails
+      pathname: `/main/`, 
+      next_role : next_role,
+      state: userDetails
     });
   }
   const classes = useStyles();
@@ -54,18 +72,16 @@ export default function AccountMenu(props) {
       </IconButton>
 
       <StyledMenu  id="account-appbar" anchorEl={anchorEl} keepMounted open={Boolean(anchorEl)} onClose={handleClose}>
-          {(props.userDetails.isStudent && props.userDetails.isTeacher) 
-          ? 
+          {(userDetails.isStudent && userDetails.isTeacher) 
+          && 
           <StyledMenuItem onClick={onChangeRole}>
             <ListItemIcon >
               <Sync fontSize="large" />
             </ListItemIcon>
             <ListItemText primary="החלף תפקיד" />
-          </StyledMenuItem> 
-          : 
-          <></>}
+          </StyledMenuItem> }
 
-          <StyledMenuItem onClick={handleDialogClickOpen}>
+          <StyledMenuItem onClick={onUpdateDetailsButton}>
             <ListItemIcon>
                 <CreateOutlined fontSize="large" />
             </ListItemIcon>
@@ -87,17 +103,14 @@ export default function AccountMenu(props) {
           </StyledMenuItem>
 
       </StyledMenu>
-      <div  style={{margin : "1%", alignItems:"right", alignContent:"right"}}>
-        {props.userDetails.first_name} <br/>{props.userDetails.last_name}
+      <div  style={{margin : "1%", textAlign:"right"}}>
+      שלום<br/> {userDetails.first_name} {userDetails.last_name}
       </div>
     </>
     )
   }
 
-
-
-
-  const fromListToOpterationsInNavBar = props.navbar_operations_by_role.map(menu_item=>
+  const fromListToOpterationsInNavBar = navbar_operations_by_role.map(menu_item=>
     <StyledMenuItem style={{marginRight : "6%"}} onClick={menu_item.on_click} key={menu_item.key}>
           <ListItemIcon>
               {menu_item.icon}
@@ -107,49 +120,103 @@ export default function AccountMenu(props) {
           </h4>
         </StyledMenuItem>
   )
-    //   <>
-    //   <StyledMenuItem style={{marginRight : "6%"}} onClick={()=>console.log("update your zminut")}>
-    //     <ListItemIcon>
-    //         <EventAvailableOutlinedIcon fontSize="large" style={{color:"white"}} />
-    //     </ListItemIcon>
-    //     <h4>
-    //       עדכון זמינות
-    //     </h4>
-    //   </StyledMenuItem>
 
-    //   <StyledMenuItem style={{marginRight : "6%"}}  onClick={()=>console.log("choose courser to teach ")}>
-    //     <ListItemIcon>
-    //       <ImportContactsSharpIcon fontSize="large" style={{color:"white"}} />
-    //     </ListItemIcon>
-    //     <h4>
-    //       בחירת קורסים להוראה
-    //     </h4>
-    //   </StyledMenuItem>
-    // </>
+  const httpPostRequestToUpdateUser = (formValues) => {
+    let user = {
+      _id : formValues._id, password : formValues.password
+    }
+    axios.post(get_mongo_api('sign_in'), user).then((response)=> {
+        if (response.data.success) {
+          return true
+        } else {
+            alert(response.data.message)
+            return false
+        }
+    }).then(res => {
+      if (res){
+        axios.post(get_mongo_api(`users/update/${formValues._id}`), formValues).then((response)=>{
+          if (response.data.success) {
+            console.log("User updated");
+            setUpdated(true)
+          } else {
+            alert("Couldn't update: ", response.data.message)
+          }
+        })
+      }
+    })
+  }
+  const [errors, setErrors] = useState({_id : null})
+  const submitForm = (formValues) => {
+      console.log('submitting form: ', formValues);
+      if(!allFieldsExist(formValues)) {
+          alert("אנא מלא את כל השדות")
+      } else {
+          let local_errors = check_check(formValues)
+          setErrors(local_errors)
+          let validForm = validateForm(local_errors)
+          if(!validForm) {
+              console.log(local_errors);
+              // alert(JSON.stringify(errors))
+          } else {
+              httpPostRequestToUpdateUser(formValues)
+              // need to check what happening if it disables the teacher button, should move to the student if it is, and to dashboard if not teacher and not student with the only option to set them
+
+          }
+      }
+  }
 
   return (
     <Toolbar variant="dense" className={classes.toolbar}>
       {accountMenuSection()}
       <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
-        <DialogTitle id="form-dialog-title">Subscribe</DialogTitle>
-        <DialogContent>
-          <DialogContentText>
+        <DialogTitle style={{direction : "rtl", textAlign:"right"}} id="form-dialog-title">עדכון פרטים</DialogTitle>
+        <DialogContent style={{direction : "rtl", textAlign:"right"}}>
+          {/* <DialogContentText>
             To subscribe to this website, please enter your email address here. We will send updates
             occasionally.
-          </DialogContentText>
-          <SignupForm user={props.userDetails}/>  
+          </DialogContentText> */}
+          <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} idDisabled={true} formSubmitButtonName={formSubmitButtonName} submitDisabled={wasUpdated}/>
+          {wasUpdated && <Button onClick={handleDialogClose} color="primary"> צא </Button>}
+          {/* <SignupForm user={userDetails}/>   */}
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <Button onClick={handleDialogClose} color="primary">
             Cancel
           </Button>
           <Button onClick={handleDialogClose} color="primary">
             Subscribe
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Dialog>
       {fromListToOpterationsInNavBar}
     </Toolbar>
   )
 }
+  
+const mapStateToProps = (state, ownProps) => {
+  // console.log('map state:', ownProps.userDetails);
+  return (
+    {
+      formValues: getFormValues('updateDetails')(state),
+      initialValues : ownProps.userDetails
+    }
+  )
+}
+// ();
 
+const formConfiguration = {
+  form : "updateDetails",
+  enableReinitialize: true
+}
+
+const updateForm = connect(mapStateToProps)(
+  reduxForm(formConfiguration)(AccountMenu)
+);
+// console.log(updateForm); 
+export default updateForm
+  // return (
+  //   <></>
+  //   // {updateForm()}
+  // )
+// }
+// export default Out
