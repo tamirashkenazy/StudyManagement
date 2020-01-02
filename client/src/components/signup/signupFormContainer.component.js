@@ -11,7 +11,7 @@ import {connect } from 'react-redux'
 
 import axios from 'axios'
 import get_mongo_api from '../mongo/paths.component'
-import { check_check, validateForm, allFieldsExist } from './validationFields';
+import { check_errors, validateForm, allFieldsExist } from './validationFields';
 
 const SignupConatainer = ({handleSubmit, formValues}) => {
     // formValues = {"first_name" : "ash",}
@@ -43,14 +43,12 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
     } 
 
     const [errors, setErrors] = useState({})
-    // const [isValid, setIsValid] = useState(false)
-    // console.log(JSON.stringify(props))
     const submitForm = (formValues) => {
         console.log('submitting form: ', formValues);
         if(!allFieldsExist(formValues)) {
             alert("אנא מלא את כל השדות")
         } else {
-            let local_errors = check_check(formValues)
+            let local_errors = check_errors(formValues)
             setErrors(local_errors)
             let validForm = validateForm(local_errors)
             if(!validForm) {

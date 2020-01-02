@@ -8,20 +8,16 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {Sync, CreateOutlined} from '@material-ui/icons';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {useStyles, StyledMenu, StyledMenuItem} from './styles'
+import {useStyles, StyledMenu, StyledMenuItem} from './appBarMenu.styles'
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
-import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {SignupForm} from '../signup/signupForm.component'
-
 import {SignupFormRedux} from '../signup/signupFormRedux'
 import {reduxForm, getFormValues } from 'redux-form'
 import {connect } from 'react-redux'
-import { check_check, validateForm, allFieldsExist } from '../signup/validationFields';
+import { check_errors, validateForm, allFieldsExist } from '../signup/validationFields';
 import get_mongo_api from '../mongo/paths.component'
 import axios from 'axios'
 
@@ -151,16 +147,13 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
       if(!allFieldsExist(formValues)) {
           alert("אנא מלא את כל השדות")
       } else {
-          let local_errors = check_check(formValues)
+          let local_errors = check_errors(formValues)
           setErrors(local_errors)
           let validForm = validateForm(local_errors)
           if(!validForm) {
               console.log(local_errors);
-              // alert(JSON.stringify(errors))
           } else {
               httpPostRequestToUpdateUser(formValues)
-              // need to check what happening if it disables the teacher button, should move to the student if it is, and to dashboard if not teacher and not student with the only option to set them
-
           }
       }
   }
@@ -171,22 +164,9 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
       <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
         <DialogTitle style={{direction : "rtl", textAlign:"right"}} id="form-dialog-title">עדכון פרטים</DialogTitle>
         <DialogContent style={{direction : "rtl", textAlign:"right"}}>
-          {/* <DialogContentText>
-            To subscribe to this website, please enter your email address here. We will send updates
-            occasionally.
-          </DialogContentText> */}
           <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} idDisabled={true} formSubmitButtonName={formSubmitButtonName} submitDisabled={wasUpdated}/>
           {wasUpdated && <Button onClick={handleDialogClose} color="primary"> צא </Button>}
-          {/* <SignupForm user={userDetails}/>   */}
         </DialogContent>
-        {/* <DialogActions>
-          <Button onClick={handleDialogClose} color="primary">
-            Cancel
-          </Button>
-          <Button onClick={handleDialogClose} color="primary">
-            Subscribe
-          </Button>
-        </DialogActions> */}
       </Dialog>
       {fromListToOpterationsInNavBar}
     </Toolbar>
@@ -194,7 +174,6 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
 }
   
 const mapStateToProps = (state, ownProps) => {
-  // console.log('map state:', ownProps.userDetails);
   return (
     {
       formValues: getFormValues('updateDetails')(state),
@@ -202,7 +181,6 @@ const mapStateToProps = (state, ownProps) => {
     }
   )
 }
-// ();
 
 const formConfiguration = {
   form : "updateDetails",
@@ -212,11 +190,4 @@ const formConfiguration = {
 const updateForm = connect(mapStateToProps)(
   reduxForm(formConfiguration)(AccountMenu)
 );
-// console.log(updateForm); 
 export default updateForm
-  // return (
-  //   <></>
-  //   // {updateForm()}
-  // )
-// }
-// export default Out

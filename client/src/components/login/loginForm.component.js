@@ -1,7 +1,7 @@
 //useState - hooks in react
 import React, { useState } from 'react'
 //REST
-import {Link , useHistory} from 'react-router-dom'
+import { useHistory} from 'react-router-dom'
 import {Form , Button, Checkbox} from 'semantic-ui-react'
 // import HttpPostRequestToGetUser from '../httpRequests/userLogIn'
 //TALKS to the backend, sends https requests
@@ -17,17 +17,16 @@ function FormLogin ()  {
             _id : inputs.username,
             password : inputs.password,
         }
-        // console.log("the user is: " + inputs.username + " " + inputs.password);
         axios.post(get_mongo_api('sign_in'), login_user).then((response)=> {
-                    if (response.data.success) {
-                        history.push({
-                            pathname: '/main',
-                            state: { _id : inputs.username },
-                            next_role : null
-                        })
-                    } else {
-                        alert(response.data.message)
-                   }
+            if (response.data.success) {
+                history.push({
+                    pathname: '/main',
+                    state: { _id : inputs.username },
+                    next_role : null
+                })
+            } else {
+                alert(response.data.message)
+            }
         })
     }
 
@@ -94,14 +93,11 @@ function FormLogin ()  {
 
                 <Form.Field>
                     <Button onClick={handleSubmit} primary >התחבר</Button>
-                    <Link to={{ pathname: '/signup'}} style={{marginRight : '9%'}}>
-                        <Button color="teal">להרשמה</Button>
-                    </Link>
+                    
                 </Form.Field>
             </Form>
         </div>
     )
-    
 }
 
 export default FormLogin;

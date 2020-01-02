@@ -9,7 +9,6 @@ export default function Main(props) {
         axios.get(get_mongo_api(`users/${_id}`)).then((response=>{
             if (response.data.success) {
                 let user = response.data.user
-                // console.log(JSON.stringify(user));
                 if(next_role === null) {
                   if(user.isStudent) {
                     history.replace({

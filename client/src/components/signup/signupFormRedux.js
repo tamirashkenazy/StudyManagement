@@ -3,7 +3,6 @@ import { Form,  Label, Button} from 'semantic-ui-react'; //Radio,
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
 import {Field}  from 'redux-form'
-import { useForm } from "react-hook-form";
 //all form came from here: https://rangle.io/blog/creating-forms-with-redux-part-i , https://rangle.io/blog/creating-forms-with-redux-part-ii
 
 const textField =({label, input, placeholder, type, error, pointer, direction, disable=false, ref}) => {
@@ -30,7 +29,6 @@ const RadioGenerator = props => {
                   <label className="sans-serif w-100" key={`${index}`} htmlFor={`${props.input.name}-${index}`}></label>
                     <Field
                     id={`${index}`}
-                    //{`${props.input.name}`}
                     component="input"
                     name={props.input.name}
                     type="radio"
@@ -192,5 +190,3 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
 }
 
 
-
-// export { SignupFormRedux }
