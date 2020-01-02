@@ -377,7 +377,3 @@ function SignupForm(props) {
         </Form>
     )
 }
-
-
-
-export { SignupForm }

@@ -93,7 +93,6 @@ function FormLogin ()  {
 
                 <Form.Field>
                     <Button onClick={handleSubmit} primary >התחבר</Button>
-                    
                 </Form.Field>
             </Form>
         </div>

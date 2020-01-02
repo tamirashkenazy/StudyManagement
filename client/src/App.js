@@ -4,11 +4,13 @@ import './styles/App.scss';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 // import {Button } from 'semantic-ui-react'
 import LandingPage from './components/login/LandingPage.component';
+
 import signupConatainer from './components/signup/signupFormContainer.component';
 import Main from './components/main/dashboard_main';
 import Student from './components/main/student.component';
 import Teacher from './components/main/teacher.component';
 import Admin from './components/main/admin.component';
+
 
 function App() {
   return (
