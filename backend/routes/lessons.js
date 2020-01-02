@@ -36,7 +36,6 @@ router.route('/byCourseId/:courseId').get((req,res) => {
 
 router.route('/byTeacherId/:teacherId').get((req,res) => {
     Lesson.find({ "teacher.teacher_id" : req.params.teacherId }, (err,lessons) => {
-        console.log(lessons)
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (lessons && lessons.length > 0) {

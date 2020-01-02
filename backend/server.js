@@ -29,6 +29,7 @@ const signinRouter = require('./routes/sign_in');
 const lessonsRouter = require('./routes/lessons');
 const coursesRouter = require('./routes/courses');
 const teachersRouter = require('./routes/teachers');
+const studentsRouter = require('./routes/students');
 const teacherRequestsRouter = require('./routes/teacherRequests');
 
 
@@ -37,6 +38,7 @@ app.use('/sign_in', signinRouter);
 app.use('/lessons', lessonsRouter);
 app.use('/courses', coursesRouter);
 app.use('/teachers', teachersRouter);
+app.use('/students', studentsRouter);
 app.use('/teacherRequests', teacherRequestsRouter);
 
 app.listen(port, () => {
