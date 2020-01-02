@@ -1,31 +1,75 @@
-import React, { useState } from 'react';
-import { Container} from 'react-bootstrap'
-import { Form,  Label, Dropdown, Button, Radio, Checkbox, Icon} from 'semantic-ui-react';
-import axios from 'axios'
-import {Link , useHistory } from 'react-router-dom'
+import React, { useState} from 'react';
+// import { Container} from 'react-bootstrap'
+import { Form,  Label, Dropdown, Button, Radio, Checkbox} from 'semantic-ui-react';
+import {useHistory} from 'react-router-dom'
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
 import {validateForm, check_and_assign_errors, error_default_messages}  from './validationFields'
+import axios from 'axios'
+import get_mongo_api from '../mongo/paths.component'
 
-function SignupForm() {
-    let history = useHistory()
+function SignupForm(props) {
+    const history = useHistory()
+    // console.log(JSON.stringify(props));
 
-    const useSignUpForm = (callback) => {
-        const [userState, setUserState] = useState({
-            first_name: '',
-            last_name: '',
-            id_number: '', 
-            tel_number: '',
-            password: '', 
-            year : '',
-            email : '',
-            gender : '',
-            isStudent : false,
-            isTeacher : false,
-            bank_number : '',
-            bank_branch : '',
-            bank_account : ''
+    function httpPostAddStudent() {
+        console.log("Added student")
+    }
+    function httpPostAddTeacher(){
+        const {_id, bank_account_name, bank_account_number, bank_branch, bank_number  } = userState
+        const teacher_to_add = {  
+            _id : _id,
+            bank_account_name : bank_account_name,
+            bank_account_number : bank_account_number,
+            bank_branch : bank_branch,
+            bank_name : bank_number,
+            teaching_courses : null,
+            hours_available : null,
+            teaching_requests : null,
+            lessons : null,
+            grades_file : null,
+        }
+        console.log("the teacher is: " + teacher_to_add);
+        axios.post(get_mongo_api('teachers/add'), teacher_to_add)
+        .then((response)=> {
+                    if (response.data.success) {
+                        // think about something to do
+                    } else {
+                        alert(response.data.message)
+                   }
         })
+    }
+    
+    function httpPostRequestToAddUser() {
+        const {_id, password, email, first_name, last_name, tel_number, gender, isTeacher, isStudent, study_year } = userState
+        const user_to_add = {  
+            _id : _id,
+            password : password,
+            email: email,
+            first_name : first_name, 
+            last_name: last_name, 
+            tel_number : tel_number,
+            gender : gender,
+            isTeacher : isTeacher,
+            isStudent: isStudent,
+            isAdmin : false,
+            study_year: study_year,
+        }
+        console.log("the user is: " + user_to_add);
+        axios.post(get_mongo_api('users/add'), user_to_add)
+        .then((response)=> {
+                    if (response.data.success) {
+                        history.push('/')
+                    } else {
+                        alert(response.data.message)
+                   }
+        })
+    }  
+
+    
+
+    const useSignUpForm = (addUserOnSignUp, addTeacherOnSignUp, addStudentOnSignUp) => {
+        const [userState, setUserState] = useState(props.user)
         const [validForm, setValidForm] = useState(false)
         const [errors, setErrors] = useState({
             first_name_error: error_default_messages.first_name_error,
@@ -33,17 +77,39 @@ function SignupForm() {
             id_number_error : error_default_messages.id_number_error,
             tel_number_error:  error_default_messages.tel_number_error,
             password_error:  error_default_messages.password_error,
-            year_error :error_default_messages.year_error,
+            year_error : error_default_messages.year_error,
             email_error :  error_default_messages.email_error,
             gender_error : error_default_messages.gender_error,
             role_error : error_default_messages.role_error,
-    })
+        })
         const handleSubmit = (event) => {
             if (event) {
                 event.preventDefault();
-                callback()
+                if (userState.isTeacher) {
+                    addTeacherOnSignUp()
+                }
+                if (userState.isStudent) {
+                    addStudentOnSignUp()
+                }
+                addUserOnSignUp()
             }
             
+        }
+        const checkForErrors = () => {
+            // console.log('errorrorororos');
+            let temp_errors = {
+                first_name_error: null,
+                last_name_error: null,
+                id_number_error : null,
+                tel_number_error:  null,
+                password_error:  error_default_messages.password_error,
+                year_error : null,
+                email_error :  null,
+                gender_error : null,
+                role_error : null,
+            }
+            setErrors(temp_errors)
+            return errors
         }
         const handleInputChange = (event, {name, value, checked, type}) => {
             //If you want to access the event properties in an asynchronous way, 
@@ -73,36 +139,13 @@ function SignupForm() {
             setUserState(inputs => ({...inputs, [name] : local_value}));
         }
         // console.log(userState);
-        return { handleSubmit, handleInputChange, userState, validForm, errors };
+        return { handleSubmit, handleInputChange, userState, validForm, errors, checkForErrors };
     }
 
-    const httpPostRequestToAddUser = () => {
-        const {id_number, password, email, first_name, last_name, tel_number, gender, isTeacher, isStudent, year } = userState
-        const user_to_add = {  
-            _id : id_number,
-            password : password,
-            email: email,
-            first_name : first_name, 
-            last_name: last_name, 
-            tel_number : tel_number,
-            gender : gender,
-            isTeacher : isTeacher,
-            isStudent: isStudent,
-            isAdmin : false,
-            study_year: year,
-        }
-        console.log("the user is: " + user_to_add);
-        axios.post('http://localhost:5000/users/add', user_to_add)
-        .then((response)=> {
-                    if (response.data.success) {
-                        history.push('/')
-                    } else {
-                        alert(response.data.message)
-                   }
-        })
-    }  
-    const {handleSubmit,handleInputChange, userState, validForm, errors } = useSignUpForm(httpPostRequestToAddUser);
-
+    const {handleSubmit,handleInputChange, userState, validForm, errors, checkForErrors  } = useSignUpForm(httpPostRequestToAddUser, httpPostAddTeacher, httpPostAddStudent );
+    // useEffect(()=>{
+    //     checkForErrors()
+    // })
     const email_field = () => {
         const { email } = userState
         const { email_error } = errors
@@ -138,16 +181,17 @@ function SignupForm() {
         )
     }
     const id_number_field = () => {
-        const { id_number } = userState
+        const { _id } = userState
         const { id_number_error } = errors
 
         return (
             <Form.Field required>
                 <label>ת.ז</label>
                 <Form.Input style={{direction:"ltr"}}
+                    // disabled = {id_disable}
                     placeholder='ת.ז - שם משתמש'
-                    name='id_number'
-                    value={id_number}
+                    name='_id'
+                    value={_id}
                     onChange={handleInputChange}
                     error={id_number_error ? id_number_error : null}
                 />
@@ -167,7 +211,6 @@ function SignupForm() {
                     value={tel_number}
                     onChange={handleInputChange}
                     error={ tel_number_error ? tel_number_error : null}
-
                 />
             </Form.Field>
         )
@@ -261,13 +304,13 @@ function SignupForm() {
             { key: 'd', text: 'שנה ד', value: 'year-d' },
             { key: 'e', text: 'שנה ה', value: 'year-e' },
         ]
-        const {year} = userState
+        const {study_year} = userState
         return (
             <Form.Field required  width={4} >
                 <label>שנת לימודים</label>
                 <Dropdown 
-                    name='year'
-                    value={year}
+                    name='study_year'
+                    value={study_year}
                     clearable 
                     options={options} 
                     selection 
@@ -277,14 +320,20 @@ function SignupForm() {
         )
     }
     const bank_details_field = () => {
-        const {bank_number, bank_branch, bank_account} = userState
+        const {bank_number, bank_branch, bank_account_number, bank_account_name} = userState
         return (
             <Form.Field required width={2}>
                 <label>פרטי בנק</label>
                 <Form.Input
-                    placeholder="מס' חשבון"
-                    name='bank_account'
-                    value={bank_account}
+                    placeholder="שם החשבון"
+                    name='bank_account_name'
+                    value={bank_account_name}
+                    onChange={handleInputChange}
+                />
+                <Form.Input
+                    placeholder="מס' בנק"
+                    name='bank_number'
+                    value={bank_number}
                     onChange={handleInputChange}
                 />
                 <Form.Input
@@ -294,9 +343,9 @@ function SignupForm() {
                     onChange={handleInputChange}
                 />
                 <Form.Input
-                    placeholder="מס' בנק"
-                    name='bank_number'
-                    value={bank_number}
+                    placeholder="מס' חשבון"
+                    name='bank_account_number'
+                    value={bank_account_number}
                     onChange={handleInputChange}
                 />
             </Form.Field>
@@ -326,21 +375,5 @@ function SignupForm() {
                 </Form.Field>
             </Form.Group>
         </Form>
-    )
-}
-
-export default function signupConatainer () {
-    return (
-        <div  id="land-page" className="bg" style={{direction:"rtl"}}>
-            <Container id="signup-box"  className="right-align">
-                <h3>כותרת טופס הרשמה שנראית טוב</h3>
-                <Link to="/" style={{textDecoration: 'none', color: 'black'}}>
-                    <Icon size='big' name='arrow right' style={{margin:"2%"}}></Icon>
-                </Link>
-                <SignupForm/>
-            </Container>
-        </div>
-       
-        
     )
 }

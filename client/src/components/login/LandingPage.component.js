@@ -4,6 +4,8 @@ import '../../styles/App.scss'
 import login_people_books from '../../images/background_images/login_people_books.jpg'
 import study_management from '../../images/background_images/study_management.png'
 import FormLogin from './loginForm.component'
+import {Link } from 'react-router-dom'
+import { Button} from 'semantic-ui-react'
 
 
 function ImagesLogin() {
@@ -29,6 +31,11 @@ function LoginBox() {
                 <Col>
                     <FormLogin></FormLogin>
                 </Col>
+            </Row>
+            <Row>
+            <Link to={{ pathname: '/signup'}} style={{marginRight : '9%'}}>
+                        <Button color="teal">להרשמה</Button>
+                    </Link>
             </Row>
         </Container>
     );
