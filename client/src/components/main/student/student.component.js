@@ -51,7 +51,7 @@ export default function Student(props) {
         <h5>
         Student{openedPopups.request_hours_popup}
         </h5>
-        {Dialog_generator(openedPopups.request_hours_popup, ()=>setOpenedPopups(getOpenedPopup(false, false)), "בקשת שעות חונכות",{_id:user._id}, ()=>RequestHours(props._id))}
+        {Dialog_generator(openedPopups.request_hours_popup, ()=>setOpenedPopups(getOpenedPopup(false, false)), "בקשת שעות חונכות",{_id:user._id}, (id)=>RequestHours(id))}
         {/* <Dialog open={openedPopups.request_hours_popup} onClose={()=>setOpenedPopups(getOpenedPopup(false, false))} aria-labelledby="form-dialog-title">
             <DialogTitle style={{direction : "rtl", textAlign:"right"}} id="form-dialog-title">בקשת שעות חונכות</DialogTitle>
             <DialogContent style={{direction : "rtl", textAlign:"right"}}>

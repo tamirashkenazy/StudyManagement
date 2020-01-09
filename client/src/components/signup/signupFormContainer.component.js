@@ -4,43 +4,19 @@ import { Icon} from 'semantic-ui-react';
 import {Link , useHistory} from 'react-router-dom'
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
-// import {SignupForm} from './signupForm.component'
 import {SignupFormRedux} from './signupFormRedux'
 import {reduxForm, getFormValues } from 'redux-form'
 import {connect } from 'react-redux'
+import {httpPostRequestToAddUser, httpPostRequestToAddStudent, httpPostRequestToAddTeacher} from './signupPostRequests'
 
-import axios from 'axios'
-import get_mongo_api from '../mongo/paths.component'
+
 import { check_errors, validateForm, allFieldsExist } from './validationFields';
 
 const SignupConatainer = ({handleSubmit, formValues}) => {
     // formValues = {"first_name" : "ash",}
     // console.log('signupcontainer: ', handleSubmit);
     const history = useHistory()
-    function httpPostRequestToAddUser(formValues) {
-        const user_to_add = {  
-            _id : formValues._id,
-            password : formValues.password,
-            email: formValues.email,
-            first_name : formValues.first_name, 
-            last_name: formValues.last_name, 
-            tel_number : formValues.tel_number,
-            gender : formValues.gender,
-            isTeacher : formValues.isTeacher,
-            isStudent: formValues.isStudent,
-            isAdmin : false,
-            study_year: formValues.study_year,
-        }
-        console.log("the user is: " + user_to_add);
-        axios.post(get_mongo_api('users/add'), user_to_add)
-        .then((response)=> {
-            if (response.data.success) {
-                history.push('/')
-            } else {
-                alert(response.data.message)
-            }
-        })
-    } 
+    
 
     const [errors, setErrors] = useState({})
     const submitForm = (formValues) => {
@@ -55,8 +31,13 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
                 console.log(local_errors);
                 // alert(JSON.stringify(errors))
             } else {
-                httpPostRequestToAddUser(formValues)
-                // httpPostRequestToAddTeacher(formValues)
+                httpPostRequestToAddUser(formValues, history)
+                if(formValues.isStudent) {
+                    httpPostRequestToAddStudent(formValues._id)
+                } else if (formValues.isTeacher) {
+                    httpPostRequestToAddTeacher(formValues._id)
+
+                }
                 // httpPostRequestToAddStudent(formValues)
             }
         }
@@ -77,8 +58,9 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
 }
 
 
-const emptyUser = {   _id : "", password : "", email: "", first_name : "",  last_name: "", tel_number : "", gender : "", isTeacher : false, isStudent: false, isAdmin : false,  
-                    study_year: "", bank_account_name : "", bank_account_number : "", bank_branch : "", bank_name : ""}
+const emptyUser = {   _id : "", password : "", email: "", first_name : "",  last_name: "", tel_number : "", gender : "", 
+                    isTeacher : false, isStudent: false, isAdmin : false,  study_year: ""}
+    //bank_account_name : "", bank_account_number : "", bank_branch : "", bank_name : ""
 
 const mapStateToProps = state => ({
     formValues: getFormValues('sign-up-form')(state),

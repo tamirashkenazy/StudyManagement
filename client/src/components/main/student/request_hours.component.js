@@ -31,12 +31,12 @@ const get_options = (num_of_options) => {
 }
 
 export default function RequestHours(_id){
-    // const [courses, setCourses] = useState(null)
     const [selectedCourse, setSelectedCourse] = useState(null)
     const [result, loading] = useAsyncHook(`courses`, make_courses_option);
     const [hours, setHours] = useState(null)
 
-    const sendCourse = () => {
+    const sendCourse = (_id) => {
+        console.log(_id);
         axios.post(get_mongo_api(`students/add/request/${_id}`),{course_id : selectedCourse, number_of_hours: hours, status : "waiting"}).then(response=>{
             if (response.data.success) {
                 alert(response.data.message)
@@ -69,7 +69,7 @@ export default function RequestHours(_id){
                 <Dropdown  placeholder='מספר שעות' onChange={onChangeHours} options={get_options(4)}/>
             </Grid.Row>
             {selectedCourse && hours && <Grid.Row>
-                <Button onClick={sendCourse}>שלח</Button>
+                <Button onClick={()=>sendCourse(_id)}>שלח</Button>
             </Grid.Row>}
         </Grid>
     )
