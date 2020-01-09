@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { Form,  Label, Button} from 'semantic-ui-react'; //Radio,
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
@@ -91,9 +91,9 @@ const RadioGenerator = props => {
     );
   }
 export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idDisabled, formSubmitButtonName, submitDisabled=false}) => {
-    useEffect(()=>{
-      formValues = formValues
-    })
+    // useEffect(()=>{
+    //   formValues = formValues
+    // })
     const id_number_field = () => {
         return (
             <Field name="_id" label="ת.ז" placeholder='ת.ז - שם משתמש' type="text" error={errors._id_error} pointer={<Label size="tiny" pointing>שם המשתמש</Label>} component={textField} direction="ltr" disable={idDisabled}/>

@@ -1,7 +1,7 @@
 import React, {useState, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import {useStyles} from './appBarMenu.styles'
-import AccountMenu from './navbar.component'
+import {useStyles} from '../navbar/appBarMenu.styles'
+import AccountMenu from '../navbar/navbar.component'
 import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined';
 import ImportContactsSharpIcon from '@material-ui/icons/ImportContactsSharp';
 
