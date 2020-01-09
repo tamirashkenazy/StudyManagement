@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react'
+import React, {useState} from 'react'
 import {useHistory} from 'react-router-dom'
 import Toolbar from '@material-ui/core/Toolbar';
 import IconButton from '@material-ui/core/IconButton';
@@ -14,11 +14,11 @@ import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import {SignupFormRedux} from '../signup/signupFormRedux'
+import {SignupFormRedux} from '../../signup/signupFormRedux'
 import {reduxForm, getFormValues } from 'redux-form'
 import {connect } from 'react-redux'
-import { check_errors, validateForm, allFieldsExist } from '../signup/validationFields';
-import get_mongo_api from '../mongo/paths.component'
+import { check_errors, validateForm, allFieldsExist } from '../../signup/validationFields';
+import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
 
 function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_operations_by_role, formSubmitButtonName}) {
@@ -39,9 +39,9 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
     history.push("/");
   }
 
-  useEffect(()=> {
-    formValues = userDetails
-  })
+  // useEffect(()=> {
+  //   formValues = userDetails
+  // })
   function onChangeRole() {
     history.push({
       pathname: `/main/`, 

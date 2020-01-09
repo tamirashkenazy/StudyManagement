@@ -7,9 +7,9 @@ import LandingPage from './components/login/LandingPage.component';
 
 import signupConatainer from './components/signup/signupFormContainer.component';
 import Main from './components/main/dashboard_main';
-import Student from './components/main/student.component';
-import Teacher from './components/main/teacher.component';
-import Admin from './components/main/admin.component';
+import Student from './components/main/student/student.component';
+import Teacher from './components/main/teacher/teacher.component';
+import Admin from './components/main/admin/admin.component';
 
 
 function App() {
