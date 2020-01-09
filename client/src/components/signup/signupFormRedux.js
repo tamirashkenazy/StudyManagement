@@ -141,23 +141,24 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
             />
         )
     }
-    const bank_details_field = () => {
-        return (
-            <Form.Field>
-            <Field name='bank_account_name' label="שם החשבון" placeholder='שם החשבון' type="text" component={textField} direction="ltr"/>
-            <Field name='bank_number' label="מס' בנק" placeholder="מס' בנק" type="text" component={textField} direction="ltr"/>
-            <Field name='bank_branch' label='סניף' placeholder='סניף' type="text" component={textField} direction="ltr"/>
-            <Field name='bank_account_number' label="מס' חשבון" placeholder="מס' חשבון" type="text" component={textField} direction="ltr"/>
-            </Form.Field>
-        )
-    }
+    // NO NEED ANYMORE
+    // const bank_details_field = () => {
+    //     return (
+    //         <Form.Field>
+    //         <Field name='bank_account_name' label="שם החשבון" placeholder='שם החשבון' type="text" component={textField} direction="ltr"/>
+    //         <Field name='bank_number' label="מס' בנק" placeholder="מס' בנק" type="text" component={textField} direction="ltr"/>
+    //         <Field name='bank_branch' label='סניף' placeholder='סניף' type="text" component={textField} direction="ltr"/>
+    //         <Field name='bank_account_number' label="מס' חשבון" placeholder="מס' חשבון" type="text" component={textField} direction="ltr"/>
+    //         </Form.Field>
+    //     )
+    // }
 
     const roles_field = () => {
         return (
             <Form.Field>
                 <Field name="isStudent" label="תלמיד" component={CheckboxGenerator}/>
                 <Field name="isTeacher" label="מורה"  component={CheckboxGenerator}/>
-                {formValues && ('isTeacher' in formValues) && (formValues.isTeacher) && bank_details_field()}
+                {/* {formValues && ('isTeacher' in formValues) && (formValues.isTeacher) && bank_details_field()} */} 
             </Form.Field>
         )
     }
@@ -177,7 +178,6 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
             <Form.Group  widths='equal'>
                 {study_year_field()}
                 {roles_field()}
-                
                 {genders_field()}
             </Form.Group>
             <Form.Group>
