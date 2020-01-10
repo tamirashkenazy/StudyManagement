@@ -12,17 +12,17 @@ export function useAsyncHook(api, func_to_sort) {
     const [result, setResult] = useState([]);
     const [loading, setLoading] = useState(true);
     useEffect(() => {
-        async function getCoursesFromDB(){
-            const response = await axios.get(get_mongo_api(api)).then(response=>{ //api = `courses`
-                return response.data
+        async function getDataFromAPI(){
+            const response = await axios.get(get_mongo_api(api)).then(response=>{
+                return response.data.message
             })
             const arr_of_courses = await response
             const options = func_to_sort(arr_of_courses)
             setResult(options);
             setLoading(false)
         }
-        getCoursesFromDB()
-    },[api, func_to_sort])
+        getDataFromAPI()
+    },[api])
     return [result, loading];
 }
 
