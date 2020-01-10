@@ -93,6 +93,9 @@ function FormLogin ()  {
 
                 <Form.Field>
                     <Button onClick={handleSubmit} primary >התחבר</Button>
+                    <Link to="/signup" style={{marginRight : '9%'}}>
+                        <Button color="teal">להרשמה</Button>
+                    </Link>
                 </Form.Field>
             </Form>
         </div>

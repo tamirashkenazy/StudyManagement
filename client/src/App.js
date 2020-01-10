@@ -11,6 +11,9 @@ import Student from './components/main/student/student.component';
 import Teacher from './components/main/teacher/teacher.component';
 import Admin from './components/main/admin/admin.component';
 
+import signupConatainer from './components/signup/signupForm.component';
+import Main from './components/main/dashboard_tamir.component';
+import s from './components/main/student.component';
 
 function App() {
   return (
@@ -20,6 +23,8 @@ function App() {
           <Route path="/main/student" component={Student}/>
           <Route path="/main/teacher" component={Teacher}/>
           <Route path="/main/admin" component={Admin}/>
+          <Route path="/signup" component={signupConatainer}/>
+          <Route path="/main/student" component={s}/>
           <Route path="/main" component={Main}/>
           <Route path="/" exact component={LandingPage}/>
         </Switch>
