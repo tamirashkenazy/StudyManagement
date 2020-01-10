@@ -30,11 +30,11 @@ const get_options = (num_of_options) => {
     return options
 }
 
-export default function RequestHours(_id){
+export default function RequestHours(props){
     const [selectedCourse, setSelectedCourse] = useState(null)
     const [courses_options, loading] = useAsyncHook(`courses`, make_courses_option);
     const [hours, setHours] = useState(null)
-
+    
     const sendCourse = (_id) => {
         const course_id = selectedCourse.split('-')[0]
         const course_name = selectedCourse.split('-')[1]
@@ -49,6 +49,8 @@ export default function RequestHours(_id){
                 console.log(response.data.message)
             }
         })
+        window.location.reload(true)
+        // callback()
         // console.log(selectedCourse, hours); 
     }
     
@@ -62,7 +64,7 @@ export default function RequestHours(_id){
                 <Dropdown  placeholder='מספר שעות' onChange={(e,{value})=>setHours(value)} options={get_options(4)}/>
             </Grid.Row>
             {selectedCourse && hours && <Grid.Row>
-                <Button onClick={()=>sendCourse(_id)}>שלח</Button>
+                <Button onClick={()=>sendCourse(props._id, props.onSend)}>שלח</Button>
             </Grid.Row>}
         </Grid>
     )
