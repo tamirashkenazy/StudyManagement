@@ -1,4 +1,4 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {useAsyncHook} from '../../mongo/paths.component'
 import { makeStyles } from '@material-ui/core/styles';
 import Table from '@material-ui/core/Table';
@@ -11,7 +11,8 @@ import Paper from '@material-ui/core/Paper';
 var dateFormat = require('dateformat');
 
 const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
-    if (arr_of_student_courses_requests.length > 0){
+
+    if (arr_of_student_courses_requests && arr_of_student_courses_requests.length > 0){
         let options = arr_of_student_courses_requests.map(course_obj => {
             return (
                 {
@@ -24,6 +25,7 @@ const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
                 }
             )
         })
+        console.log(options);
         return options
     }
 }
@@ -39,13 +41,14 @@ const useStyles = makeStyles({
   });
 
 
-const english_to_hebrew_status = {"waiting" : "מחכה לאישור"}
+const english_to_hebrew_status = {"waiting" : {text : "ממתין לאישור", color:"red"}, "should_pay" : {text : "ממתין לתשלום", color:"#990099"}, "approved" : {text : "בקשה מאושרת", color:"green"}}
 
 export default function CoursesTable(user_id) {
     const [table_rows, loading] = useAsyncHook(`students/${user_id}/request`, make_rows_of_courses_requests);
+
     const classes = useStyles();
     return (
-        !loading &&
+        !loading && table_rows && 
         <TableContainer component={Paper}>
             <Table className={classes.table} aria-label="simple table">
                 <TableHead className={classes.tableHead}>
@@ -64,7 +67,7 @@ export default function CoursesTable(user_id) {
                             <TableCell align="right">{date}</TableCell>
                             <TableCell component="th" scope="row" align="right">{row.course_id}</TableCell>
                             <TableCell align="right">{row.hours}</TableCell>
-                            <TableCell align="right">{english_to_hebrew_status[row.status]}</TableCell>
+                            <TableCell align="right" style={{color:english_to_hebrew_status[row.status].color}}>{english_to_hebrew_status[row.status].text}</TableCell>
                         </TableRow>
                     )
                 })}
