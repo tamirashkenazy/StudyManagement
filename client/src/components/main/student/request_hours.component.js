@@ -6,12 +6,12 @@ import { Grid } from 'semantic-ui-react'
 
 const make_courses_option = (arr_of_courses) => {
     // let local_courses = courses
-    if (arr_of_courses!==null){
+    if (arr_of_courses && arr_of_courses!==undefined){
         let options = arr_of_courses.map(course_obj => {
             return (
                 {
                     key : course_obj._id,
-                    value : `${course_obj._id} ${course_obj.name}`,
+                    value : `${course_obj._id}-${course_obj.name}`,
                     text : `${course_obj._id} - ${course_obj.name}`
                 }
             )
@@ -32,12 +32,16 @@ const get_options = (num_of_options) => {
 
 export default function RequestHours(_id){
     const [selectedCourse, setSelectedCourse] = useState(null)
-    const [result, loading] = useAsyncHook(`courses`, make_courses_option);
+    const [courses_options, loading] = useAsyncHook(`courses`, make_courses_option);
     const [hours, setHours] = useState(null)
 
     const sendCourse = (_id) => {
-        console.log(_id);
-        axios.post(get_mongo_api(`students/add/request/${_id}`),{course_id : selectedCourse, number_of_hours: hours, status : "waiting"}).then(response=>{
+        const course_id = selectedCourse.split('-')[0]
+        const course_name = selectedCourse.split('-')[1]
+        console.log(course_name);
+        console.log(course_id);
+
+        axios.post(get_mongo_api(`students/add/request/${_id}`),{course_id : course_id, number_of_hours: hours, status : "waiting"}).then(response=>{
             if (response.data.success) {
                 alert(response.data.message)
             } else {
@@ -45,28 +49,17 @@ export default function RequestHours(_id){
                 console.log(response.data.message)
             }
         })
-        // console.log(selectedCourse, hours);
+        // console.log(selectedCourse, hours); 
     }
     
-    const onChangeCourse = (e,{value}) => {
-        value = value.split(' ')[0]
-        setSelectedCourse(value)
-    }
-
-    const onChangeHours = (e,{value}) => {
-        // console.log("selected= ", value)
-        setHours(value)
-    }
-
-
     return (
         !loading && 
         <Grid columns={1} style={{ margin:"10%", minHeight:"20%"}} >
             <Grid.Row >
-                <Dropdown  fluid placeholder='בחר קורס' onChange={onChangeCourse} options={result}/>
+                <Dropdown  fluid placeholder='בחר קורס' onChange={(e,{value})=> setSelectedCourse(value)} options={courses_options}/>
             </Grid.Row>
             <Grid.Row>
-                <Dropdown  placeholder='מספר שעות' onChange={onChangeHours} options={get_options(4)}/>
+                <Dropdown  placeholder='מספר שעות' onChange={(e,{value})=>setHours(value)} options={get_options(4)}/>
             </Grid.Row>
             {selectedCourse && hours && <Grid.Row>
                 <Button onClick={()=>sendCourse(_id)}>שלח</Button>

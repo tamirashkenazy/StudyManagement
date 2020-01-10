@@ -8,6 +8,8 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import RequestHours from './request_hours.component'
+import CoursesTable from './courses_table.component'
+import { Grid } from 'semantic-ui-react'
 const getOpenedPopup = (is_open_request_hours, is_open_book_class) => {
     return(
         {request_hours_popup : is_open_request_hours, book_class_popup : is_open_book_class }
@@ -38,10 +40,6 @@ export default function Student(props) {
     const classes = useStyles();
 
 
-    // const  = () => {
-        
-    // }
-    // onEnter={RequestHours()} 
     return (
         <div>
             <AppBar position="static" className={classes.AppBar} >
@@ -49,17 +47,27 @@ export default function Student(props) {
 
             </AppBar> 
         <h5>
-        Student{openedPopups.request_hours_popup}
+        Student
         </h5>
         {Dialog_generator(openedPopups.request_hours_popup, ()=>setOpenedPopups(getOpenedPopup(false, false)), "בקשת שעות חונכות",{_id:user._id}, (id)=>RequestHours(id))}
-        {/* <Dialog open={openedPopups.request_hours_popup} onClose={()=>setOpenedPopups(getOpenedPopup(false, false))} aria-labelledby="form-dialog-title">
-            <DialogTitle style={{direction : "rtl", textAlign:"right"}} id="form-dialog-title">בקשת שעות חונכות</DialogTitle>
-            <DialogContent style={{direction : "rtl", textAlign:"right"}}>
-            <RequestHours/>
-            </DialogContent>
-        </Dialog> */}
+        <Grid divided='vertically' centered>
+            <Grid.Row columns={2}>
+                <div>
+                    דיב1
+                </div>
+                <div>
+                    דיב2
+                </div>
+            </Grid.Row>
+            <Grid.Row columns={1}>
+                <Grid.Column> 
+                    {CoursesTable(user._id)}
+                </Grid.Column>
+            </Grid.Row>
+            
+        </Grid>
         
-
         </div>
     )
+
 }
