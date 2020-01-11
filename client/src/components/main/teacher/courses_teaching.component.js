@@ -1,8 +1,7 @@
 import React, {useState} from 'react';
-import {Button, Dropdown, Checkbox} from 'semantic-ui-react'
-import axios from 'axios'
-import get_mongo_api, {useAsyncHook} from '../../mongo/paths.component'
+import {Button, Checkbox} from 'semantic-ui-react'
 import { Grid } from 'semantic-ui-react'
+import {useAsyncHook} from '../../mongo/paths.component'
 
 const make_courses_option = (arr_of_courses) => {
     // let local_courses = courses
@@ -21,14 +20,14 @@ const make_courses_option = (arr_of_courses) => {
 }
 
 
-const get_options = (num_of_options) => {
-    var options = []
-    for (let i=1 ; i<=num_of_options; i++) {
-        let temp = {key : i, text : i, value: `${i}`}
-        options.push(temp)
-    }
-    return options
-}
+// const get_options = (num_of_options) => {
+//     var options = []
+//     for (let i=1 ; i<=num_of_options; i++) {
+//         let temp = {key : i, text : i, value: `${i}`}
+//         options.push(temp)
+//     }
+//     return options
+// }
 
 export default function CoursesToTeach(props){
     const [selectedCourses, setSelectedCourses] = useState({})

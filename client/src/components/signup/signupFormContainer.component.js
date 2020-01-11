@@ -13,11 +13,7 @@ import {httpPostRequestToAddUser, httpPostRequestToAddStudent, httpPostRequestTo
 import { check_errors, validateForm, allFieldsExist } from './validationFields';
 
 const SignupConatainer = ({handleSubmit, formValues}) => {
-    // formValues = {"first_name" : "ash",}
-    // console.log('signupcontainer: ', handleSubmit);
     const history = useHistory()
-    
-
     const [errors, setErrors] = useState({})
     const submitForm = (formValues) => {
         console.log('submitting form: ', formValues);
@@ -31,6 +27,7 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
                 // console.log(local_errors);
                 // alert(JSON.stringify(errors))
             } else {
+                // TODO - need to check if all of the http request returned OK and if no - delete the new student/teacher/user that was uploaded and send error msg
                 if(formValues.isStudent) {
                     httpPostRequestToAddStudent(formValues._id)
                 } 
