@@ -4,12 +4,11 @@ import {useStyles} from '../navbar/appBarMenu.styles'
 import AccountMenu from '../navbar/navbar.component'
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined';
-import Dialog from '@material-ui/core/Dialog';
-import DialogContent from '@material-ui/core/DialogContent';
-import DialogTitle from '@material-ui/core/DialogTitle';
+
 import RequestHours from './request_hours.component'
 import CoursesTable from './courses_table.component'
 import { Grid } from 'semantic-ui-react'
+import {Dialog_generator} from '../utils/utils'
 const getOpenedPopup = (is_open_request_hours, is_open_book_class) => {
     return(
         { request_hours_popup : is_open_request_hours, book_class_popup : is_open_book_class }
@@ -17,17 +16,17 @@ const getOpenedPopup = (is_open_request_hours, is_open_book_class) => {
 }
 
 
-function Dialog_generator(open, onClose, title, props, component){
-    const rtl_style = {direction : "rtl", textAlign:"right"}
-    return (
-        <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
-            <DialogTitle style={rtl_style} id="form-dialog-title">{title}</DialogTitle>
-            <DialogContent style={rtl_style}>
-            {component(props)}
-            </DialogContent>
-        </Dialog>
-    )
-}
+// function Dialog_generator(open, onClose, title, props, component){
+//     const rtl_style = {direction : "rtl", textAlign:"right"}
+//     return (
+//         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
+//             <DialogTitle style={rtl_style} id="form-dialog-title">{title}</DialogTitle>
+//             <DialogContent style={rtl_style}>
+//             {component(props)}
+//             </DialogContent>
+//         </Dialog>
+//     )
+// }
 
 export default function Student(props) {
     const user = props.history.location.state
@@ -42,8 +41,7 @@ export default function Student(props) {
     return (
         <div>
             <AppBar position="static" className={classes.AppBar} >
-                <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} formSubmitButtonName="עדכן פרטים"/>
-
+                <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{formSubmitButtonName : "עדכן פרטים"}}/>
             </AppBar> 
 
         {Dialog_generator(openedPopups.request_hours_popup, ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false))), "בקשת שעות חונכות",{_id:user._id}, (id)=>RequestHours(id))}
