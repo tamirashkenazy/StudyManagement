@@ -4,7 +4,7 @@ let Lesson = require('../models/lesson.model');
 router.route('/').get((req, res) => {
     //mongoose method to find all the lessons
     Lesson.find()
-    .then(lessons => res.json(lessons))
+    .then(lessons => res.send({success : true, message:lessons}))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
@@ -13,9 +13,9 @@ router.route('/byStatus/:status').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (lessons && lessons.length > 0) {
-            return res.send({success : true, message:"The lessons of status: " + req.params.status + " are: " + JSON.stringify(lessons)})
+            return res.send({success : true, message: lessons})
         } else {
-            return res.send({success : true, message: "no lessons"})
+            return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
         }
     })
 })
@@ -26,9 +26,9 @@ router.route('/byCourseId/:courseId').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (lessons && lessons.length > 0) {
-            return res.send({success : true, message:"The lessons in course: " + req.params.courseId + " are: " + JSON.stringify(lessons)})
+            return res.send({success : true, message: lessons})
         } else {
-            return res.send({success : true, message: "no lessons"})
+            return res.send({success : true, message: "השיעורים המבוקשים אינם קיימים במערכת"})
         }
     })
 })
@@ -39,9 +39,9 @@ router.route('/byTeacherId/:teacherId').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (lessons && lessons.length > 0) {
-            return res.send({success : true, message:"The lessons of : " + req.params.teacherId + " are: " + JSON.stringify(lessons)})
+            return res.send({success : true, message: lessons})
         } else {
-            return res.send({success : true, message: "no lessons"})
+            return res.send({success : true, message: "השיעורים המבוקשים אינם קיימים במערכת"})
         }
     })
 })
@@ -52,15 +52,16 @@ router.route('/byStudentId/:studentId').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (lessons && lessons.length > 0) {
-            return res.send({success : true, message:"The lessons of : " + lessons[0].student.student_id + "are: " + JSON.stringify(lessons)})
+            return res.send({success : true, message: lessons})
         } else {
-            return res.send({success : true, message: "no lessons"})
+            return res.send({success : true, message: "השיעורים המבוקשים אינם קיימים במערכת"})
         }
     })
 })
 
 
 router.route('/add').post((req, res) => {
+    // change to req.body
     const { body } = req;
     const { course, date, teacher, student, status } = body
     if (student.student_id == teacher.teacher_id){
@@ -70,7 +71,7 @@ router.route('/add').post((req, res) => {
         if(err) {
             return res.send({success : false, message:"Error: Server Error"})
         } else if (lessons && lessons.length > 0) {
-            return res.send({success : false, message:"The student or the teacher are already in a lesson at this exact hour"})
+            return res.send({success : false, message:"לסטודנט או המורה נקבע שיעור אחר בזמן זה, אנא נסה שוב במועד שונה"})
         }
         const newLesson = new Lesson({
             course,
@@ -84,7 +85,7 @@ router.route('/add').post((req, res) => {
             if (err) {
                 return res.send({success : false, message:"Error: Couldn't Save " + err})
             }
-            return res.send({success : true, message:"Success: Lesson added, " + JSON.stringify(newLesson)})
+            return res.send({success : true, message: newLesson})
         })
     });
 })
@@ -96,11 +97,7 @@ router.route('/update').post((req,res) => {
     Lesson.find({"date": date, "student": student, "teacher": teacher}).
     then((lesson) => {
         if (!lesson || lesson.length != 1) {
-            return res.send({
-                success : false,
-                message : "Error: no such lesson"
-            })
-        }
+            return res.send({success : false,message : "!השיעור המבוקש אינו קיים"})}
         if (lesson.length == 1){
             lesson = lesson[0]
             console.log(lesson)
@@ -116,9 +113,7 @@ router.route('/update').post((req,res) => {
                         success : false, message : err.message
                     });
                 }
-                return res.send({
-                    success : true, message : 'Updated successfuly',
-                });
+                return res.send({success : true, message : "!השיעור עודכן בהצלחה"});
             })
         }
     }); 
@@ -128,23 +123,20 @@ router.route('/update').post((req,res) => {
 router.route('/delete').post((req,res) => {
     const {date, student_id, teacher_id} = req.body
     console.log(date, student_id, teacher_id)   
-    Lesson.deleteOne({date : date    , "student.student_id" : student_id, "teacher.teacher_id" : teacher_id}, (err, lesson)=>{
+    Lesson.deleteOne({date : date, "student.student_id" : student_id, "teacher.teacher_id" : teacher_id}, (err, lesson)=>{
         if (err) {
             return res.send({
                 success : false, message : 'Error in delete: ' + err,
             });
         }
         if (lesson.deletedCount > 0) {
-            return res.send({
-                success : true, message : 'Deleted successfuly',
-            });
+            return res.send({success : true, message : "!השיעור נמחק בהצלחה",});
         } else if (lesson.deletedCount == 0) {
-            return res.send({
-                success : true, message : 'could not find lesson to delete',
-            });
+            return res.send({success : true, message : '!השיעור המבוקש אינו קיים במערכת',});
         }
     })
 })
+
 
 router.route('/findOne').post((req,res) => {
     const {date, student_id, teacher_id} = req.body
@@ -153,18 +145,14 @@ router.route('/findOne').post((req,res) => {
         if (err) {
             res.status(400).json('Error: ' + err)
             return res.send({
-                success : false, message : 'Error on fing lesson: ' + err,
+                success : false, message : 'Error on finג lesson: ' + err,
             });
         }
         if (lessons && lessons.length > 0) {
             console.log(lessons);
-            return res.send({
-                success : true, message : 'Found the lesson: ' + lessons[0],
-            });
+            return res.send({success : true, message : lessons[0]});
         } else {
-            return res.send({
-                success : true, message : 'could not find the lesson',
-            });
+            return res.send({success : true, message : "!השיעור המבוקש אינו קיים במערכת"});
         }
     })
 })

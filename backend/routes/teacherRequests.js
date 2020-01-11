@@ -4,7 +4,7 @@ let TeacherRequests = require('../models/teacherRequest.model');
 router.route('/').get((req, res) => {
     //mongoose method to find all the teacher Requests
     TeacherRequests.find()
-    .then(teacherRequests => res.json(teacherRequests))
+    .then(teacherRequests => res.send({success : true, message: teacherRequests}))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
@@ -16,9 +16,9 @@ router.route('/byTeacherId/:teacherId').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (teacherRequests.length > 0) {
-            return res.send({success : true, message:"teacher Requests: " + JSON.stringify({teacherRequests} ), teacherRequests: teacherRequests})
+            return res.send({success : true, message:teacherRequests})
         }else{
-            return res.send({success : false, message:"there is no requests for this teacher! "})
+            return res.send({success : false, message:"!לא קיימות בקשות עבור המורה"})
         }
     })
 })
@@ -32,9 +32,9 @@ router.route('/byStatus/:status').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (teacherRequests.length > 0) {
-            return res.send({success : true, message:"teacher Requests: " + JSON.stringify({teacherRequests} ), teacherRequests: teacherRequests})
+            return res.send({success : true, message:teacherRequests})
         }else{
-            return res.send({success : false, message:"There are no suitable requests."})
+            return res.send({success : false, message:"לא קיימות בקשות אלו במערכת"})
         }
     })
 })
@@ -48,13 +48,9 @@ router.route('/findOne').post((req,res) => {
             });
         }
         else if (teacherRequests && teacherRequests.length > 0) {
-            return res.send({
-                success : true, message : 'found request: ' + JSON.stringify(teacherRequests[0]), teacherRequests: teacherRequests[0]
-            });
+            return res.send({success : true, message : teacherRequests[0]});
         } else {
-            return res.send({
-                success : false, message : 'could not find teacher Requests',
-            });
+            return res.send({success : false, message :"לא קיימות בקשות אלו במערכת"});
         }
     })
 })
@@ -66,19 +62,18 @@ router.route('/add').post((req, res) => {
         if(err) {
             return res.send({success : false, message:"Error: Server Error"})
         } else if (previousRequest && previousRequest.length > 0) {
-            return res.send({success : false, message:"Error: Request Already Exist"})
+            return res.send({success : false, message:"שגיאה: בקשה זו כבר קיימת במערכת"})
         } else{
             const newRequest = new TeacherRequests({
                 teacherId,
                 courseNumber,
                 status
             })
-            console.log(newRequest)
             newRequest.save((err, teacherRequests)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
-                return res.send({success:true, message:"Success: course added, " + JSON.stringify(teacherRequests)})
+                return res.send({success:true, message:teacherRequests})
             })
         }
     });
@@ -89,10 +84,7 @@ router.route('/update').post((req,res) => {
     TeacherRequests.find({"teacherId": teacherId, "courseNumber": courseNumber}).
     then((request) => {
         if (!request || request.length != 1) {
-            return res.send({
-                success : false,
-                message : "Error: no such request"
-            })
+            return res.send({success : false,message : "Error: no such request"})
         }
         if (request.length == 1){
             request = request[0]
@@ -102,14 +94,9 @@ router.route('/update').post((req,res) => {
             request.status = req.body.status
             request.save((err, doc)=> {
                 if(err) {
-                    console.log('Error: ' + err);
-                    return res.send({
-                        success : false, message : err.message
-                    });
+                    console.log('Error: ' + err);return res.send({success : false, message : err.message});
                 }
-                return res.send({
-                    success : true, message : 'Updated successfuly',
-                });
+                return res.send({success : true, message : "הבקשה עודכנה בהצלחה"});
             })
         }
     }); 
@@ -125,15 +112,12 @@ router.route('/delete').delete((req,res) => {
             });
         }
         if (teacherRequests.deletedCount > 0) {
-            return res.send({
-                success : true, message : 'Deleted successfuly',
-            });
+            return res.send({success : true, message : "הבקשה נמחקה בהצלחה",});
         } else if (teacherRequests.deletedCount == 0) {
-            return res.send({
-                success : false, message : 'could not find teacher Requests to delete',
-            });
+            return res.send({success : false, message : "הבקשה אינה קיימת במערכת"});
         }
     })
 })
+
 
 module.exports = router;

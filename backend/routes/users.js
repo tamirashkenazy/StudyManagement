@@ -8,7 +8,7 @@ var bcrypt = require('bcrypt')
 router.route('/').get((req, res) => {
     //mongoose method to find all the users
     User.find()
-    .then(users => res.json(users))
+    .then(users => res.send({success : true, message: users}))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
@@ -18,9 +18,9 @@ router.route('/:id').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (user) {
-            return res.send({success : true, message:"The user is: " + JSON.stringify(user), user: user})
+            return res.send({success : true, message:user})
         } else {
-            return res.send({success : false, message:"user does not exist!" })
+            return res.send({success : false, message:"!המשתמש אינו קיים במערכת"})
         }
     })
 })
@@ -75,16 +75,9 @@ router.route('/:id').delete((req,res) => {
 router.route('/update/:id').post((req,res) => {
     User.findById((req.params.id)).then((user) => {
         if (!user) {
-            return res.send({
-                success : false,
-                message : "Error: no such user"
-            })
-        }
+            return res.send({success : false,message : "!המשתמש אינו קיים במערכת"})}
         if (!user.checkPassword(req.body.password)){
-            return res.send({
-                success : false,
-                message : "Error: password is too short!"
-            })
+            return res.send({success : false,message : "שגיאה: הסיסמא שהוזנה קצרה מדי"})
         }
         user._id = req.body._id.trim();
         user.password = user.generateHash(req.body.password)
@@ -100,14 +93,11 @@ router.route('/update/:id').post((req,res) => {
         user.save((err, doc)=> {
             if(err) {
                 console.log('Error: ' + err);
-                return res.send({
-                    success : false, message : err.errmsg
-                });
+                return res.send({success : false, message : err.errmsg});
             }
-            return res.send({
-                success : true, message : 'Updated successfuly',
-            });
+            return res.send({success : true, message : "המשתמש עודכן בהצלחה"});
         })
     }); 
 });
+
 module.exports = router;
