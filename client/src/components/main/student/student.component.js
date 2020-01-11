@@ -8,11 +8,12 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import RequestHours from './request_hours.component'
+import CoursesTable from './courses_table.component'
+import { Grid } from 'semantic-ui-react'
 const getOpenedPopup = (is_open_request_hours, is_open_book_class) => {
     return(
-        {request_hours_popup : is_open_request_hours, book_class_popup : is_open_book_class }
+        { request_hours_popup : is_open_request_hours, book_class_popup : is_open_book_class }
     )
-    
 }
 
 
@@ -22,7 +23,7 @@ function Dialog_generator(open, onClose, title, props, component){
         <Dialog open={open} onClose={onClose} aria-labelledby="form-dialog-title">
             <DialogTitle style={rtl_style} id="form-dialog-title">{title}</DialogTitle>
             <DialogContent style={rtl_style}>
-            {component(props._id)}
+            {component(props)}
             </DialogContent>
         </Dialog>
     )
@@ -31,35 +32,39 @@ function Dialog_generator(open, onClose, title, props, component){
 export default function Student(props) {
     const user = props.history.location.state
     const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false))
+
     const navbar_operations_by_role = [
         { key : 'request_tutoring', header : 'בקשת שעות חונכות' , on_click : ()=>setOpenedPopups(Object.assign({},getOpenedPopup(true, false))) , icon : <ScheduleOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'book_class', header : 'קביעת שיעור' , on_click : ()=>{console.log("book_class")} , icon : <AssignmentTurnedInOutlinedIcon fontSize="large" style={{color:"white"}} />}
       ]
     const classes = useStyles();
 
-
-    // const  = () => {
-        
-    // }
-    // onEnter={RequestHours()} 
     return (
         <div>
             <AppBar position="static" className={classes.AppBar} >
                 <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} formSubmitButtonName="עדכן פרטים"/>
 
             </AppBar> 
-        <h5>
-        Student{openedPopups.request_hours_popup}
-        </h5>
-        {Dialog_generator(openedPopups.request_hours_popup, ()=>setOpenedPopups(getOpenedPopup(false, false)), "בקשת שעות חונכות",{_id:user._id}, (id)=>RequestHours(id))}
-        {/* <Dialog open={openedPopups.request_hours_popup} onClose={()=>setOpenedPopups(getOpenedPopup(false, false))} aria-labelledby="form-dialog-title">
-            <DialogTitle style={{direction : "rtl", textAlign:"right"}} id="form-dialog-title">בקשת שעות חונכות</DialogTitle>
-            <DialogContent style={{direction : "rtl", textAlign:"right"}}>
-            <RequestHours/>
-            </DialogContent>
-        </Dialog> */}
-        
 
+        {Dialog_generator(openedPopups.request_hours_popup, ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false))), "בקשת שעות חונכות",{_id:user._id}, (id)=>RequestHours(id))}
+        <Grid divided='vertically' centered>
+            <Grid.Row columns={2}>
+                <div>
+                    דיב1
+                </div>
+                <div>
+                    דיב2
+                </div>
+            </Grid.Row>
+            <Grid.Row columns={1}>
+                <Grid.Column> 
+                    {CoursesTable(user._id)}
+                </Grid.Column>
+            </Grid.Row>
+            
+        </Grid>
+        
         </div>
     )
+
 }

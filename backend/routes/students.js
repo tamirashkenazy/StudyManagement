@@ -4,7 +4,7 @@ let Student = require('../models/student.model');
 // all students info
 router.route('/').get((req, res) => {
     Student.find()
-    .then(student => res.json(student))
+    .then(student => res.send({success : true, message: student}))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
@@ -14,9 +14,9 @@ router.route('/:id').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (student) {
-            return res.send({success : true, message:"The student is: " + JSON.stringify(student), student: student})
+            return res.send({success : true, message: student})
         } else {
-            return res.send({success : false, message:"student does not exist!" })
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         }
     })
 })
@@ -27,10 +27,10 @@ router.route('/:id/request').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!student) {
-            return res.send({success : false, message:"Student does not exist!" })
+        } else if (!Array.isArray(student) || !student.length) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
-            return res.send({success : true, message:"The requests of this student are: "  + student.requests})
+            return res.send({success : true, message: student.requests})
         }
     })
 })
@@ -40,19 +40,18 @@ router.route('/add/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!student) {
-            return res.send({success : false, message:"Student does not exist!" })
-        } else {
-              
+        } else if (!Array.isArray(student) || !student.length) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {    
             if (student.requests.find(request => request.course_id === req.body.course_id)){
-                return res.send({success : false, message:"course already in student request!" })
+                return res.send({success : false, message:"הקורס כבר קיים בבקשות הסטודנט" })
             }
             student.requests.push(req.body)
             student.save((err, doc)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
-                return res.send({success:true, message:"Success: Student updated: " + JSON.stringify(student)})
+                return res.send({success:true, message: student})
             })
         }
     })
@@ -61,17 +60,19 @@ router.route('/add/request/:id').post((req, res) => {
 
 // add student
 router.route('/add').post((req, res) => {
-    const { body } = req;
-    const { _id, requests } = body
+    id = req.body._id
+    group = req.body.group
+    requests = []
     const newStudent = new Student({
-        _id,
+        id,
+        group,
         requests
     })
     newStudent.save((err, student)=> {
         if (err) {
             return res.send({success:false, message:"Error: Couldn't Save " + err})
         }
-        return res.send({success:true, message:"Success: Student added, " + JSON.stringify(student)})
+        return res.send({success:true, message: student})
     })
 })
 
@@ -79,7 +80,7 @@ router.route('/add').post((req, res) => {
 // delete student by id
 router.route('/:id').delete((req,res) => {
     Student.deleteOne({_id: req.params.id})
-    .then(student => res.json(student))
+    .then(student => res.send({success : true, message: "הסדטודנט נמחק בהצלחה"}))
     .catch(err => res.status(400).json('Error: ' + err))
 })
 
@@ -87,24 +88,18 @@ router.route('/:id').delete((req,res) => {
 // update student by id
 router.route('/update/:id').post((req,res) => {
     Student.findById((req.params.id)).then((student) => {
-        if (!student) {
-            return res.send({
-                success : false,
-                message : "Error: no such student"
-            })
+        if (!Array.isArray(student) || !student.length) {
+            return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
         }
         student._id = req.body._id.trim();
+        student.group = req.body.group;
         student.requests = req.body.requests;
         student.save((err, doc)=> {
             if(err) {
                 console.log('Error: ' + err);
-                return res.send({
-                    success : false, message : err.errmsg
-                });
+                return res.send({success : false, message : err.errmsg});
             }
-            return res.send({
-                success : true, message : 'Updated successfuly',
-            });
+            return res.send({success : true, message : "!הסטודנט עודכן בהצלחה"});
         })
     }); 
 });
@@ -114,8 +109,8 @@ router.route('/delete/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!student) {
-            return res.send({success : false, message:"Student does not exist!" })
+        } else if (!Array.isArray(student) || !student.length) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
             student.requests = student.requests.filter(request => request != req.body.request_id)
             student.save((err, student)=> {
@@ -123,7 +118,7 @@ router.route('/delete/request/:id').post((req, res) => {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
             })
-            return res.send({success:true, message:"Success: Student updated: " + JSON.stringify(student)})
+            return res.send({success:true, message: "!הבקשה הוסרה בהצלחה"})
         }
     })
 })
