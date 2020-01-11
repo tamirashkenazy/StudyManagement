@@ -27,7 +27,7 @@ router.route('/:id/request').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!student) {
+        } else if (!Array.isArray(student) || !student.length) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
             return res.send({success : true, message: student.requests})
@@ -40,11 +40,11 @@ router.route('/add/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!student) {
+        } else if (!Array.isArray(student) || !student.length) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {    
             if (student.requests.find(request => request.course_id === req.body.course_id)){
-                return res.send({success : false, message:"course already in student request!" })
+                return res.send({success : false, message:"הקורס כבר קיים בבקשות הסטודנט" })
             }
             student.requests.push(req.body)
             student.save((err, doc)=> {
@@ -88,7 +88,7 @@ router.route('/:id').delete((req,res) => {
 // update student by id
 router.route('/update/:id').post((req,res) => {
     Student.findById((req.params.id)).then((student) => {
-        if (!student) {
+        if (!Array.isArray(student) || !student.length) {
             return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
         }
         student._id = req.body._id.trim();
@@ -109,7 +109,7 @@ router.route('/delete/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!student) {
+        } else if (!Array.isArray(student) || !student.length) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
             student.requests = student.requests.filter(request => request != req.body.request_id)
