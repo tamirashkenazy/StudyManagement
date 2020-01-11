@@ -57,7 +57,6 @@ router.route('/add').post((req, res) => {
     }else{
         return res.send({success : false, message:"Error: password is too short!"})
     }
-    console.log(newUser)
     newUser.save((err, user)=> {
         if (err) {
             return res.send({success:false, message:"Error: Couldn't Save " + err})
