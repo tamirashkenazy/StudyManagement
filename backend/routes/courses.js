@@ -5,7 +5,7 @@ let Course = require('../models/course.model');
 router.route('/').get((req, res) => {
     //mongoose method to find all the courses
     Course.find()
-    .then(courses => res.json(courses))
+    .then(courses => res.send({success : true, message: courses}))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
@@ -17,9 +17,9 @@ router.route('/:_id').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (course.length > 0) {
-            return res.send({success : true, message:"course exists: " + JSON.stringify({course} ), course: course})
+            return res.send({success : true, message: course})
         }else{
-            return res.send({success : false, message:"course does not exist! "})
+            return res.send({success : false, message:"!הקורס אינו קיים"})
         }
     })
 })
@@ -37,7 +37,7 @@ router.route('/add').post((req, res) => {
         if (err) {
             return res.send({success:false, message:"Error: Couldn't Save " + err})
         }
-        return res.send({success:true, message:"Success: course added, " + JSON.stringify(course)})
+        return res.send({success:true, message: course})
     })
 })
 

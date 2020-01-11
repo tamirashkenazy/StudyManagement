@@ -11,9 +11,9 @@ const LessonSchema = new Schema({
                 teacher_name :  {type : String,  required : true,  match: onlyEnglishAndHebrew }},
     student :{ student_id : {type : String,  required : true, match: onlyNumbers, minlength: 9, maxlength: 9 }, 
                student_name :  {type : String,  required : true,  match: onlyEnglishAndHebrew }},
-    status : { type : String, required : true, enum: status},
+    status : { type : String, required : true, enum: status, default: 'waiting'},
     course : {course_id: {type : String, required : true, match: onlyNumbers},
-                    course_name: {type : String, required : true, minlength: 2}}
+                course_name: {type : String, required : true, minlength: 2}}
 }, { timestamps:true }, );
 // should make the Date as an index
 module.exports = mongoose.model('Lessons', LessonSchema);
