@@ -22,7 +22,7 @@ export function useAsyncHook(api, func_to_sort) {
             setLoading(false)
         }
         getDataFromAPI()
-    },[api, func_to_sort])
+    },[api])
     return [result, loading];
 }
 
