@@ -1,8 +1,7 @@
 import {useState, useEffect} from 'react';
 import axios from 'axios'
-
-
-const GET_MONGO_PATH = () => 'http://localhost:5000'
+const port = "5001"
+const GET_MONGO_PATH = () => `http://localhost:${port}`
 const get_mongo_api = (http_request) => {
     return `${GET_MONGO_PATH()}/${http_request}`
 }
@@ -14,7 +13,11 @@ export function useAsyncHook(api, func_to_sort) {
     useEffect(() => {
         async function getDataFromAPI(){
             const response = await axios.get(get_mongo_api(api)).then(response=>{
-                return response.data.message
+                if (response.data.success===true) {
+                    return response.data.message
+                } else {
+                    return null
+                }
             })
             const arr_of_courses = await response
             const options = func_to_sort(arr_of_courses)

@@ -29,7 +29,6 @@ export function httpPostRequestToAddUser(formValues, history) {
 export function httpPostRequestToAddStudent(id) {
     const student_to_add = {  
         _id : id,
-        requests : []
     }
     console.log("the student is: " + student_to_add);
     axios.post(get_mongo_api('students/add'), student_to_add)
@@ -44,11 +43,14 @@ export function httpPostRequestToAddTeacher(id) {
     const teacher_to_add = {  
         _id : id,
     }
-    console.log("the student is: " + teacher_to_add);
-    axios.post(get_mongo_api('students/add'), teacher_to_add)
+    console.log("the teacher is: " + teacher_to_add);
+    axios.post(get_mongo_api('teachers/add'), teacher_to_add)
     .then((response)=> {
-        if (!response.data.success) {
+        if (response.data.success === false) {
             alert(response.data.message)
+        } else {
+            console.log(response.data.message);
+            // alert(response.data.message)
         }
     })
 } 

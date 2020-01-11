@@ -8,7 +8,7 @@ export default function Main(props) {
     const fetchDataById = async (_id, next_role) => {
         axios.get(get_mongo_api(`users/${_id}`)).then((response=>{
             if (response.data.success) {
-                let user = response.data.user
+                let user = response.data.message
                 if(next_role === null) {
                   if(user.isStudent) {
                     history.replace({

@@ -28,17 +28,17 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
             setErrors(local_errors)
             let validForm = validateForm(local_errors)
             if(!validForm) {
-                console.log(local_errors);
+                // console.log(local_errors);
                 // alert(JSON.stringify(errors))
             } else {
-                httpPostRequestToAddUser(formValues, history)
                 if(formValues.isStudent) {
                     httpPostRequestToAddStudent(formValues._id)
-                } else if (formValues.isTeacher) {
+                } 
+                if (formValues.isTeacher) {
                     httpPostRequestToAddTeacher(formValues._id)
-
                 }
-                // httpPostRequestToAddStudent(formValues)
+                httpPostRequestToAddUser(formValues, history)
+
             }
         }
         
