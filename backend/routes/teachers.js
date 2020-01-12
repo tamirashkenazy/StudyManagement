@@ -137,7 +137,8 @@ router.route('/add/request/:id').post((req, res) => {
                     if (teacher.teaching_requests.includes(course._id)){
                         return res.send({success : false, message:"הקורס כבר קיים ברשימת הבקשות של המורה" })
                     }
-                    teacher.teaching_requests.push(course._id)
+                    let new_teaching_req = {course_id : req.body.course_id, course_name:req.body.course_name, status: "waiting", updated_at:Date.now()}
+                    teacher.teaching_requests.push(new_teaching_req)
                     teacher.save((err, doc)=> {
                         if (err) {
                             return res.send({success:false, message:"Error: Couldn't Save " + err})
