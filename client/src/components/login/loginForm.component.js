@@ -1,9 +1,6 @@
-//useState - hooks in react
 import React, { useState } from 'react'
-//REST
 import { useHistory} from 'react-router-dom'
 import {Form , Button, Checkbox} from 'semantic-ui-react'
-// import HttpPostRequestToGetUser from '../httpRequests/userLogIn'
 //TALKS to the backend, sends https requests
 import get_mongo_api from '../mongo/paths.component'
 import axios from 'axios'

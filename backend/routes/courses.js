@@ -13,7 +13,6 @@ router.route('/').get((req, res) => {
 router.route('/:_id').get((req,res) => {
     console.log(req.params._id)
     Course.find({ _id : req.params._id }, (err,course) => {
-        console.log(course)
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (course && course.length > 0) {
@@ -32,7 +31,6 @@ router.route('/add').post((req, res) => {
         name,
         _id
     })
-    console.log(newCourse)
     newCourse.save((err, course)=> {
         if (err) {
             return res.send({success:false, message:"Error: Couldn't Save " + err})
