@@ -9,7 +9,7 @@ import PostAddIcon from '@material-ui/icons/PostAdd';
 import {Dialog_generator} from '../utils/utils'
 import Participants from './participants.component'
 import AddCourse from './add_course.component'
-
+import TeacherRequestTable from './teacher_req.component'
 // const getOpenedPopup = (is_participants, is_statistics, is_reports) => {
 //     return(
 //         { participants : is_participants, statistics : is_statistics,  reports : is_reports}
@@ -41,6 +41,8 @@ export default function Admin(props) {
     const total_popups = 4
     const user = props.history.location.state
     const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
+
+    const [loaded, setLoaded] = useState(false)
     const classes = useStyles();
     const navbar_operations_by_role = [
         { key : 'participants', header : 'משתתפים' , on_click : ()=>setOpenedPopups(getOpenedPopup(0,total_popups)) , icon : <PeopleAltOutlinedIcon fontSize="large" style={{color:"white"}} />},
@@ -57,6 +59,7 @@ export default function Admin(props) {
             </AppBar> 
             {Dialog_generator(openedPopups[0], ()=>setOpenedPopups(closeAllPopups(total_popups)), "משתתפים",{}, ()=>Participants())}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse())}
+            {TeacherRequestTable(setLoaded)}
         </div>
 
     )

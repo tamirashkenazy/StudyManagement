@@ -1,7 +1,8 @@
 import React, {useState} from 'react';
 import {Button, Checkbox} from 'semantic-ui-react'
 import { Grid } from 'semantic-ui-react'
-import {useAsyncHook} from '../../mongo/paths.component'
+import axios from 'axios'
+import get_mongo_api, {useAsyncHook} from '../../mongo/paths.component'
 
 const make_courses_option = (arr_of_courses) => {
     // let local_courses = courses
@@ -30,35 +31,27 @@ const make_courses_option = (arr_of_courses) => {
 // }
 
 export default function CoursesToTeach(props){
-    const [selectedCourses, setSelectedCourses] = useState({})
+    const [selectedCourses, setSelectedCourses] = useState([])
     const [courses_options, loading] = useAsyncHook(`courses`, make_courses_option);
     const sendCourses = (_id) => {
-        
-        // const course_id = selectedCourses.split('-')[0]
-        // const course_name = selectedCourses.split('-')[1]
+        Object.keys(selectedCourses).forEach(key=>{
+            let course_id = key.split('-')[0]
+            let course_name = key.split('-')[1]
+            axios.post(get_mongo_api(`teachers/add/request/${_id}`),{course_id : course_id, course_name: course_name}).then(response=>{
+                if (!response.data.success) {
+                    console.log(response.data.message)
+                }
+            })
+        })
 
-        console.log(selectedCourses);
-        // console.log(course_id);
-
-        // axios.post(get_mongo_api(`students/add/request/${_id}`),{course_id : course_id, number_of_hours: hours, status : "waiting"}).then(response=>{
-        //     if (response.data.success) {
-        //         alert(response.data.message)
-        //     } else {
-        //         console.log('false');
-        //         console.log(response.data.message)
-        //     }
-        // })
         // window.location.reload(true)
         // callback()
         // console.log(selectedCourse, hours); 
     }
     
     const onChangeCourse = (e, {value, label, checked}) => {
-        console.log("e", value, label, checked);
-
         let new_selected = Object.assign({},selectedCourses)
         new_selected[value] = checked
-        console.log(new_selected);
         setSelectedCourses(new_selected)
     }
 

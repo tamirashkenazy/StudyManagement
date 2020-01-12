@@ -20,7 +20,12 @@ export function useAsyncHook(api, func_to_sort) {
                 }
             })
             const arr_of_courses = await response
-            const options = func_to_sort(arr_of_courses)
+            let options = null
+            if (func_to_sort) {
+                options = func_to_sort(arr_of_courses)
+            } else {
+                options = arr_of_courses
+            }
             setResult(options);
             setLoading(false)
         }

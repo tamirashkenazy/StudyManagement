@@ -17,7 +17,7 @@ const TeacherSchema = new Schema({
     hours_available : {type: [Date], default:[]},
     // list of course number
     teaching_requests : {type: [{course_id : {type : String,  required : true, match: onlyNumbers },
-                        course_name : {type : String,  required : true, match: onlyEnglishAndHebrew},
+                        course_name : {type : String,  required : true},
                         updated_at : {type : Date,  required : true, default: Date.now()},
                         status : { type : String, required : true, enum: status, default: 'waiting'}}] || [] , default : []},
     grades_file : {type : String, default : null},
