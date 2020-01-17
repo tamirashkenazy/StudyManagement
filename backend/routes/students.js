@@ -27,10 +27,24 @@ router.route('/:id/request').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(student) || !student.length) {
+        } else if (!student && student.length === 0) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
             return res.send({success : true, message: student.requests})
+        }
+    })
+})
+
+
+// list of student courses by student id
+router.route('/:id/courses').get((req,res) => {
+    Student.findById((req.params.id), (err,student) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!student && student.length === 0) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {
+            return res.send({success : true, message: student.courses})
         }
     })
 })
@@ -47,6 +61,29 @@ router.route('/add/request/:id').post((req, res) => {
                 return res.send({success : false, message:"הקורס כבר קיים בבקשות הסטודנט" })
             }
             student.requests.push(req.body)
+            student.save((err, doc)=> {
+                if (err) {
+                    return res.send({success:false, message:"Error: Couldn't Save " + err})
+                }
+                return res.send({success:true, message: student})
+            })
+        }
+    })
+})
+
+
+// add course to student courses list
+router.route('/add/courses/:id').post((req, res) => {
+    Student.findById((req.params.id), (err,student) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!student && student.length === 0) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {    
+            if (student.courses.find(course => course.course_id === req.body.course_id)){
+                return res.send({success : false, message:"הקורס כבר קיים בקורסי הלימוד של הסטודנט" })
+            }
+            student.courses.push(req.body)
             student.save((err, doc)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
@@ -88,7 +125,7 @@ router.route('/:id').delete((req,res) => {
 // update student by id
 router.route('/update/:id').post((req,res) => {
     Student.findById((req.params.id)).then((student) => {
-        if (!Array.isArray(student) || !student.length) {
+        if (!student && student.length === 0) {
             return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
         }
         student._id = req.body._id.trim();
@@ -109,10 +146,10 @@ router.route('/delete/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(student) || !student.length) {
+        } else if (!student && student.length === 0) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
-            student.requests = student.requests.filter(request => request != req.body.request_id)
+            student.requests = student.requests.filter(request => request != req.body.course_id)
             student.save((err, student)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
@@ -122,6 +159,26 @@ router.route('/delete/request/:id').post((req, res) => {
         }
     })
 })
+
+
+router.route('/delete/courses/:id').post((req, res) => {
+    Student.findById((req.params.id), (err,student) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!student && student.length === 0) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {
+            student.courses = student.courses.filter(course => course != req.body.course_id)
+            student.save((err, student)=> {
+                if (err) {
+                    return res.send({success:false, message:"Error: Couldn't Save " + err})
+                }
+            })
+            return res.send({success:true, message: "!הבקשה הוסרה בהצלחה"})
+        }
+    })
+})
+
 
 
 module.exports = router;

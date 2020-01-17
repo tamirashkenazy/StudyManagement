@@ -14,7 +14,7 @@ router.route('/:id').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : true, message: teacher})
         } else {
             return res.send({success : false, message:"המורה אינו קיים במערכת" })
@@ -28,7 +28,7 @@ router.route('/:id/hoursAvailable').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : true, message: teacher.hours_available})
         } else {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
@@ -42,7 +42,7 @@ router.route('/:id/teachingCourse').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             return res.send({success : true, message: teacher.teaching_courses})
@@ -55,7 +55,7 @@ router.route('/:id/request').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             return res.send({success : true, message: teacher.teaching_requests})
@@ -68,7 +68,7 @@ router.route('/:id/request').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             return res.send({success : true, message:{bank_number : teacher.bank_number,
@@ -82,7 +82,7 @@ router.route('/:id/grades').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             return res.send({success : true, message: teacher.grades_file})
@@ -95,13 +95,13 @@ router.route('/add/teachingCourse/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             Course.findById((req.body.course_id), (err,course) => {
                 if(err) {
                     return res.send({success : false, message:"Error: " + err})
-                } else if (!Array.isArray(course) || !course.length) {
+                } else if (!course && course.length === 0) {
                     return res.send({success : false, message:"!הקורס המבוקש אינו קיים במערכת" })
                 } else {
                     if (teacher.teaching_courses.includes(course._id)){
@@ -125,13 +125,13 @@ router.route('/add/request/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             Course.findById((req.body.course_id), (err,course) => {
                 if(err) {
                     return res.send({success : false, message:"Error: " + err})
-                } else if (!Array.isArray(course) || !teacher.length) {
+                } else if (!course && course.length === 0) {
                     return res.send({success : false, message:"!הקורס אינו קיים במערכת"})
                 } else {
                     if (teacher.teaching_requests.includes(course._id)){
@@ -156,7 +156,7 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             teacher.hours_available.push.apply(teacher.hours_available, req.body)
@@ -205,7 +205,7 @@ router.route('/:id').delete((req,res) => {
 // update teacher by id
 router.route('/update/:id').post((req,res) => {
     Teacher.findById((req.params.id)).then((teacher) => {
-        if (!Array.isArray(teacher) || !teacher.length) {
+        if (!teacher && teacher.length === 0) {
             return res.send({success : false,message : "!המורה אינו קיים במערכת"})
         }
         teacher._id = req.body._id.trim();
@@ -234,7 +234,7 @@ router.route('/delete/teachingCourse/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             teacher.teaching_courses = teacher.teaching_courses.filter(course => course != req.body.course_id)
@@ -253,7 +253,7 @@ router.route('/delete/request/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             teacher.teaching_requests = teacher.teaching_requests.filter(request => request != req.body.request_id)
@@ -272,7 +272,7 @@ router.route('/delete/hoursAvailable/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
+        } else if (!teacher && teacher.length === 0) {
             return res.send({success : false, message: "!המורה אינו קיים במערכת"})
         } else {
             teacher.hours_available = teacher.hours_available.filter(date => req.body.includes(date))

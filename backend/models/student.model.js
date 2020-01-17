@@ -12,7 +12,11 @@ const StudentSchema = new Schema({
                  course_name : {type : String,  required : true, match: onlyEnglishAndHebrew},
                  number_of_hours : {type : String,  required : true, match: onlyNumbers},
                  updated_at : {type : Date,  required : true, default: Date.now()},
-                 status : { type : String, required : true, enum: status, default: 'waiting'}}]
+                 status : { type : String, required : true, enum: status, default: 'waiting'}}],
+    courses : [{course_id : {type : String,  required : true, match: onlyNumbers },
+                course_name : {type : String,  required : true, match: onlyEnglishAndHebrew},
+                approved_hours : {type : String,  required : true, match: onlyNumbers},
+                hours_already_done : {type : String,  required : true, match: onlyNumbers, default: '0'}}] 
 }, { timestamps:true }, );
 
 // defult status

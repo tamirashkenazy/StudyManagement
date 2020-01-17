@@ -43,7 +43,7 @@ router.route('/add').post((req, res) => {
 
 router.route('/:_id').delete((req,res) => {
     Course.deleteOne({_id: req.params._id})
-    .then(course => res.json(course))
+    .then(course => res.send({success : true, message: "הקורס נמחק בהצלחה"}))
     .catch(err => res.status(400).json('Error: ' + err))
 })
 
