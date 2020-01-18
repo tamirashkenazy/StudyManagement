@@ -40,7 +40,7 @@ export default function AddCourse(){
 
     return (
         <div>
-            <Form className="login-form">
+            <Form>
                 <Form.Field>
                     <label>מספר קורס</label>
                     <Form.Input
@@ -55,7 +55,7 @@ export default function AddCourse(){
                 <Form.Field>
                     <label>שם הקורס</label>
                     <Form.Input
-                        style={{direction:"ltr"}}
+                        style={{direction:"rtl"}}
                         placeholder='שם הקורס'
                         name='course_name'
                         value={inputs.course_name} 
@@ -63,7 +63,7 @@ export default function AddCourse(){
                     />
                 </Form.Field>
                 <Form.Field>
-                     <Button onClick={handleSubmit} primary >הוסף קורס</Button>
+                     <Button onClick={handleSubmit} primary >הוספת קורס</Button>
                     
                 </Form.Field>
             </Form>

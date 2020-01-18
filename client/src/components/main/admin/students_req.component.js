@@ -19,7 +19,7 @@ const students_requests_array = (students_arr)=>{
                             "שעות מבוקשות" : request.number_of_hours,
                             "שעות מאושרות" : "שעות לאשר",
                             "קבצים" : "קבצים",
-                            "": <IconButton size="small"><CheckIcon style={{color:"green"}}/></IconButton>,
+                            "": <IconButton size="small" onClick={()=>console.log('clicked')}><CheckIcon style={{color:"green"}}/></IconButton>,
                             " ":<IconButton size="small"><CloseIcon style={{color:"red"}}/></IconButton>
                         }
                     )
@@ -36,7 +36,7 @@ const students_requests_array = (students_arr)=>{
     }
 }
 
-export default function StudentsRequestTable() {
+export default function StudentsRequestTable(props) {
     const [students, loading] = useAsyncHook(`students`, students_requests_array);
     return (
         !loading && <GenericTable table_data={{data:students, title:"בקשות תלמידים"}}/>
