@@ -6,7 +6,6 @@ import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedI
 import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined';
 import RequestHours from './request_hours.component'
 import CoursesTable from './courses_table.component'
-import { Grid } from 'semantic-ui-react'
 import { Dialog_generator } from '../utils/utils'
 import '../../../styles/students.scss';
 
@@ -41,12 +40,12 @@ export default function Student(props) {
                     <div className="leftDiv">
                         דיב1
                     </div>
+                    <div className="bottomDiv">
+                        {CoursesTable(user._id)}
+                    </div>
                 </div>
-                <div className="bottomDiv">
-                    {CoursesTable(user._id)}
-                </div>
-            </div>
-        </div >
+            </div >
+        </div>
     )
 
 }
