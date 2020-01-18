@@ -13,7 +13,7 @@ router.route('/:id').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (student) {
+        } else if (student && student.length > 0) {
             return res.send({success : true, message: student})
         } else {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
@@ -27,7 +27,7 @@ router.route('/:id/request').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(student) || !student.length) {
+        } else if (!student || student.length===0) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
             return res.send({success : true, message: student.requests})
@@ -38,9 +38,10 @@ router.route('/:id/request').get((req,res) => {
 // add course to student requests list
 router.route('/add/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
+        
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(student) || !student.length) {
+        } else if (!student || student.length === 0) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {    
             if (student.requests.find(request => request.course_id === req.body.course_id)){
@@ -60,14 +61,14 @@ router.route('/add/request/:id').post((req, res) => {
 
 // add student
 router.route('/add').post((req, res) => {
-    id = req.body._id
-    group = req.body.group
+    _id = req.body._id
     requests = []
-    const newStudent = new Student({
-        id,
-        group,
-        requests
-    })
+    student_obj = { _id : _id, requests : requests}
+    const {group } = req.body 
+    if (group && group !== '') {
+        student_obj[group] = group
+    }
+    const newStudent = new Student(student_obj)
     newStudent.save((err, student)=> {
         if (err) {
             return res.send({success:false, message:"Error: Couldn't Save " + err})
@@ -88,7 +89,7 @@ router.route('/:id').delete((req,res) => {
 // update student by id
 router.route('/update/:id').post((req,res) => {
     Student.findById((req.params.id)).then((student) => {
-        if (!Array.isArray(student) || !student.length) {
+        if (!student || student.length === 0) {
             return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
         }
         student._id = req.body._id.trim();
@@ -109,7 +110,7 @@ router.route('/delete/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(student) || !student.length) {
+        } else if (!student || student.length === 0) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
             student.requests = student.requests.filter(request => request != req.body.request_id)

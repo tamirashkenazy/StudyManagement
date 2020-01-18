@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {Sync, CreateOutlined} from '@material-ui/icons';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {useStyles, StyledMenu, StyledMenuItem} from './appBarMenu.styles'
+import {useStylesAppBar, StyledMenu, StyledMenuItem} from './appBarMenu.styles'
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -21,7 +21,7 @@ import { check_errors, validateForm, allFieldsExist } from '../../signup/validat
 import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
 
-function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_operations_by_role, formSubmitButtonName}) {
+function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_operations_by_role, props}) {
   // console.log("userDetails: " , userDetails);
   const [open, setOpen] = useState(false);
   const onUpdateDetailsButton = () => { 
@@ -49,7 +49,7 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
       state: userDetails
     });
   }
-  const classes = useStyles();
+  const classes = useStylesAppBar();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = event => {
@@ -58,7 +58,6 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
   const handleClose = () => {
       setAnchorEl(null);
   };
-
 
   const accountMenuSection = () => {
     return (  
@@ -164,7 +163,7 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
       <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
         <DialogTitle style={{direction : "rtl", textAlign:"right"}} id="form-dialog-title">עדכון פרטים</DialogTitle>
         <DialogContent style={{direction : "rtl", textAlign:"right"}}>
-          <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} idDisabled={true} formSubmitButtonName={formSubmitButtonName} submitDisabled={wasUpdated}/>
+          <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} idDisabled={true} formSubmitButtonName={props.formSubmitButtonName} submitDisabled={wasUpdated}/>
           {wasUpdated && <Button onClick={handleDialogClose} color="primary"> צא </Button>}
         </DialogContent>
       </Dialog>

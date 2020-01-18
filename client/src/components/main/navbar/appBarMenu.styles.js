@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import MenuItem from '@material-ui/core/MenuItem';
 import Menu from '@material-ui/core/Menu';
 import { withStyles } from '@material-ui/core/styles';
-export const useStyles = makeStyles(theme => ({
+export const useStylesAppBar = makeStyles(theme => ({
     AppBar : {
         backgroundColor : "gray",
         alignItems : "right",

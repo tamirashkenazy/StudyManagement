@@ -6,17 +6,16 @@ router.route('/').get((req, res) => {
     //mongoose method to find all the courses
     Course.find()
     .then(courses => res.send({success : true, message: courses}))
-    .catch(err => res.status(400).json("Error: " + err));
+    .catch(err => res.status(400).send({success:false, message: "Error: " + err}));
 });
 
 // the /:id is like a variable
 router.route('/:_id').get((req,res) => {
     console.log(req.params._id)
     Course.find({ _id : req.params._id }, (err,course) => {
-        console.log(course)
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (course.length > 0) {
+        } else if (course && course.length > 0) {
             return res.send({success : true, message: course})
         }else{
             return res.send({success : false, message:"!הקורס אינו קיים"})
@@ -32,7 +31,6 @@ router.route('/add').post((req, res) => {
         name,
         _id
     })
-    console.log(newCourse)
     newCourse.save((err, course)=> {
         if (err) {
             return res.send({success:false, message:"Error: Couldn't Save " + err})
@@ -43,8 +41,8 @@ router.route('/add').post((req, res) => {
 
 router.route('/:_id').delete((req,res) => {
     Course.deleteOne({_id: req.params._id})
-    .then(course => res.json(course))
-    .catch(err => res.status(400).json('Error: ' + err))
+    .then(course => res.send({success:true, message: course}))
+    .catch(err => res.status(400).send({success:false, message: "Error: " + err}))
 })
 
 module.exports = router;

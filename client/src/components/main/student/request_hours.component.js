@@ -36,22 +36,24 @@ export default function RequestHours(props){
     const [hours, setHours] = useState(null)
     
     const sendCourse = (_id) => {
+        console.log("in sendCourse");
         const course_id = selectedCourse.split('-')[0]
         const course_name = selectedCourse.split('-')[1]
         console.log(course_name);
         console.log(course_id);
 
-        axios.post(get_mongo_api(`students/add/request/${_id}`),{course_id : course_id, number_of_hours: hours, status : "waiting"}).then(response=>{
+        axios.post(get_mongo_api(`students/add/request/${_id}`),{course_id : course_id,course_name:course_name, number_of_hours: hours,  status : "waiting"}).then(response=>{
             if (response.data.success) {
+                console.log('reloading');
                 alert(response.data.message)
+                window.location.reload(true)
             } else {
                 console.log('false');
                 console.log(response.data.message)
             }
         })
-        window.location.reload(true)
-        // callback()
-        // console.log(selectedCourse, hours); 
+        
+
     }
     
     return (
@@ -64,7 +66,7 @@ export default function RequestHours(props){
                 <Dropdown  placeholder='מספר שעות' onChange={(e,{value})=>setHours(value)} options={get_options(4)}/>
             </Grid.Row>
             {selectedCourse && hours && <Grid.Row>
-                <Button onClick={()=>sendCourse(props._id, props.onSend)}>שלח</Button>
+                <Button onClick={()=>{sendCourse(props._id); console.log('clicked');}}>שלח</Button>
             </Grid.Row>}
         </Grid>
     )

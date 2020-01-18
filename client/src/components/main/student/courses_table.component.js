@@ -13,6 +13,7 @@ var dateFormat = require('dateformat');
 const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
 
     if (arr_of_student_courses_requests && arr_of_student_courses_requests.length > 0){
+        console.log(arr_of_student_courses_requests);
         let options = arr_of_student_courses_requests.map(course_obj => {
             return (
                 {
