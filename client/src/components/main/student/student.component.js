@@ -1,6 +1,6 @@
 import React, {useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import {useStyles} from '../navbar/appBarMenu.styles'
+import {useStylesAppBar} from '../navbar/appBarMenu.styles'
 import AccountMenu from '../navbar/navbar.component'
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined';
@@ -36,7 +36,7 @@ export default function Student(props) {
         { key : 'request_tutoring', header : 'בקשת שעות חונכות' , on_click : ()=>setOpenedPopups(Object.assign({},getOpenedPopup(true, false))) , icon : <ScheduleOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'book_class', header : 'קביעת שיעור' , on_click : ()=>{console.log("book_class")} , icon : <AssignmentTurnedInOutlinedIcon fontSize="large" style={{color:"white"}} />}
       ]
-    const classes = useStyles();
+    const classes = useStylesAppBar();
 
     return (
         <div>

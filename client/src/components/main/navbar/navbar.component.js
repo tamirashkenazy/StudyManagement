@@ -8,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText';
 import {Sync, CreateOutlined} from '@material-ui/icons';
 import HelpOutlineIcon from '@material-ui/icons/HelpOutline';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {useStyles, StyledMenu, StyledMenuItem} from './appBarMenu.styles'
+import {useStylesAppBar, StyledMenu, StyledMenuItem} from './appBarMenu.styles'
 
 import Button from '@material-ui/core/Button';
 import Dialog from '@material-ui/core/Dialog';
@@ -49,7 +49,7 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
       state: userDetails
     });
   }
-  const classes = useStyles();
+  const classes = useStylesAppBar();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = event => {

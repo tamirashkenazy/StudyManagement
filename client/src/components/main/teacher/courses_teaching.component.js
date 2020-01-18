@@ -5,8 +5,7 @@ import axios from 'axios'
 import get_mongo_api, {useAsyncHook} from '../../mongo/paths.component'
 
 const make_courses_option = (arr_of_courses) => {
-    // let local_courses = courses
-    if (arr_of_courses && arr_of_courses!==undefined){
+    if (arr_of_courses && arr_of_courses.length>0){
         let options = arr_of_courses.map(course_obj => {
             return (
                 {
