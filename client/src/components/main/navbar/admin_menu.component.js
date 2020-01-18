@@ -5,12 +5,12 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import ListItemIcon from '@material-ui/core/ListItemIcon';
 import ListItemText from '@material-ui/core/ListItemText';
 import ExitToAppIcon from '@material-ui/icons/ExitToApp';
-import {useStyles, StyledMenu, StyledMenuItem} from './appBarMenu.styles'
+import {useStylesAppBar, StyledMenu, StyledMenuItem} from './appBarMenu.styles'
 import {useHistory} from 'react-router-dom'
 
 
 export default function AdminMenu({userDetails, navbar_operations_by_role}) {
-  const classes = useStyles();
+  const classes = useStylesAppBar();
   const [anchorEl, setAnchorEl] = useState(null);
 
   const handleMenu = event => {

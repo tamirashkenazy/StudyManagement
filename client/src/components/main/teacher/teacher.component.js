@@ -1,6 +1,6 @@
 import React, {useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
-import {useStyles} from '../navbar/appBarMenu.styles'
+import {useStylesAppBar} from '../navbar/appBarMenu.styles'
 import AccountMenu from '../navbar/navbar.component'
 import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined';
 import ImportContactsSharpIcon from '@material-ui/icons/ImportContactsSharp';
@@ -22,7 +22,7 @@ export default function Teacher(props) {
         { key : 'update_availability', header : 'עדכון זמינות' , on_click : ()=>{console.log("update your zminut")} , icon : <EventAvailableOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'courses_to_teach', header : 'בחירת קורסים להוראה' , on_click : ()=>setOpenedPopups(Object.assign({},getOpenedPopup(true, false))) , icon : <ImportContactsSharpIcon fontSize="large" style={{color:"white"}} />}
       ]
-    const classes = useStyles();
+    const classes = useStylesAppBar();
     return (
         <div>
             <AppBar position="static" className={classes.AppBar} >
