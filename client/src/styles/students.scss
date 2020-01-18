@@ -1,0 +1,35 @@
+.student {
+    .header {
+        .makeStyles-AppBar-1{
+            height: 5%;
+        }
+    }
+
+   .content {
+        height: 95%;
+        margin: 0 auto;
+        >div {
+            display: flex;
+            margin: 0;
+            height: 50%;
+            padding: 15px;
+            border: 0.1px solid lightblue;
+            &.bottomDiv {
+                justify-content: center;
+                align-items: center;
+                >div {
+                    width: -webkit-fill-available;
+                }
+            }
+            >div {
+                // display: flex;
+                border: 0.1px solid lightpink;
+                width: 50%;
+                height: 100%;
+                padding: 15px;
+                justify-content: center;
+                align-items: center;
+            }
+        }
+    } 
+}
