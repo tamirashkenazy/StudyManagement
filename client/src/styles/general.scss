@@ -16,3 +16,10 @@
   // vertical-align: middle;
   // margin: 0 auto;
 }
+
+#root {
+  height: 100%;
+  >div{
+    height: 100%;
+  }
+}
