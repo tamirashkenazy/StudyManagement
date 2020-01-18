@@ -9,17 +9,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
 
-
-// export default function Student(props) {
-//     const data = [
-//                     { id: 1, name: 'itay', age: 21, email: 'itay@email.com' },
-//                     { id: 2, name: 'eli', age: 19, email: 'eli@email.com' },
-//                     { id: 3, name: 'yosi', age: 16, email: 'yosi@email.com' },
-//                     { id: 4, name: 'mali', age: 25, email: 'mali@email.com' }
-//                 ]
-//     const title="table"
-// }
-
 const useStyles = makeStyles({
     titleRow : {
         textAlign : "center",
@@ -91,7 +80,6 @@ export default function GenericTable(props) {
 
     return (
         <TableContainer component={Paper} className={classes.table}>
-            {/* <label>hey</label> */}
             <Table stickyHeader aria-label="sticky table" >
                 <TableHead >
                     {num_of_cols && <TableRow>
