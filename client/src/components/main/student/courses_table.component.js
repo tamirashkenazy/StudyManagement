@@ -1,13 +1,8 @@
 import React from 'react';
 import {useAsyncHook} from '../../mongo/paths.component'
 import { makeStyles } from '@material-ui/core/styles';
-import Table from '@material-ui/core/Table';
-import TableBody from '@material-ui/core/TableBody';
-import TableCell from '@material-ui/core/TableCell';
-import TableContainer from '@material-ui/core/TableContainer';
-import TableHead from '@material-ui/core/TableHead';
-import TableRow from '@material-ui/core/TableRow';
-import Paper from '@material-ui/core/Paper';
+import GenericTable from '../utils/generic_table.component'
+
 var dateFormat = require('dateformat');
 
 const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
