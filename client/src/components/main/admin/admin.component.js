@@ -59,7 +59,7 @@ export default function Admin(props) {
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
             {Dialog_generator(openedPopups[0], ()=>setOpenedPopups(closeAllPopups(total_popups)), "משתתפים",{}, ()=>Participants())}
-            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse())}
+            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse(), "md")}
             <Grid container spacing={1} alignItems="stretch" justify="space-evenly" direction="row" style={{margin:"0 auto", direction :"rtl"}}>
                 <Grid item xs>
                     <Typography variant="h5">בקשות מורים</Typography>

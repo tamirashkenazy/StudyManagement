@@ -30,6 +30,7 @@ const students_requests_array = (students_arr)=>{
             }
         })
         students_requests = students_requests.flat()
+        students_requests = students_requests.filter(element=> element!=null)
         return students_requests
     } else {
         return null
