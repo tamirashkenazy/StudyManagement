@@ -36,7 +36,10 @@ export function useAsyncHook(api, func_to_sort, args=null) {
             setLoading(false)
         }
         getDataFromAPI()
-    },[])
+    },[api, func_to_sort, args])
+    // if (api === "students") {
+    //     console.log(result);   
+    // }
     return [result, loading];
 }
 

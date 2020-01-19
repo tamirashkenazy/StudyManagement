@@ -4,13 +4,7 @@ import Dialog from '@material-ui/core/Dialog';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 
-export function Dialog_generator(open, onClose, title, args, Component, maxWidth="md"){
-    // console.log(props);
-    // const {open, onClose, title, args, Component} = props
-    // let {maxWidth} = props
-    // if (!maxWidth) {
-    //     maxWidth = "md"
-    // }
+export function Dialog_generator(open, onClose, title, props, component, maxWidth="md"){
     //options for maxWidth are: "xs" , "sm", "md", "lg", "xl"
     const rtl_style = {direction : "rtl", textAlign:"center"}
     return (

@@ -23,11 +23,7 @@ router.route('/byID/:id').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-<<<<<<< HEAD
-        } else if (student) {
-=======
         } else if (student && !Array.isArray(student)) {
->>>>>>> admin tables
             return res.send({success : true, message: student})
         } else {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
