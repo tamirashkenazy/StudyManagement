@@ -82,7 +82,7 @@ export default function GenericTable(props) {
         <TableContainer component={Paper} className={classes.table}>
             <Table stickyHeader aria-label="sticky table" >
                 <TableHead >
-                    {num_of_cols && <TableRow>
+                    {num_of_cols && title && <TableRow>
                         <TableCell  colSpan={num_of_cols} className={classes.titleRow}> {title}</TableCell>
                     </TableRow>}
                     {renderTableHeader()}
