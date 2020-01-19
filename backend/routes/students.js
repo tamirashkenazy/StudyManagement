@@ -13,7 +13,7 @@ router.route('/:id').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (student && student.length > 0) {
+        } else if (student && !Array.isArray(student)) {
             return res.send({success : true, message: student})
         } else {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })

@@ -17,7 +17,7 @@ router.route('/:id').get((req,res) => {
     User.findById((req.params.id), (err,user) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (user) {
+        } else if (user && !Array.isArray(user)) {
             return res.send({success : true, message:user})
         } else {
             return res.send({success : false, message:"!המשתמש אינו קיים במערכת"})

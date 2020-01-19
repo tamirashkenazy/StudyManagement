@@ -14,7 +14,7 @@ router.route('/:id').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (!teacher || teacher.length===0) {
+        } else if (teacher && !Array.isArray(teacher)) {
             return res.send({success : true, message: teacher})
         } else {
             return res.send({success : false, message:"המורה אינו קיים במערכת" })
