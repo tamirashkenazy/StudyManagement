@@ -8,7 +8,9 @@ import '../../styles/login-form.scss'
 import '../../styles/general.scss'
 // form creation = https://medium.com/@geeky_writer_/using-react-hooks-to-create-awesome-forms-6f846a4ce57
 function FormLogin ()  {
+    // history used for the REST api
     let history = useHistory()
+
     const httpPostRequestToGetUser = () => {
         const login_user = {  
             _id : inputs.username,
@@ -58,7 +60,6 @@ function FormLogin ()  {
     return (
         <div className="right-align rtl-direction">
             <WelcomeHeader/>
-
             <Form className="login-form">
                 <Form.Field>
                     <label>שם משתמש</label>
