@@ -26,16 +26,16 @@ function LoginBox() {
         <Container id="login-box">
             <Row style={{padding: '3%'}}>
                 <Col id="images-login">
-                    <ImagesLogin></ImagesLogin>
+                    <ImagesLogin/>
                 </Col>
                 <Col>
-                    <FormLogin></FormLogin>
+                    <FormLogin/>
                 </Col>
             </Row>
             <Row>
-            <Link to={{ pathname: '/signup'}} style={{marginRight : '9%'}}>
-                        <Button color="teal">להרשמה</Button>
-                    </Link>
+                <Link to={{ pathname: '/signup'}} style={{marginRight : '9%'}}>
+                    <Button color="teal">להרשמה</Button>
+                </Link>
             </Row>
         </Container>
     );
@@ -43,8 +43,9 @@ function LoginBox() {
 
 function LandingPage () {
     return(
-        <div id="land-page" className="bg ">
-            <LoginBox></LoginBox>
+        // id and className goes to:  '../../styles/App.scss'
+        <div id="land-page" className="bg">
+            <LoginBox/>
         </div>
     )
 }
