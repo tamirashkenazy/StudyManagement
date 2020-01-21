@@ -11,7 +11,6 @@ export function useAsyncHook(api, func_to_sort, args=null) {
     const [result, setResult] = useState([]);
     const [loading, setLoading] = useState(true);
     console.log("api: ", api);
-    // the useEffect function happens every time that the args (api, func_to_sort, args=null) are changing
     useEffect(() => {
         async function getDataFromAPI(){
             const response = await axios.get(get_mongo_api(api)).then(response=>{
@@ -36,10 +35,7 @@ export function useAsyncHook(api, func_to_sort, args=null) {
             setLoading(false)
         }
         getDataFromAPI()
-    },[api, func_to_sort, args])
-    // if (api === "students") {
-    //     console.log(result);   
-    // }
+    },[])
     return [result, loading];
 }
 
