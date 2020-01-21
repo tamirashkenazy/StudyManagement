@@ -8,9 +8,9 @@ const get_mongo_api = (http_request) => {
 
 // from here https://dev.to/vinodchauhan7/react-hooks-with-async-await-1n9g
 export function useAsyncHook(api, func_to_sort, args=null) {
-
     const [result, setResult] = useState([]);
     const [loading, setLoading] = useState(true);
+    console.log("api: ", api);
     useEffect(() => {
         async function getDataFromAPI(){
             const response = await axios.get(get_mongo_api(api)).then(response=>{
@@ -35,10 +35,7 @@ export function useAsyncHook(api, func_to_sort, args=null) {
             setLoading(false)
         }
         getDataFromAPI()
-    },[api, func_to_sort, args])
-    // if (api === "students") {
-    //     console.log(result);   
-    // }
+    },[])
     return [result, loading];
 }
 
