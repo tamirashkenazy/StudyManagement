@@ -34,7 +34,7 @@ const useStyles = makeStyles({
 
 });
 
-export default function GenericTable(props) {
+export default function GenericTable(props) { //props : {table_data : {data: some_data-> array of objects , title: string_of_title}}
     const classes = useStyles();
     const {data, title} = props.table_data
     
@@ -50,9 +50,9 @@ export default function GenericTable(props) {
         let header = Object.keys(data[0])
         return (
             <TableRow className={classes.headerRow}>
-                {header.map((key, index) => {
-                    return <TableCell className={classes.headerCell} key={index}>{key.toUpperCase()}</TableCell>
-                })}
+                {header.map((key, index) => 
+                    <TableCell className={classes.headerCell} key={index}>{key.toUpperCase()}</TableCell>
+                )}
             </TableRow>
         )
        
@@ -80,7 +80,7 @@ export default function GenericTable(props) {
 
     return (
         <TableContainer component={Paper} className={classes.table}>
-            <Table stickyHeader aria-label="sticky table" >
+            <Table stickyHeader>
                 <TableHead >
                     {num_of_cols && title && <TableRow>
                         <TableCell  colSpan={num_of_cols} className={classes.titleRow}> {title}</TableCell>

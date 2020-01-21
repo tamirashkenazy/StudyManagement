@@ -12,7 +12,7 @@ export default function Main(props) {
                 if(next_role === null) {
                   if(user.isStudent) {
                     history.replace({
-                      pathname: '/main/student', 
+                      pathname: '/main/student',
                       state: user
                     });
                   } else if(user.isTeacher) {
