@@ -11,6 +11,7 @@ const store = configureStore()
 
 // the "root" is from the index.html id=root
 ReactDOM.render(
+//store is related to redux 
 <Provider store={store}>
     <App />
 </Provider>, 
