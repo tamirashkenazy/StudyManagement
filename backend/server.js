@@ -30,6 +30,7 @@ const lessonsRouter = require('./routes/lessons');
 const coursesRouter = require('./routes/courses');
 const teachersRouter = require('./routes/teachers');
 const studentsRouter = require('./routes/students');
+const groupsRouter = require('./routes/groups');
 const teacherRequestsRouter = require('./routes/teacherRequests');
 
 
@@ -39,6 +40,7 @@ app.use('/lessons', lessonsRouter);
 app.use('/courses', coursesRouter);
 app.use('/teachers', teachersRouter);
 app.use('/students', studentsRouter);
+app.use('/groups', groupsRouter);
 app.use('/teacherRequests', teacherRequestsRouter);
 
 app.listen(port, () => {

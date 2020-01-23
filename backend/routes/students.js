@@ -1,14 +1,24 @@
 const router = require('express').Router();
 let Student = require('../models/student.model');
+let Groups = require('../models/group.model');
 
-// all students info
+
+
+/**
+ * get list of all the students.
+ */
 router.route('/').get((req, res) => {
     Student.find()
     .then(students => res.send({success : true, message: students}))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-// the /:id is like a variable
+
+/**
+ * get student info by id.
+ * request parameters:
+ *      /byID/<student_id>
+ */
 router.route('/byID/:id').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
@@ -22,7 +32,11 @@ router.route('/byID/:id').get((req,res) => {
 })
 
 
-// list of student's requests by student id
+/**
+ * get list of student's requests by student id
+ * request parameters:
+ *      /<student_id>/requests
+ */
 router.route('/:id/requests').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
@@ -35,7 +49,31 @@ router.route('/:id/requests').get((req,res) => {
     })
 })
 
-//  student request by student id and course_id
+
+/**
+ * get list of student's courses by student id
+ * request parameters:
+ *      /<student_id>/courses
+ */
+router.route('/:id/courses').get((req,res) => {
+    Student.findById((req.params.id), (err,student) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!student || student.length===0) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {
+            return res.send({success : true, message: student.courses})
+        }
+    })
+})
+
+
+
+/**
+ * get list of student's requests by course_id
+ * request parameters:
+ *      /<student_id>/requests/byCourseID
+ */
 router.route('/:id/requests/byCourseID').post((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
@@ -50,7 +88,12 @@ router.route('/:id/requests/byCourseID').post((req,res) => {
 })
 
 
-//  student request by student id and status
+
+/**
+ * get list of student's requests by status
+ * request parameters:
+ *       /<student_id>/requests/byStatus
+ */
 router.route('/:id/requests/byStatus').post((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
@@ -65,7 +108,14 @@ router.route('/:id/requests/byStatus').post((req,res) => {
 })
 
 
-// all students with the same group
+
+/**
+ * get list of all the students at the same group.
+ * request parameters:
+ *      /group
+ * request body:
+ *      "group_name" : <name_of_group>
+ */
 router.route('/group').post((req, res) => {
     Student.find()
     .then(students => {
@@ -76,7 +126,14 @@ router.route('/group').post((req, res) => {
 });
 
 
-// all requests with same status
+
+/**
+ * get list of all the requests with the same status.
+ * request parameters:
+ *      /status/<status>
+ * request body:
+ *      none
+ */
 router.route('/status/:status').get((req, res) => {
     Student.find()
     .then(students => {
@@ -88,7 +145,13 @@ router.route('/status/:status').get((req, res) => {
 });
 
 
-// all requests with same course_id
+/**
+ * get list of all the requests with the same course_id.
+ * request parameters:
+ *      /courseID/<courseID>
+ * request body:
+ *      none
+ */
 router.route('/courseID/:courseID').get((req, res) => {
     Student.find()
     .then(students => {
@@ -100,7 +163,14 @@ router.route('/courseID/:courseID').get((req, res) => {
 });
 
 
-// get all requests
+
+/**
+ * get list of all the requests.
+ * request parameters:
+ *      /allRequests
+ * request body:
+ *      None
+ */
 router.route('/allRequests').get((req, res) => {
     Student.find()
     .then(students => {
@@ -112,7 +182,16 @@ router.route('/allRequests').get((req, res) => {
 });
 
 
-// add request to student requests list
+ 
+/**
+ * Add request to student requests list.
+ * request parameters:
+ *      /add/request/<student_id>
+ * request body:
+ *      "course_id" : <course_id>
+ *      "course_name" : <course_name>
+ *      "number_of_hours" : <number_of_hours>      
+ */
 router.route('/add/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         new_request = req.body
@@ -161,74 +240,139 @@ router.route('/add/request/:id').post((req, res) => {
 })
 
 
-// add student
+/**
+ * Add new student.
+ * request parameters:
+ *      /add
+ * request body:
+ *      "_id" : <student_id>
+ *      optional:
+ *          "group_name" : <group_name>
+ */
 router.route('/add').post((req, res) => {
     _id = req.body._id
-    group = ''
-    if (req.body.hasOwnProperty('group')){
-        group = req.body.group
+    if (req.body.hasOwnProperty('group_name')){
+        group_name = req.body.group_name
     }
     requests = []
     courses = []
-    student_obj = { _id : _id, requests : requests, courses : courses, group : group}
-    const newStudent = new Student(student_obj)
-    newStudent.save((err, student)=> {
-        if (err) {
-            return res.send({success:false, message:"Error: Couldn't Save " + err})
+    Groups.findOne({ name : group_name }, (err,group) => {
+        if (err || group === null){
+            new_group = ""
+        }else{
+            new_group = { name: group.name, aproved_hours : group.aproved_hours}
         }
-        return res.send({success:true, message: student})
+        student_obj = { _id : _id, requests : requests, courses : courses, group : new_group}
+        const newStudent = new Student(student_obj)
+        newStudent.save((err, student)=> {
+            if (err) {
+                return res.send({success:false, message:"Error: Couldn't Save " + err})
+            }
+             return res.send({success:true, message: student})
+        })
     })
 })
 
 
-// delete student by id
+ 
+/**
+ * Delete student by id.
+ * request parameters:
+ *      /<student_id>
+ * request body:
+ *     None
+ */
 router.route('/:id').delete((req,res) => {
     Student.deleteOne({_id: req.params.id})
-    .then(student => res.send({success : true, message: "הסדטודנט נמחק בהצלחה"}))
-    .catch(err => res.status(400).json('Error: ' + err))
+    .then(student => {
+        if (student.n === 1){
+            res.send({success : true, message: "!הסטודנט נמחק בהצלחה"})
+        }else{
+            res.send({success : false, message: "!הסטודנט אינו קיים"})
+        }
+    }).catch(err => res.status(400).json('Error: ' + err))
 })
 
 
-// update student by id
-router.route('/update/:id').post((req,res) => {
-    Student.findById((req.params.id)).then((student) => {
+/**
+ * Update student.
+ * request parameters:
+ *     /update
+ * request body:
+ *      "_id" : <student_id>
+ *      "requests" : [list_of_request]
+ *      "courses" : [list_of_courses]
+ *       "group_name" : <group_object>
+ */
+router.route('/update').post((req,res) => {
+    Student.findById((req.body._id.trim())).then((student) => {
         if (!student || student.length === 0) {
             return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
         }
-        student._id = req.body._id.trim();
-        student.group = req.body.group;
-        student.requests = req.body.requests;
-        student.courses = req.body.courses;
-        student.save((err, doc)=> {
-            if(err) {
-                console.log('Error: ' + err);
-                return res.send({success : false, message : err.errmsg});
+        Groups.findOne({ name : req.body.group_name }, (err,group) => {
+            if (err || group === null){
+                new_group = {name: "", aproved_hours : "4"}
+            }else{
+                new_group = { name: group.name, aproved_hours : group.aproved_hours}
             }
-            return res.send({success : true, message : "!הסטודנט עודכן בהצלחה"});
+            student.group.name = new_group.name
+            student.group.aproved_hours = new_group.aproved_hours
+            student._id = req.body._id.trim();
+            student.requests = req.body.requests;
+            student.courses = req.body.courses;
+            student.save((err, doc)=> {
+                if(err) {
+                    console.log('Error: ' + err);
+                    return res.send({success : false, message : err.errmsg});
+                }
+                return res.send({success : true, message : "!הסטודנט עודכן בהצלחה"});
+            })
         })
     }); 
 });
 
 
-// update student's group by id
+ 
+/**
+ * update student's group by id.
+ * request parameters:
+ *     /update/group/<student_id>
+ * request body:
+ *       "group_name" : <group_name>
+ */
 router.route('/update/group/:id').post((req,res) => {
     Student.findById((req.params.id)).then((student) => {
         if (!student || student.length === 0) {
             return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
         }
-        student.group = req.body.group;
-        student.save((err, doc)=> {
-            if(err) {
-                console.log('Error: ' + err);
-                return res.send({success : false, message : err.errmsg});
+        Groups.findOne({ name : req.body.group_name }, (err,group) => {
+            if (err || group === null){
+                new_group = ""
+            }else{
+                new_group = { name: group.name, aproved_hours : group.aproved_hours}
             }
-            return res.send({success : true, message : "!הקבוצה של הסטודנט עודכנה בהצלחה"});
+            student.group = new_group;
+            student.save((err, doc)=> {
+                if(err) {
+                   console.log('Error: ' + err);
+                   return res.send({success : false, message : err.errmsg});
+                }
+                return res.send({success : true, message : "!הקבוצה של הסטודנט עודכנה בהצלחה"});
+            })
         })
     }); 
 });
 
 
-// update request status by id and course_id
+
+/**
+ * update request status by id and course_id.
+ * request parameters:
+ *     /update/requestStatus/<student_id>
+ * request body:
+ *      "course_id" : <course_id>
+ *      "status" : <status>
+ */
 router.route('/update/requestStatus/:id').post((req,res) => {
     Student.findById((req.params.id)).then((student) => {
         if (!student || student.length === 0) {
@@ -236,11 +380,10 @@ router.route('/update/requestStatus/:id').post((req,res) => {
         }
         new_request = req.body;
         current_request = student.requests.filter(request => request.course_id === new_request.course_id)
-        if (!current_request || current_request.length===0) {
+        if (!current_request || current_request.length === 0) {
             return res.send({success : false, message:"!הבקשה אינה קיימת במערכת" })
         }
         else{
-
             current_request = current_request[0]
             if (new_request.status === 'approved'){
                 course_to_update = student.courses.findIndex(course => course.course_id === new_request.course_id)
@@ -264,7 +407,14 @@ router.route('/update/requestStatus/:id').post((req,res) => {
     }); 
 });
 
-// delete request by id and course_id
+
+/**
+ * delete request by id and course_id.
+ * request parameters:
+ *     /delete/request/<student_id>
+ * request body:
+ *      "course_id" : <course_id>
+ */
 router.route('/delete/request/:id').post((req, res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
@@ -284,7 +434,7 @@ router.route('/delete/request/:id').post((req, res) => {
 })
 
 
-function changehours( new_hours, course_id, courses ) {
+function changehours(new_hours, course_id, courses ) {
     for (var i in courses) {
       if (courses[i].course_id == course_id) {
           courses[i].wating_hours = new_hours;
