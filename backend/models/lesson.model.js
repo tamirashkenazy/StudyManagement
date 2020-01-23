@@ -15,5 +15,6 @@ const LessonSchema = new Schema({
     course : {course_id: {type : String, required : true, match: onlyNumbers},
                 course_name: {type : String, required : true, minlength: 2}}
 }, { timestamps:true }, );
-// should make the Date as an index
+
+
 module.exports = mongoose.model('Lessons', LessonSchema);

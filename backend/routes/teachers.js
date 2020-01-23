@@ -120,7 +120,7 @@ router.route('/add/teachingCourse/:id').post((req, res) => {
     })
 })
 
-// add course to teacher requests list
+// add request to teacher requests list
 router.route('/add/request/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -170,24 +170,24 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
         }
     })
 })
-        //bank_number,
-        //bank_branch,
-        //bank_account_number,
-        //bank_account_name,
+       
 
-        // teaching_courses,
-        // hours_available,
-        // teaching_requests,
-        // grades_file
 // add teacher
 router.route('/add').post((req, res) => {
     const { _id } = req.body
+    teaching_requests = []
+    hours_available = []
+    teaching_courses = []
+    grades_file = null
     const newTeacher = new Teacher({
-        _id : _id
+        _id : _id,
+        teaching_requests : teaching_requests,
+        hours_available : hours_available,
+        teaching_courses : teaching_courses,
+        grades_file : grades_file
     })
     newTeacher.save((err, teacher)=> {
         if (err) {
-            console.log(err);
             return res.send({success:false, message:"Error: Couldn't Save " + err})
         }
         return res.send({success:true, message: teacher})
@@ -198,8 +198,13 @@ router.route('/add').post((req, res) => {
 // delete teacher by id
 router.route('/:id').delete((req,res) => {
     Teacher.deleteOne({_id: req.params.id})
-    .then(teacher => res.send({success : true, message: "המורה נמחק בהצלחה"}))
-    .catch(err => res.status(400).send({success : false, message: err}))
+    .then(teacher => {
+        if (teacher.n === 1){
+            res.send({success : true, message: "!המורה נמחק בהצלחה"})
+        }else{
+            res.send({success : false, message: "!המורה אינו קיים"})
+        }
+    }).catch(err => res.status(400).send({success : false, message: err}))
 })
 
 // update teacher by id
@@ -217,7 +222,6 @@ router.route('/update/:id').post((req,res) => {
         teacher.hours_available = req.body.hours_available;
         teacher.teaching_requests = req.body.teaching_requests;
         teacher.grades_file = req.body.grades_file.trim();
-
         teacher.save((err, doc)=> {
             if(err) {
                 console.log('Error: ' + err);
