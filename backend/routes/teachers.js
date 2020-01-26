@@ -2,15 +2,22 @@ const router = require('express').Router();
 let Teacher = require('../models/teacher.model');
 let Course = require('../models/course.model');
 
-// all teachers info
+/**
+ * get list of all the teachers.
+ */
 router.route('/').get((req, res) => {
     Teacher.find()
     .then(teacher => res.send({success : true, message: teacher}))
     .catch(err => res.status(400).json("Error: " + err));
 });
 
-// the /:id is like a variable
-router.route('/:id').get((req,res) => {
+
+/**
+ * get teacher info by id.
+ * request parameters:
+ *      /byID/<teacher_id>
+ */
+router.route('/byID/:id').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
@@ -23,7 +30,12 @@ router.route('/:id').get((req,res) => {
 })
 
 
-// the list of hours available by teacher id
+
+/**
+ * get list of available dates by teacher id
+ * request parameters:
+ *      /<teacher_id>/requests
+ */
 router.route('/:id/hoursAvailable').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -37,8 +49,12 @@ router.route('/:id/hoursAvailable').get((req,res) => {
 })
 
 
-// get list of courses (course number) by teacher id
-router.route('/:id/teachingCourse').get((req,res) => {
+/**
+ * get list of all the courses by teacher id
+ * request parameters:
+ *      /<teacher_id>/courses
+ */
+router.route('/:id/courses').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
@@ -50,8 +66,12 @@ router.route('/:id/teachingCourse').get((req,res) => {
     })
 })
 
-// list of teacher request (course number) by teacher id
-router.route('/:id/request').get((req,res) => {
+/**
+ * get list of all the requests by teacher id
+ * request parameters:
+ *      /<teacher_id>/requests
+ */
+router.route('/:id/requests').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
@@ -78,6 +98,11 @@ router.route('/:id/request').get((req,res) => {
 })
 */
 
+/**
+ * get grades file by teacher id
+ * request parameters:
+ *      /<teacher_id>/grades
+ */
 router.route('/:id/grades').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -90,7 +115,71 @@ router.route('/:id/grades').get((req,res) => {
     })
 })
 
-// add course to teacher teaching-courses list 
+
+/**
+ * get list of all the requests with the same status.
+ * request parameters:
+ *      /status/<status>
+ * request body:
+ *      none
+ */
+router.route('/status/:status').get((req, res) => {
+    Teacher.find()
+    .then(teacher => {
+        requests = []
+        teacher.forEach(teacher => requests.push(teacher.teaching_requests.filter(request => request.status === req.params.status)));
+        res.send({success : true, message: requests})
+    })
+    .catch(err => res.status(400).json("Error: " + err));
+});
+
+
+/**
+ * get list of all the requests with the same course_id.
+ * request parameters:
+ *      /courseID/<courseID>
+ * request body:
+ *      none
+ */
+router.route('/courseID/:courseID').get((req, res) => {
+    Teacher.find()
+    .then(teachers => {
+        requests = []
+        teachers.forEach(teacher => requests.push(teachers.teaching_requests.filter(request => request.course_id === req.params.courseID)));
+        res.send({success : true, message: requests})
+    })
+    .catch(err => res.status(400).json("Error: " + err));
+});
+
+
+/**
+ * get list of all the requests.
+ * request parameters:
+ *      /allRequests
+ * request body:
+ *      None
+ */
+router.route('/allRequests').get((req, res) => {
+    Teacher.find()
+    .then(theachers => {
+        requests = []
+        theachers.forEach(teacher => requests.push(teacher.teaching_requests));
+        res.send({success : true, message: requests})
+    })
+    .catch(err => res.status(400).json("Error: " + err));
+});
+
+
+
+
+/**
+ * Add course to teaching-courses list.
+ * request parameters:
+ *      /add/teachingCourse/<teacher_id>
+ * request body:
+ *      "course_id" : <course_id>
+ *      "course_name" : <course_name>     
+ */
 router.route('/add/teachingCourse/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -120,39 +209,54 @@ router.route('/add/teachingCourse/:id').post((req, res) => {
     })
 })
 
-// add request to teacher requests list
+
+
+/**
+ * Add request to teacher requests list.
+ * request parameters:
+ *      /add/request/<teacher_id>
+ * request body:
+ *      "course_id" : <course_id>
+ *      "course_name" : <course_name>     
+ */
 router.route('/add/request/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
+        new_request = req.body
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            Course.findById((req.body.course_id), (err,course) => {
-                if(err) {
-                    return res.send({success : false, message:"Error: " + err})
-                } else if (!course || course.length===0) {
-                    return res.send({success : false, message:"!הקורס אינו קיים במערכת"})
-                } else {
-                    if (teacher.teaching_requests.includes(course._id)){
-                        return res.send({success : false, message:"הקורס כבר קיים ברשימת הבקשות של המורה" })
-                    }
-                    let new_teaching_req = {course_id : req.body.course_id, course_name:req.body.course_name, status: "waiting", updated_at:Date.now()}
-                    teacher.teaching_requests.push(new_teaching_req)
-                    teacher.save((err, doc)=> {
-                        if (err) {
-                            return res.send({success:false, message:"Error: Couldn't Save " + err})
-                        }
-                        return res.send({success:true, message:teacher})
-                    })
+            course = teacher.teaching_courses.find(({course_id}) => course_id === new_request.course_id )
+            if (course){
+                return res.send({success : false, message:"הקורס כבר קיים ברשימת הקורסים שהמורה מלמד" })
+            // add new course to list of the courses
+            }
+            new_course = {course_id: new_request.course_id,
+                        course_name: new_request.course_name,
+                        hours_already_done: '0'}
+            teacher.teaching_courses.push(new_course)
+            new_request.status = 'waiting'
+            new_request.updated_at = Date.now()
+            teacher.teaching_requests.push(new_request)
+            teacher.save((err, doc)=> {
+                if (err) {
+                    return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
+                return res.send({success:true, message: teacher})
             })
         }
     })
 })
 
 
-// add dates to teacher hours_available list 
+/**
+ * Add dates to teacher hours_available list.
+ * request parameters:
+ *      /add/hoursAvailable/<teacher_id>
+ * request body:
+ *      dates : <list_of_dates>
+ */
 router.route('/add/hoursAvailable/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -172,7 +276,13 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
 })
        
 
-// add teacher
+/**
+ * Add new teacher.
+ * request parameters:
+ *      /add
+ * request body:
+ *      "_id" : <teacher_id>
+ */
 router.route('/add').post((req, res) => {
     const { _id } = req.body
     teaching_requests = []
@@ -195,7 +305,13 @@ router.route('/add').post((req, res) => {
 })
 
 
-// delete teacher by id
+/**
+ * Delete teacher by id.
+ * request parameters:
+ *      /<teacher_id>
+ * request body:
+ *     None
+ */
 router.route('/:id').delete((req,res) => {
     Teacher.deleteOne({_id: req.params.id})
     .then(teacher => {
@@ -207,7 +323,18 @@ router.route('/:id').delete((req,res) => {
     }).catch(err => res.status(400).send({success : false, message: err}))
 })
 
-// update teacher by id
+
+/**
+ * Update teacher.
+ * request parameters:
+ *     /update/<theacher-id>
+ * request body:
+ *      "_id" : <theacher>
+ *      "teaching_courses" : [teaching_courses]
+ *      "teaching_requests" : [teaching_requests]
+ *      "hours_available" : [hours_available]
+ *      "grades_file" : <grades_file>
+ */
 router.route('/update/:id').post((req,res) => {
     Teacher.findById((req.params.id)).then((teacher) => {
         if (!teacher || teacher.length===0) {
@@ -234,6 +361,51 @@ router.route('/update/:id').post((req,res) => {
 });
 
 
+/**
+ * update request status by id and course_id.
+ * request parameters:
+ *     /update/requestStatus/<teacher_id>
+ * request body:
+ *      "course_id" : <course_id>
+ *      "status" : <status>
+ */
+router.route('/update/requestStatus/:id').post((req,res) => {
+    Teacher.findById((req.params.id)).then((teacher) => {
+        if (!teacher || teacher.length === 0) {
+            return res.send({success : false, message : "!המורה אינו קיים במערכת"})
+        }
+        new_request = req.body;
+        current_request = teacher.teaching_requests.filter(request => request.course_id === new_request.course_id)
+        if (!current_request || current_request.length === 0) {
+            return res.send({success : false, message:"!הבקשה אינה קיימת במערכת" })
+        }
+        else{
+            current_request = current_request[0]
+            if (new_request.status === 'approved'){
+               // TODO - add new course to teacher courses **************************************************
+    
+            }else{
+                status_to_update = teacher.teaching_requests.findIndex(requests => requests.course_id === new_request.course_id)
+                teacher.teaching_requests[status_to_update].status = new_request.status
+            }
+            teacher.save((err, doc)=> {
+                if(err) {
+                    console.log('Error: ' + err);
+                    return res.send({success : false, message : err.errmsg});
+                }
+                return res.send({success : true, message : "!סטטוס הבקשה עודכן בהצלחה"});
+            })
+        }
+    }); 
+});
+
+/**
+ * delete teachingCourse by id and course_id.
+ * request parameters:
+ *     /delete/request/<teacher_id>
+ * request body:
+ *      "course_id" : <course_id>
+ */
 router.route('/delete/teachingCourse/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -253,6 +425,13 @@ router.route('/delete/teachingCourse/:id').post((req, res) => {
 })
 
 
+/**
+ * delete request by id and course_id.
+ * request parameters:
+ *     /delete/request/<teacher_id>
+ * request body:
+ *      "course_id" : <course_id>
+ */
 router.route('/delete/request/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -260,7 +439,7 @@ router.route('/delete/request/:id').post((req, res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            teacher.teaching_requests = teacher.teaching_requests.filter(request => request != req.body.request_id)
+            teacher.teaching_requests = teacher.teaching_requests.filter(course_id => course_id != req.body.course_id)
             teacher.save((err, teacher)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
@@ -272,6 +451,13 @@ router.route('/delete/request/:id').post((req, res) => {
 })
 
 
+/**
+ * delete dates by teacher id.
+ * request parameters:
+ *     /delete/hoursAvailable/<teacher_id>
+ * request body:
+ *      "hours_available" : [hours_available]
+ */
 router.route('/delete/hoursAvailable/:id').post((req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {

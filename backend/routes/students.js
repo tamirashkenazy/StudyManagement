@@ -51,7 +51,7 @@ router.route('/:id/requests').get((req,res) => {
 
 
 /**
- * get list of student's courses by student id
+ * get list of all courses by student id
  * request parameters:
  *      /<student_id>/courses
  */
