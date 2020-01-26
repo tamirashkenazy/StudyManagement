@@ -8,8 +8,9 @@ const Schema = mongoose.Schema;
 const TeacherSchema = new Schema({
     _id :  {type : String, required : true, match: onlyNumbers, minlength: 9, maxlength: 9},
     // list of course number
-    teaching_courses :[{course_id : {type : String,  required : true, match: onlyNumbers },
-                        course_name : {type : String,  required : true, match: onlyEnglishAndHebrew}}],
+    teaching_courses : [{course_id : {type : String,  required : true, match: onlyNumbers },
+                        course_name : { type : String, required : true, minlength: 2 },
+                        hours_already_done : {type : String,  required : true, match: onlyNumbers, default: '0'}}],
     hours_available : {type: [Date], default:[]},
     // list of course number
     teaching_requests : [{course_id : {type : String,  required : true, match: onlyNumbers },
