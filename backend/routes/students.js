@@ -251,6 +251,7 @@ router.route('/add/request/:id').post((req, res) => {
  */
 router.route('/add').post((req, res) => {
     _id = req.body._id
+    group_name = ''
     if (req.body.hasOwnProperty('group_name')){
         group_name = req.body.group_name
     }
