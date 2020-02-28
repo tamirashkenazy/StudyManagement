@@ -21,19 +21,10 @@ router.route('/byID/:id').get((req,res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-<<<<<<< HEAD
-<<<<<<< HEAD
-        } else if (!teacher || teacher.length===0) {
-=======
-=======
->>>>>>> admin tables
         } else if (teacher && !Array.isArray(teacher)) {
             return res.send({success : true, message: teacher})
         } else {
->>>>>>> admin tables
             return res.send({success : false, message:"המורה אינו קיים במערכת" })
-        } else {
-            return res.send({success : true, message: teacher})
         }
     })
 })
