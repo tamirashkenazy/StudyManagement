@@ -22,8 +22,11 @@ router.route('/byID/:id').get((req,res) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
 <<<<<<< HEAD
+<<<<<<< HEAD
         } else if (!teacher || teacher.length===0) {
 =======
+=======
+>>>>>>> f8ce705b7b39277341ae5793cc77c87ddaeb44ee
         } else if (teacher && !Array.isArray(teacher)) {
             return res.send({success : true, message: teacher})
         } else {
