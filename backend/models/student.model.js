@@ -1,6 +1,6 @@
 const mongoose = require("mongoose");
 
-const status = 'waiting payed approved'.split(' ')
+const status = 'waiting payed approved declined'.split(' ')
 const onlyNumbers = /^[-0-9\b]+$/;
 
 const Schema = mongoose.Schema;

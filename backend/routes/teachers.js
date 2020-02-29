@@ -202,7 +202,7 @@ router.route('/add/teachingCourse/:id').post((req, res) => {
                         if (err) {
                             return res.send({success:false, message:"Error: Couldn't Save " + err})
                         }
-                        return res.send({success:true, message:teacher})
+                        return res.send({success:true, message:"!הקורס התווסף בהצלחה"})
                     })
                 }
             })
@@ -228,10 +228,13 @@ router.route('/add/request/:id').post((req, res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            course = teacher.teaching_courses.find(({course_id}) => course_id === new_request.course_id )
+            course = teacher.teaching_courses.find(({ course_id }) => course_id === new_request.course_id )
             if (course){
                 return res.send({success : false, message:"הקורס כבר קיים ברשימת הקורסים שהמורה מלמד" })
-            // add new course to list of the courses
+            }
+            course = teacher.teaching_requests.find(({ course_id }) => course_id === new_request.course_id )
+            if (course){
+                return res.send({success : false, message:"הקורס כבר קיים ברשימת הבקשות של המורה " })
             }
             new_request.status = 'waiting'
             new_request.updated_at = Date.now()
@@ -240,7 +243,7 @@ router.route('/add/request/:id').post((req, res) => {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
-                return res.send({success:true, message: teacher})
+                return res.send({success:true, message: " הבקשה ללמד את הקורס "  + new_request.course_name + " נשלחה בהצלחה "})
             })
         }
     })
@@ -267,7 +270,7 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
             })
-            return res.send({success:true, message: teacher})
+            return res.send({success:true, message: "!השעות נרשמו במערכת"})
         }
     })
 })
@@ -450,7 +453,7 @@ router.route('/delete/teachingCourse/:id').post((req, res) => {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
             })
-            return res.send({success:true, message: teacher})
+            return res.send({success:true, message: " הקורס " + course + "!נמחק מרשימת הקורסים של המורה בהצלחה"})
         }
     })
 })
@@ -476,7 +479,7 @@ router.route('/delete/request/:id').post((req, res) => {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
             })
-            return res.send({success:true, message: teacher})
+            return res.send({success:true, message: "!הבקשה נמחקה בהצלחה"})
         }
     })
 })
@@ -502,7 +505,7 @@ router.route('/delete/hoursAvailable/:id').post((req, res) => {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
             })
-            return res.send({success:true, message: teacher})
+            return res.send({success:true, message: "!השעות המסומנות הוסרו בהצלחה"})
         }
     })
 })

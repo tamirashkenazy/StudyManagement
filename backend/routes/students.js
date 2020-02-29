@@ -202,10 +202,11 @@ router.route('/add/request/:id').post((req, res) => {
         } else {   
 
             course = student.courses.find(({course_id}) => course_id === new_request.course_id )
+            console.log('course: ' + course)
             if (course){
                 gap = Number(student.group.aproved_hours) - Number(course.approved_hours) - Number(course.wating_hours) + Number(course.hours_already_done) 
                 console.log('gap: ' + gap)
-                if (gap < Number(student.group.aproved_hours)){
+                if (gap > 0){
                     hours_to_add = Math.min(Number(new_request.number_of_hours), gap)
                     console.log('hours_to_add: ' + hours_to_add)
                     final_hours = hours_to_add + Number(course.wating_hours)
@@ -386,17 +387,17 @@ router.route('/update/requestStatus/:id').post((req,res) => {
         }
         else{
             current_request = current_request[0]
+            course_to_update = student.courses.findIndex(course => course.course_id === new_request.course_id)
             if (new_request.status === 'approved'){
-                course_to_update = student.courses.findIndex(course => course.course_id === new_request.course_id)
                 current_approved_hours = student.courses[course_to_update].approved_hours
                 updated_hours = Number(current_approved_hours) + Number(current_request.number_of_hours)
                 student.courses[course_to_update].approved_hours = updated_hours.toString()
                 student.courses[course_to_update].wating_hours = '0'
-                student.requests = student.requests.filter(request => request.course_id != current_request.course_id)
-            }else{
-                status_to_update = student.requests.findIndex(requests => requests.course_id === new_request.course_id)
-                student.requests[status_to_update].status = new_request.status
+            }else if(new_request.status === 'declined'){
+                student.courses[course_to_update].wating_hours = '0'
             }
+            status_to_update = student.requests.findIndex(requests => requests.course_id === new_request.course_id)
+            student.requests[status_to_update].status = new_request.status
             student.save((err, doc)=> {
                 if(err) {
                     console.log('Error: ' + err);
