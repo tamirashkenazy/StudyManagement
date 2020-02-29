@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import './styles/App.scss';
 import { BrowserRouter as Router, Route, Switch} from 'react-router-dom';
 import {useAsyncHook} from './components/mongo/paths.component'
@@ -8,7 +8,6 @@ import Main from './components/main/dashboard_main';
 import Student from './components/main/student/student.component';
 import Teacher from './components/main/teacher/teacher.component';
 import Admin from './components/main/admin/admin.component';
-import get_mongo_api from './components/mongo/paths.component';
 
 
 function App() {

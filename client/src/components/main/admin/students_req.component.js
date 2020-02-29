@@ -1,5 +1,4 @@
 import React from 'react';
-import {useAsyncHook} from '../../mongo/paths.component'
 import GenericTable from '../utils/generic_table.component'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';

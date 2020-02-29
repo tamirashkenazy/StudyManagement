@@ -1,68 +1,54 @@
 import React from 'react';
-import {useAsyncHook} from '../../mongo/paths.component'
+// import {useAsyncHook} from '../../mongo/paths.component's
 import GenericTable from '../utils/generic_table.component'
-import IconButton from '@material-ui/core/IconButton';
-import CloseIcon from '@material-ui/icons/Close';
-import CheckIcon from '@material-ui/icons/Check';
-import axios from 'axios';
-import get_mongo_api from '../../mongo/paths.component';
+import { Typography } from '@material-ui/core';
+// import IconButton from '@material-ui/core/IconButton';
+// import CloseIcon from '@material-ui/icons/Close';
+// import CheckIcon from '@material-ui/icons/Check';
+// import axios from 'axios';
+// import get_mongo_api from '../../mongo/paths.component';
 
-const approve_decline_teacher_req = (_id, status, course_id) => {
-    axios.post(get_mongo_api(`teachers/update/requestStatus/${_id}`),{course_id, status}).then(response=>{
-        if (response.data.success) {
-            alert(response.data.message)
-            window.location.reload(true)
-        } else {
-            // alert("הקורס לא התווסף בהצלחה")
-            alert(response.data.message)
-        }
-    })
+// const approve_decline_teacher_req = (_id, status, course_id) => {
+//     axios.post(get_mongo_api(`teachers/update/requestStatus/${_id}`),{course_id, status}).then(response=>{
+//         if (response.data.success) {
+//             alert(response.data.message)
+//             window.location.reload(true)
+//         } else {
+//             // alert("הקורס לא התווסף בהצלחה")
+//             alert(response.data.message)
+//         }
+//     })
+// }
+
+const status_to_hebrew = {
+    "waiting" : {text : "ממתין לאישור", color: "inherit"},
+    "approved" : {text : "אושר", color: "primary"},
+    "declined" : {text : "בקשה נדחתה", color: "error"}
 }
 
-const teachers_requests_array = (teachers_arr)=>{
-    if (teachers_arr && teachers_arr.length>0){
-        let teacher_requests = teachers_arr.map(teacher_obj => {
-            let request_courses_to_teach = teacher_obj.teaching_requests
-            request_courses_to_teach = request_courses_to_teach.filter(teaching_req => teaching_req.status === "waiting")
-            const teacher_id = teacher_obj._id
-            const grades_sheet = "גיליון"
-            if (request_courses_to_teach && request_courses_to_teach.length>0){
-                let requests_arr = request_courses_to_teach.map(request => {
-                    return (
-                        {
-                            "ת.ז" : teacher_id,
-                            "קורס" : request.course_name,
-                            "גיליון" : grades_sheet,
-                            "אישור קורס": <IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "approved", request.course_id)}><CheckIcon style={{color:"green"}}/></IconButton>,
-                            "דחיית בקשה":<IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "declined", request.course_id)}><CloseIcon style={{color:"red"}}/></IconButton>
-                        }
-                    )
-                })
-                return requests_arr
-            } else {
-                return null
-            }
+const teacher_status_request_array = (teacher)=>{
+    const {teaching_requests} = teacher;
+    if (teaching_requests && teaching_requests.length>0){    
+        let teacher_requests_status = teaching_requests.map(teaching_request => {
+            return (
+                {
+                    "קורס" :<Typography variant="h5">{teaching_request.course_name}</Typography> ,
+                    "סטטוס" : <Typography variant="h5" color={status_to_hebrew[teaching_request.status].color}>{status_to_hebrew[teaching_request.status].text}</Typography>
+                }
+            )
         })
-        teacher_requests = teacher_requests.flat()
-        teacher_requests = teacher_requests.filter(element=> element!=null)
-        console.log('teacher req: ', teacher_requests);
-        if (teacher_requests && Array.isArray(teacher_requests) && teacher_requests.length===0) {
-            return ([{
-                "אין בקשות של מורים":""
-            }])
-        }
-        return teacher_requests
+        return teacher_requests_status
     } else {
         return ([{
-            "אין מורים להציג":""
+            "אין בקשות":""
         }])
     }
 }
 
 export default function TeachersStatusRequestsTable({teacher}) {
-    console.log('teacher in req: ', teacher);
+    let teacher_req_stat = teacher_status_request_array(teacher)
     // const [teachers, loading] = useAsyncHook(`teachers`, teachers_requests_array);
     return (
-        <div>a</div> //<GenericTable table_data={{data:teachers, title:"בקשות מורים"}}/>
+        <GenericTable table_data={{data:teacher_req_stat, title:"סטטוס בקשות"}}/>
     )
 }
