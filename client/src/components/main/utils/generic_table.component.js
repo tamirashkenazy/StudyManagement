@@ -22,7 +22,7 @@ const useStyles = makeStyles({
         align : "right",
         textAlign : "right",
         maxHeight : "60vh",
-        maxWidth : "95%", 
+        // maxWidth : "100%", 
         margin : "0 auto" //will center the table inside the component its located
 
     },
