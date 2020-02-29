@@ -25,7 +25,8 @@ const make_courses_option = (arr_of_courses, teacher) => {
 }
 
 export default function CoursesToTeach(props){
-    const {_id, teacher} = props
+    // const {_id, teacher} = props
+    const { teacher} = props
     const [selectedCourses, setSelectedCourses] = useState([])
     const [courses_options, loading] = useAsyncHook(`courses`, make_courses_option, teacher);
     const sendCourses = (_id) => {

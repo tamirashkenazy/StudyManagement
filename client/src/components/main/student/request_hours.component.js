@@ -3,7 +3,6 @@ import {Button, Dropdown} from 'semantic-ui-react'
 import axios from 'axios'
 import get_mongo_api, {useAsyncHook} from '../../mongo/paths.component'
 import { Grid } from 'semantic-ui-react'
-import { arrayInsert } from 'redux-form';
 
 const make_courses_option = (arr_of_courses) => {
     // let local_courses = courses

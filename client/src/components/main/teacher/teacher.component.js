@@ -24,7 +24,8 @@ const filter_teacher_by_id = (teachers, id) => {
 
 export default function Teacher(props) {
     const {teachers } = props
-    const [user, setUser] = useState(props.history.location.state)
+    const user = props.history.location.state
+    // const [user, setUser] = useState(props.history.location.state)
     const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false))
     const navbar_operations_by_role = [
         { key : 'update_availability', header : 'עדכון זמינות' , on_click : ()=>{console.log("update your zminut")} , icon : <EventAvailableOutlinedIcon fontSize="large" style={{color:"white"}} />},
@@ -39,18 +40,19 @@ export default function Teacher(props) {
             </AppBar> 
             {Dialog_generator(openedPopups.select_courses, ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false))), "בחירת קורסים ללמד",{_id:user._id, teacher }, (id, teacher)=>CoursesToTeach(id, teacher))}
 
-        <h5>
+        {/* <h5> */}
         <Grid container spacing={1} alignItems="stretch" justify="space-evenly" direction="row" style={{margin:"0 auto", direction :"rtl"}}>
-            <Grid item xs>
-                <Typography variant="h4">סטטוס בקשות</Typography>
-                <TeachersStatusRequestsTable teacher={teacher}/>
-            </Grid>
-            <Grid item xs>
+            <Grid item xs align="center">
                 <Typography variant="h4">שיעורים</Typography>
                 {/* <TeachersStatusRequestsTable/> */}
             </Grid>
+            <Grid item xs align="center">
+                <Typography variant="h4">סטטוס בקשות</Typography>
+                <TeachersStatusRequestsTable teacher={teacher}/>
+            </Grid>
+
         </Grid>
-        </h5>
+        {/* </h5> */}
         </div>
     )
 }

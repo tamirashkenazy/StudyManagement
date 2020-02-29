@@ -8,12 +8,31 @@ import '../../../styles/students.scss';
 import RequestHours from './request_hours.component'
 import CoursesTable from './courses_table.component'
 import { Dialog_generator } from '../utils/utils'
+import { Grid } from '@material-ui/core';
+import { makeStyles } from '@material-ui/core/styles';
 const getOpenedPopup = (is_open_request_hours, is_open_book_class) => {
     return (
         { request_hours_popup: is_open_request_hours, book_class_popup: is_open_book_class }
     )
 }
+const useStyles = makeStyles(theme => ({
+    root: {
+      flexGrow: 1,
+    },
 
+    gridItem : {
+        alignItems : "center",
+        align : "center",
+        textAlign:"center"
+        // backgroundColor : "red",
+    },
+    paper : {
+        width: "50%",
+        textAlign:"center",
+        alignItems : "center",
+        align : "center"
+    }
+  }));
 export default function Student(props) {
     const user = props.history.location.state
     const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false))
@@ -24,15 +43,32 @@ export default function Student(props) {
     ]
     const classes = useStylesAppBar();
 
+    const classes_grid = useStyles()
     return (
         <div className="student">
 
             <AppBar position="static" className={classes.AppBar} >
                 <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
             </AppBar>
+            <div className={classes_grid.root}>
+                <Grid container>
+                    <Grid item>
+                    </Grid>
+                    <Grid item>
 
+                    </Grid>
+                </Grid>
+                <Grid container justify="center">
+                    <Grid item className={classes_grid.gridItem}>
+                        {CoursesTable(user._id)}
+                        {/* <Paper className={classes_grid.paper}></Paper> */}
+                    </Grid>
+                </Grid>
+            </div>
+            
             {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false))), "בקשת שעות חונכות", { _id: user._id }, (id) => RequestHours(id))}
-            <div className="content" >
+            
+            {/* <div className="content" >
                 <div className="topDiv">
                     <div className="rightDiv">
                         דיב2
@@ -41,10 +77,10 @@ export default function Student(props) {
                         דיב1
                     </div>
                     <div className="bottomDiv">
-                        {CoursesTable(user._id)}
+                        
                     </div>
                 </div>
-            </div>
+            </div> */}
         </div>
     )
 
