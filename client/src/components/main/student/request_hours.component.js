@@ -48,8 +48,6 @@ export default function RequestHours(props){
                 alert(response.data.message)
             }
         })
-        
-
     }
     
     return (

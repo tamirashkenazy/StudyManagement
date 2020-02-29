@@ -11,24 +11,26 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles({
-    card: {
-      minWidth: "000px",
-    },
+
     tableCell : {
       textAlign : "center",
-      direction : "ltr"
+      direction : "ltr",
+      fontSize : "3vh"
     },
     tableCellHeader : {
       textAlign : "center",
       // direction : "rtl",
       backgroundColor : "#000066",
       color : "white",
+      fontSize : "3vh"
+
     }
   });
   
 
 const student_courses_func = (student_obj)=>{
   if (student_obj) {
+    console.log(student_obj);
     let courses_arr = student_obj.requests.filter(course_req => course_req.status === "approved")
     if (courses_arr && courses_arr.length>0) {
       // console.log(courses_arr.length);
@@ -57,24 +59,26 @@ const teacher_courses_func = (teacher_obj)=>{
 }
 export default function UserCard({user_id}) {
     const [user, loading] = useAsyncHook(`users/${user_id}`, null);
-    const [student_courses, loading_student_courses] = useAsyncHook(`students/${user_id}`, student_courses_func);
-    const [teacher_courses, loading_teacher_courses] = useAsyncHook(`teachers/${user_id}`, teacher_courses_func);
+    const [student_courses, loading_student_courses] = useAsyncHook(`students/byID/${user_id}`, student_courses_func);
+    const [teacher_courses, loading_teacher_courses] = useAsyncHook(`teachers/byID/${user_id}`, teacher_courses_func);
+    console.log(student_courses);
+    console.log(teacher_courses);
     const full_name = `${user.first_name} ${user.last_name}`
     const classes = useStyles();
     let roles = "אין תפקיד"
     if (user.isStudent && user.isTeacher) {
       roles = "מורה, תלמיד"
-    } else if (user.isStudent) {
-      roles = "מורה"
     } else if (user.isTeacher) {
+      roles = "מורה"
+    } else if (user.isStudent) {
       roles = "תלמיד"
     }
     return (
         !loading && !loading_student_courses && !loading_teacher_courses &&
-        <Card className={classes.card}>
+        <Card >
             <CardContent>
               <TableContainer>
-                <Table>
+                <Table size="small">
                   <TableHead>
                     <TableRow >
                       <TableCell className={classes.tableCellHeader} colSpan={2}>{full_name}</TableCell>
