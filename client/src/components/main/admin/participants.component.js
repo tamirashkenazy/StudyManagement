@@ -1,5 +1,4 @@
 import React, { useState } from 'react';
-// import {useAsyncHook} from '../../mongo/paths.component'
 import { Tab } from 'semantic-ui-react'
 import UserCard from '../utils/card.component'
 import {Dialog_generator} from '../utils//utils'
