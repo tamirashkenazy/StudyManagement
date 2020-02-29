@@ -42,8 +42,9 @@ const closeAllPopups = (total_popups) => {
 export default function Admin(props) {
     const total_popups = 4
     const user = props.history.location.state
+    const {teachers, students, users} = props
     const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
-
+    // console.log('props in admin: ', props);
     const classes = useStylesAppBar();
     const navbar_operations_by_role = [
         { key : 'participants', header : 'משתתפים' , on_click : ()=>setOpenedPopups(getOpenedPopup(0,total_popups)) , icon : <PeopleAltOutlinedIcon fontSize="large" style={{color:"white"}} />},
@@ -52,24 +53,23 @@ export default function Admin(props) {
         { key : 'add_course', header : 'הוסף קורס' , on_click : ()=>setOpenedPopups(getOpenedPopup(3,total_popups)) , icon : <PostAddIcon fontSize="large" style={{color:"white"}} />}
       
     ]
-
+    
     return (
         <div style={{align : "center", textAlign : "center"}}>
             <AppBar position="static" className={classes.AppBar} >
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
-            {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים" ,{} ,(args)=>Participants(args))}
+            {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים" ,{users, teachers, students} ,(args)=>Participants(args))}
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse(), "md")}
             <Grid container spacing={1} alignItems="stretch" justify="space-evenly" direction="row" style={{margin:"0 auto", direction :"rtl"}}>
                 <Grid item xs>
-                    <Typography variant="h5">בקשות מורים</Typography>
-                    <TeachersRequestTable/>
-
+                    <Typography variant="h4">בקשות מורים</Typography>
+                    <TeachersRequestTable teachers={teachers} />
                 </Grid>
                 <Grid item xs>
-                    <Typography variant="h5">בקשות תלמידים</Typography>
-                    <StudentsRequestTable/>
+                    <Typography variant="h4">בקשות תלמידים</Typography>
+                    <StudentsRequestTable students={students}/>
                 </Grid>
             </Grid>
         </div>
