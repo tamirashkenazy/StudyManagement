@@ -1,5 +1,5 @@
 import React from 'react';
-// import {useAsyncHook} from '../../mongo/paths.component'
+import {useAsyncHook} from '../../mongo/paths.component'
 import GenericTable from '../utils/generic_table.component'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
@@ -45,7 +45,7 @@ const teachers_requests_array = (teachers_arr)=>{
         })
         teacher_requests = teacher_requests.flat()
         teacher_requests = teacher_requests.filter(element=> element!=null)
-        // console.log('teacher req: ', teacher_requests);
+        console.log('teacher req: ', teacher_requests);
         if (teacher_requests && Array.isArray(teacher_requests) && teacher_requests.length===0) {
             return ([{
                 "אין בקשות של מורים":""
@@ -59,11 +59,10 @@ const teachers_requests_array = (teachers_arr)=>{
     }
 }
 
-export default function TeachersRequestTable({teachers}) {
+export default function TeachersStatusRequestsTable({teacher}) {
+    console.log('teacher in req: ', teacher);
     // const [teachers, loading] = useAsyncHook(`teachers`, teachers_requests_array);
-    let teacher_arr = teachers_requests_array(teachers)
-    // console.log("teacher_arr", teacher_arr);
     return (
-        <GenericTable table_data={{data:teacher_arr, title:"בקשות מורים"}}/>
+        <div>a</div> //<GenericTable table_data={{data:teachers, title:"בקשות מורים"}}/>
     )
 }
