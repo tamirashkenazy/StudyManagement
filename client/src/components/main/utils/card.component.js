@@ -12,18 +12,24 @@ import TableRow from '@material-ui/core/TableRow';
 
 const useStyles = makeStyles({
 <<<<<<< HEAD
+<<<<<<< HEAD
 
     tableCell : {
       textAlign : "center",
       direction : "ltr",
       fontSize : "3vh"
 =======
+=======
+>>>>>>> admin tables
     card: {
       minWidth: "000px",
     },
     tableCell : {
       textAlign : "center",
       direction : "ltr"
+<<<<<<< HEAD
+>>>>>>> admin tables
+=======
 >>>>>>> admin tables
     },
     tableCellHeader : {
@@ -32,8 +38,11 @@ const useStyles = makeStyles({
       backgroundColor : "#000066",
       color : "white",
 <<<<<<< HEAD
+<<<<<<< HEAD
       fontSize : "3vh"
 
+=======
+>>>>>>> admin tables
 =======
 >>>>>>> admin tables
     }
@@ -43,7 +52,10 @@ const useStyles = makeStyles({
 const student_courses_func = (student_obj)=>{
   if (student_obj) {
 <<<<<<< HEAD
+<<<<<<< HEAD
     console.log(student_obj);
+=======
+>>>>>>> admin tables
 =======
 >>>>>>> admin tables
     let courses_arr = student_obj.requests.filter(course_req => course_req.status === "approved")
@@ -75,10 +87,15 @@ const teacher_courses_func = (teacher_obj)=>{
 export default function UserCard({user_id}) {
     const [user, loading] = useAsyncHook(`users/${user_id}`, null);
 <<<<<<< HEAD
+<<<<<<< HEAD
     const [student_courses, loading_student_courses] = useAsyncHook(`students/byID/${user_id}`, student_courses_func);
     const [teacher_courses, loading_teacher_courses] = useAsyncHook(`teachers/byID/${user_id}`, teacher_courses_func);
     console.log(student_courses);
     console.log(teacher_courses);
+=======
+    const [student_courses, loading_student_courses] = useAsyncHook(`students/${user_id}`, student_courses_func);
+    const [teacher_courses, loading_teacher_courses] = useAsyncHook(`teachers/${user_id}`, teacher_courses_func);
+>>>>>>> admin tables
 =======
     const [student_courses, loading_student_courses] = useAsyncHook(`students/${user_id}`, student_courses_func);
     const [teacher_courses, loading_teacher_courses] = useAsyncHook(`teachers/${user_id}`, teacher_courses_func);
@@ -89,9 +106,15 @@ export default function UserCard({user_id}) {
     if (user.isStudent && user.isTeacher) {
       roles = "מורה, תלמיד"
 <<<<<<< HEAD
+<<<<<<< HEAD
     } else if (user.isTeacher) {
       roles = "מורה"
     } else if (user.isStudent) {
+=======
+    } else if (user.isStudent) {
+      roles = "מורה"
+    } else if (user.isTeacher) {
+>>>>>>> admin tables
 =======
     } else if (user.isStudent) {
       roles = "מורה"
@@ -102,15 +125,21 @@ export default function UserCard({user_id}) {
     return (
         !loading && !loading_student_courses && !loading_teacher_courses &&
 <<<<<<< HEAD
+<<<<<<< HEAD
         <Card >
             <CardContent>
               <TableContainer>
                 <Table size="small">
 =======
+=======
+>>>>>>> admin tables
         <Card className={classes.card}>
             <CardContent>
               <TableContainer>
                 <Table>
+<<<<<<< HEAD
+>>>>>>> admin tables
+=======
 >>>>>>> admin tables
                   <TableHead>
                     <TableRow >

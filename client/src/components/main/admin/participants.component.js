@@ -9,54 +9,24 @@ import GenericTable from '../utils/generic_table.component';
 
 
 const make_participants = (arr_of_users, args) => {
-    if (!args) {
-        return null
-    }
     const users_by_roles = {teachers : [], students : []}
-    const {setCardOpen, setUserID, teachers, students} = args
-    console.log('teachers, students : ', teachers, students);
+    const {setCardOpen, setUserID} = args
     if (arr_of_users && arr_of_users!==undefined && arr_of_users.length>0){
         arr_of_users.forEach(user => {
-            const id = user._id
-            let courses;
             if (user.isTeacher) {
-                courses = []
-                let teacher = teachers.filter(teacher=> teacher._id === id)
-                if (teacher && teacher.length === 1) {
-                    teacher = teacher[0]
-                    if (teacher.teaching_courses && teacher.teaching_courses.length > 0 ) {
-                        teacher.teaching_courses.forEach(course=>courses.push(course.course_name))
-                        console.log("in the if: ", courses);
-
-                    }
-                } else {
-
-                }
                 users_by_roles.teachers.push({
                     "" : <IconButton onClick={()=>{setCardOpen(true); setUserID(user._id)}}><AccountCircleOutlinedIcon/></IconButton>,
-                    "ת.ז" : id,
+                    "ת.ז" : user._id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,
-                    "קורסים" :  courses.join(", ")
                 })
             }
             if (user.isStudent) {
-                courses = []
-                let student = students.filter(student=> student._id === id)
-                if (student && student.length === 1) {
-                    student = student[0]
-                    if (student.requests && student.requests.length > 0 ) {
-                        student.requests.filter(req=>req.status === "approved").forEach(course=>courses.push(course.course_name))
-                    }
-                } else {
-
-                }
                 users_by_roles.students.push({
                     "" : <IconButton onClick={()=>{setCardOpen(true); setUserID(user._id)}}><AccountCircleOutlinedIcon/></IconButton>,
-                    "ת.ז" : id,
+                    "ת.ז" : user._id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,
-                    "קורסים" :  courses.join(", ")
                 })
             }
         })
