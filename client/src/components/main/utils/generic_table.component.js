@@ -14,7 +14,6 @@ const useStyles = makeStyles({
         textAlign : "center",
         backgroundColor : "#000875",
         color : "white",
-        fontSize : "1.4rem"
 
     },
     table : {
@@ -22,19 +21,15 @@ const useStyles = makeStyles({
         align : "right",
         textAlign : "right",
         maxHeight : "60vh",
-        // maxWidth : "100%", 
+        maxWidth : "95%", 
         margin : "0 auto" //will center the table inside the component its located
-
     },
     cell : {
-        textAlign : "center",
-        fontSize : "1.2rem",
-        align: "center"
+        textAlign : "right"
     }, 
     headerCell : {
         backgroundColor : "#CCE5FF",
-        textAlign : "center",
-        fontSize : "1.3rem",
+        textAlign : "right" 
     }
 
 });
@@ -49,18 +44,18 @@ export default function GenericTable(props) { //props : {table_data : {data: som
     }
     const renderTableHeader = () => {
         // check if there is at least one element in the array
-        if ( !data || (Array.isArray(data) &&  data.length === 0)) {
-            return <TableRow><TableCell></TableCell></TableRow>
+        if (!(data && data.length > 0)) {
+            return null
         }
         let header = Object.keys(data[0])
-
         return (
             <TableRow className={classes.headerRow}>
                 {header.map((key, index) => 
-                    <TableCell className={classes.headerCell} key={index}>{key}</TableCell>
+                    <TableCell className={classes.headerCell} key={index}>{key.toUpperCase()}</TableCell>
                 )}
             </TableRow>
         )
+       
     }
 
     const renderTableData = () => {
@@ -82,15 +77,15 @@ export default function GenericTable(props) { //props : {table_data : {data: som
             )
         })
     }
+
     return (
         <TableContainer component={Paper} className={classes.table}>
-            <Table size="small" stickyHeader>
+            <Table stickyHeader>
                 <TableHead >
-                    {(num_of_cols>0 && title) && <TableRow>
-                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}>{title}</TableCell>
+                    {num_of_cols && title && <TableRow>
+                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}> {title}</TableCell>
                     </TableRow>}
                     {renderTableHeader()}
-                    
                 </TableHead>
                 <TableBody> 
                     {renderTableData()}
