@@ -8,7 +8,6 @@ import {Link } from 'react-router-dom'
 import { Button} from 'semantic-ui-react'
 
 
-
 function ImagesLogin() {
     return (
             <Container>
@@ -33,8 +32,8 @@ function LoginBox() {
                     <FormLogin/>
                 </Col>
             </Row>
-            <Row style={{direction : "rtl"}}>
-                <Link to={{ pathname: '/signup'}} >
+            <Row>
+                <Link to={{ pathname: '/signup'}} style={{marginRight : '9%'}}>
                     <Button color="teal">להרשמה</Button>
                 </Link>
             </Row>
