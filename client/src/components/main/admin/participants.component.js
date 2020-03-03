@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import {useAsyncHook} from '../../mongo/paths.component'
+// import {useAsyncHook} from '../../mongo/paths.component'
 import { Tab } from 'semantic-ui-react'
 import UserCard from '../utils/card.component'
 import {Dialog_generator} from '../utils//utils'
@@ -14,7 +14,6 @@ const make_participants = (arr_of_users, args) => {
     }
     const users_by_roles = {teachers : [], students : []}
     const {setCardOpen, setUserID, teachers, students} = args
-    console.log('teachers, students : ', teachers, students);
     if (arr_of_users && arr_of_users!==undefined && arr_of_users.length>0){
         arr_of_users.forEach(user => {
             const id = user._id
@@ -26,7 +25,6 @@ const make_participants = (arr_of_users, args) => {
                     teacher = teacher[0]
                     if (teacher.teaching_courses && teacher.teaching_courses.length > 0 ) {
                         teacher.teaching_courses.forEach(course=>courses.push(course.course_name))
-                        console.log("in the if: ", courses);
 
                     }
                 } else {
@@ -37,7 +35,7 @@ const make_participants = (arr_of_users, args) => {
                     "ת.ז" : id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,
-                    "קורסים" :  courses.join(", ")
+                    // "קורסים" :  courses.join(", ")
                 })
             }
             if (user.isStudent) {
@@ -45,6 +43,7 @@ const make_participants = (arr_of_users, args) => {
                 let student = students.filter(student=> student._id === id)
                 if (student && student.length === 1) {
                     student = student[0]
+                    console.log("student: ", student);
                     if (student.requests && student.requests.length > 0 ) {
                         student.requests.filter(req=>req.status === "approved").forEach(course=>courses.push(course.course_name))
                     }
@@ -56,7 +55,7 @@ const make_participants = (arr_of_users, args) => {
                     "ת.ז" : id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,
-                    "קורסים" :  courses.join(", ")
+                    // "קורסים" :  courses.join(", ")
                 })
             }
         })
