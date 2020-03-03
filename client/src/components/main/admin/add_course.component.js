@@ -14,15 +14,13 @@ export default function AddCourse(){
                alert("הקורס לא התווסף בהצלחה")
             } else {
                 alert("הקורס התווסף בהצלחה")
-                
-                // setWasAdded(true)
             }
         })
     }
 
     const useCourseForm = (httpRequestFunc) => {
         const [inputs, setInputs] = useState({course_name : '', course_id : ''})
-        const [wasAdded, setWasAdded] = useState(false)
+        // const [wasAdded, setWasAdded] = useState(false)
         const handleSubmit = (event) => {
             if (event) {
                 event.preventDefault();
@@ -34,14 +32,13 @@ export default function AddCourse(){
             event.persist();
             setInputs(inputs => ({...inputs, [name] : value}));
         }
-        return {inputs,  handleInputChange, handleSubmit, wasAdded};
+        return {inputs,  handleInputChange, handleSubmit};
     }
     const {inputs, handleInputChange, handleSubmit} = useCourseForm(httpPostRequestToAddCourse);
 
     return (
-        <div>
-            <Form>
-                <Form.Field>
+            <Form style={{textAlign : "center"}}>
+                <Form.Field width={3} style={{textAlign : "center", margin : "0 auto", padding : "1%"}}>
                     <label>מספר קורס</label>
                     <Form.Input
                         style={{direction:"ltr"}}
@@ -52,7 +49,7 @@ export default function AddCourse(){
                     />
                 </Form.Field>
                 
-                <Form.Field>
+                <Form.Field width={3} style={{textAlign : "center", margin : "0 auto", padding : "1%"}}>
                     <label>שם הקורס</label>
                     <Form.Input
                         style={{direction:"rtl"}}
@@ -64,9 +61,7 @@ export default function AddCourse(){
                 </Form.Field>
                 <Form.Field>
                      <Button onClick={handleSubmit} primary >הוספת קורס</Button>
-                    
                 </Form.Field>
             </Form>
-        </div>
     )
 }

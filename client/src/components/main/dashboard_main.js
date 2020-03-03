@@ -12,7 +12,7 @@ export default function Main(props) {
                 if(next_role === null) {
                   if(user.isStudent) {
                     history.replace({
-                      pathname: '/main/student', 
+                      pathname: '/main/student',
                       state: user
                     });
                   } else if(user.isTeacher) {
@@ -20,12 +20,12 @@ export default function Main(props) {
                     //then if you go back on the browser it will go to '/', if you change from replace to push, the stack was '/' -> '/main' -> '/main/role' which is bad because main just fetching
                     history.replace({
                       pathname: '/main/teacher', 
-                      state: user
+                      state: user,
                     });
                   } else if(user.isAdmin) {
                     history.replace({
                       pathname: '/main/admin', 
-                      state: user
+                      state: user,
                     });
                   }
                 } else {

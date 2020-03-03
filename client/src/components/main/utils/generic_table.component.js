@@ -14,6 +14,7 @@ const useStyles = makeStyles({
         textAlign : "center",
         backgroundColor : "#000875",
         color : "white",
+        fontSize : "1.4rem"
 
     },
     table : {
@@ -21,20 +22,24 @@ const useStyles = makeStyles({
         align : "right",
         textAlign : "right",
         maxHeight : "60vh",
-        maxWidth : "95%", 
+        // maxWidth : "100%", 
         margin : "0 auto" //will center the table inside the component its located
+
     },
     cell : {
-        textAlign : "right"
+        textAlign : "center",
+        fontSize : "1.2rem",
+        align: "center"
     }, 
     headerCell : {
         backgroundColor : "#CCE5FF",
-        textAlign : "right" 
+        textAlign : "center",
+        fontSize : "1.3rem",
     }
 
 });
 
-export default function GenericTable(props) {
+export default function GenericTable(props) { //props : {table_data : {data: some_data-> array of objects , title: string_of_title}}
     const classes = useStyles();
     const {data, title} = props.table_data
     
@@ -44,18 +49,18 @@ export default function GenericTable(props) {
     }
     const renderTableHeader = () => {
         // check if there is at least one element in the array
-        if (!(data && data.length > 0)) {
-            return null
+        if ( !data || (Array.isArray(data) &&  data.length === 0)) {
+            return <TableRow><TableCell></TableCell></TableRow>
         }
         let header = Object.keys(data[0])
+
         return (
             <TableRow className={classes.headerRow}>
-                {header.map((key, index) => {
-                    return <TableCell className={classes.headerCell} key={index}>{key.toUpperCase()}</TableCell>
-                })}
+                {header.map((key, index) => 
+                    <TableCell className={classes.headerCell} key={index}>{key}</TableCell>
+                )}
             </TableRow>
         )
-       
     }
 
     const renderTableData = () => {
@@ -77,15 +82,15 @@ export default function GenericTable(props) {
             )
         })
     }
-
     return (
         <TableContainer component={Paper} className={classes.table}>
-            <Table stickyHeader aria-label="sticky table" >
+            <Table size="small" stickyHeader>
                 <TableHead >
-                    {num_of_cols && <TableRow>
-                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}> {title}</TableCell>
+                    {(num_of_cols>0 && title) && <TableRow>
+                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}>{title}</TableCell>
                     </TableRow>}
                     {renderTableHeader()}
+                    
                 </TableHead>
                 <TableBody> 
                     {renderTableData()}

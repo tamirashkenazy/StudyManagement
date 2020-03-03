@@ -1,9 +1,39 @@
-import React  from 'react';
-import {useAsyncHook} from '../../mongo/paths.component'
+import React from 'react';
 import GenericTable from '../utils/generic_table.component'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
+import axios from 'axios';
+import get_mongo_api from '../../mongo/paths.component';
+
+// import Input from '@material-ui/core/Input';
+const approve_decline_hours_student = (_id, status, course_id) => {
+    axios.post(get_mongo_api(`students/update/requestStatus/${_id}`),{course_id, status}).then(response=>{
+        if (response.data.success) {
+            alert(response.data.message)
+            window.location.reload(true)
+        } else {
+            // alert("הקורס לא התווסף בהצלחה")
+            alert(response.data.message)
+        }
+    })
+}
+// function RequestRow (request, student_id) {
+function RequestRow (request, student_id) {
+    // const [approved_hours, set_approved_hours] = useState(request.number_of_hours)
+    // console.log(request);
+    return (
+        {
+            "ת.ז" : student_id,
+            "קורס" : request.course_name,
+            "שעות מבוקשות" : request.number_of_hours,
+            // "שעות מאושרות" : <Input type="number"  onChange={()=>console.log('clicked')}></Input>,
+            "קבצים" : "קבצים",
+            "אישור": <IconButton size="small" onClick={()=>approve_decline_hours_student(student_id, "approved", request.course_id)}><CheckIcon style={{color:"green"}}/></IconButton>,
+            "דחייה":<IconButton size="small" onClick={()=>approve_decline_hours_student(student_id, "declined", request.course_id)}><CloseIcon style={{color:"red"}}/></IconButton>
+        }
+    )
+}
 
 const students_requests_array = (students_arr)=>{
     if (students_arr && students_arr.length>0){
@@ -11,34 +41,34 @@ const students_requests_array = (students_arr)=>{
             let request_courses_to_study = student_obj.requests
             const student_id= student_obj._id
             if (request_courses_to_study && request_courses_to_study.length>0){
-                let requests_arr = request_courses_to_study.map(request => {
-                    return (
-                        {
-                            "ת.ז" : student_id,
-                            "קורס" : request.course_name,
-                            "שעות מבוקשות" : request.number_of_hours,
-                            "שעות מאושרות" : "שעות לאשר",
-                            "קבצים" : "קבצים",
-                            "": <IconButton size="small" onClick={()=>console.log('clicked')}><CheckIcon style={{color:"green"}}/></IconButton>,
-                            " ":<IconButton size="small"><CloseIcon style={{color:"red"}}/></IconButton>
-                        }
-                    )
-                })
+                let requests_arr = request_courses_to_study.map(request => 
+                    RequestRow(request, student_id)
+                )
                 return requests_arr
             } else {
                 return null
             }
         })
         students_requests = students_requests.flat()
+        students_requests = students_requests.filter(element=> element!=null)
+        if (students_requests && Array.isArray(students_requests) && students_requests.length===0) {
+            return ([{
+                "אין בקשות של תלמידים":""
+            }])
+        }
         return students_requests
     } else {
-        return null
+        return ([{
+            "אין תלמידים להציג":""
+        }])
     }
 }
 
-export default function StudentsRequestTable(props) {
-    const [students, loading] = useAsyncHook(`students`, students_requests_array);
+export default function StudentsRequestTable({students}) {
+
+    // const [, loading] = useAsyncHook(`students`, students_requests_array);
+    let students_arr = students_requests_array(students)
     return (
-        !loading && <GenericTable table_data={{data:students, title:"בקשות תלמידים"}}/>
+        <GenericTable table_data={{data:students_arr, title:"בקשות תלמידים"}}/>
     )
 }
