@@ -137,12 +137,42 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
             alert("Couldn't update: ", response.data.message)
           }
         })
+        console.log('formvals: ' , formValues);
+        if (formValues.isTeacher) {
+          // if the teacher exists in teachers collection - there will be a failure, so nothing will be changed
+          axios.post(get_mongo_api(`teachers/add`),{_id : formValues._id}).then(res=>{
+            if (!res.data.success) {
+              alert(res.data.message)
+            }
+          })
+        } else {
+          // if the teacher doesn't exist there will be a fuilure - again, nothing will be changed
+          axios.delete(get_mongo_api(`teachers/${formValues._id}`)).then(res=>{
+            if (!res.data.success) {
+              alert(res.data.message)
+            }
+          })
+        }
+        if (formValues.isStudent) {
+          // same as the teacher
+          axios.post(get_mongo_api(`students/add`),{_id : formValues._id}).then(res=>{
+            if (!res.data.success) {
+              alert(res.data.message)
+            }
+          })
+        } else {
+          axios.delete(get_mongo_api(`students/${formValues._id}`)).then(res=>{
+            if (!res.data.success) {
+              alert(res.data.message)
+            }
+          })
+        }
       }
     })
   }
   const [errors, setErrors] = useState({_id : null})
   const submitForm = (formValues) => {
-      console.log('submitting form: ', formValues);
+      // console.log('submitting form: ', formValues);
       if(!allFieldsExist(formValues)) {
           alert("אנא מלא את כל השדות")
       } else {
