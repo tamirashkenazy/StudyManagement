@@ -33,6 +33,8 @@ export default function Teacher(props) {
       ]
     const classes = useStylesAppBar();
     let teacher = filter_teacher_by_id(teachers, user._id)
+    console.log('teacher: ', teacher );
+    console.log('teachers: ', teachers );
     return (
         <div>
             <AppBar position="static" className={classes.AppBar} >
