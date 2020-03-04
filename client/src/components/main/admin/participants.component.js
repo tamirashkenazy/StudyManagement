@@ -8,53 +8,25 @@ import GenericTable from '../utils/generic_table.component';
 
 
 const make_participants = (arr_of_users, args) => {
-    if (!args) {
-        return null
-    }
     const users_by_roles = {teachers : [], students : []}
-    const {setCardOpen, setUserID, teachers, students} = args
+    const {setCardOpen, setCurrUser} = args
     if (arr_of_users && arr_of_users!==undefined && arr_of_users.length>0){
         arr_of_users.forEach(user => {
             const id = user._id
-            let courses;
             if (user.isTeacher) {
-                courses = []
-                let teacher = teachers.filter(teacher=> teacher._id === id)
-                if (teacher && teacher.length === 1) {
-                    teacher = teacher[0]
-                    if (teacher.teaching_courses && teacher.teaching_courses.length > 0 ) {
-                        teacher.teaching_courses.forEach(course=>courses.push(course.course_name))
-
-                    }
-                } else {
-
-                }
                 users_by_roles.teachers.push({
-                    "" : <IconButton onClick={()=>{setCardOpen(true); setUserID(user._id)}}><AccountCircleOutlinedIcon/></IconButton>,
+                    "" : <IconButton onClick={()=>{setCardOpen(true); setCurrUser(user)}}><AccountCircleOutlinedIcon/></IconButton>,
                     "ת.ז" : id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,
-                    // "קורסים" :  courses.join(", ")
                 })
             }
             if (user.isStudent) {
-                courses = []
-                let student = students.filter(student=> student._id === id)
-                if (student && student.length === 1) {
-                    student = student[0]
-                    console.log("student: ", student);
-                    if (student.requests && student.requests.length > 0 ) {
-                        student.requests.filter(req=>req.status === "approved").forEach(course=>courses.push(course.course_name))
-                    }
-                } else {
-
-                }
                 users_by_roles.students.push({
-                    "" : <IconButton onClick={()=>{setCardOpen(true); setUserID(user._id)}}><AccountCircleOutlinedIcon/></IconButton>,
+                    "" : <IconButton onClick={()=>{setCardOpen(true); setCurrUser(user)}}><AccountCircleOutlinedIcon/></IconButton>,
                     "ת.ז" : id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,
-                    // "קורסים" :  courses.join(", ")
                 })
             }
         })
@@ -62,13 +34,24 @@ const make_participants = (arr_of_users, args) => {
     }
 }
 
+const filter_by_id = (arr_of_users, user) => {
+    if (user) {
+        if (arr_of_users && Array.isArray(arr_of_users) && arr_of_users.length > 0) {
+            let a = arr_of_users.filter(temp_user => temp_user._id === user._id)
+            if (a.length === 1) {
+                return a[0]
+            }
+            return null
+        }
+        return null
+    }
+}
+
 export default function Participants(props){
     const {teachers, students, users} = props
-    console.log('props in parti', props);
     const [isCardOpen, setCardOpen] = useState(false)
-    const [user_id, setUserID] = useState(null)
-
-    let args = {setCardOpen, setUserID, teachers, students};
+    const [user, setCurrUser ] = useState(null)
+    let args = {setCardOpen, setCurrUser, teachers, students};
     let users_participants = make_participants(users, args)
     let panes=null
     if (users_participants) {
@@ -81,8 +64,7 @@ export default function Participants(props){
     return (
         <>
          <Tab panes={panes}/>
-        {Dialog_generator(isCardOpen, ()=>setCardOpen(false), "כרטיס סטודנט" ,{}, ()=><UserCard user_id={user_id}></UserCard>)}
+        {Dialog_generator(isCardOpen, ()=>setCardOpen(false), "כרטיס סטודנט" ,{}, ()=><UserCard user={user} teacher={filter_by_id(teachers, user)} student={filter_by_id(students, user)}></UserCard>)}
         </>
     )
-       
 }
