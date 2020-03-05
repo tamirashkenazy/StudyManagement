@@ -5,7 +5,7 @@ import Menu from '@material-ui/core/Menu';
 import { withStyles } from '@material-ui/core/styles';
 export const useStylesAppBar = makeStyles(theme => ({
     AppBar : {
-        backgroundColor : "gray",
+        backgroundColor : "#37474f", //#01579b //#37474f
         alignItems : "right",
         direction : "rtl",
     },
@@ -35,6 +35,6 @@ export const useStylesAppBar = makeStyles(theme => ({
       textAlign : "center",
       '&:focus': { backgroundColor: theme.palette.primary.main, 
         '& .MuiListItemIcon-root, & .MuiListItemText-primary': { 
-            color: theme.palette.common.white, 
+            color: theme.palette.common.white, // "#1de9b6" //theme.palette.common.white, 
       },},},
   }))(MenuItem);

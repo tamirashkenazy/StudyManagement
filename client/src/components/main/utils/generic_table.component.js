@@ -8,22 +8,23 @@ import TableContainer from '@material-ui/core/TableContainer';
 import { makeStyles } from '@material-ui/core/styles';
 import TableCell from '@material-ui/core/TableCell';
 import Paper from '@material-ui/core/Paper';
+import { Typography } from '@material-ui/core';
 
 const useStyles = makeStyles({
     titleRow : {
         textAlign : "center",
-        backgroundColor : "#000875",
+        backgroundColor : "#546e7a", //#01579b
         color : "white",
-        fontSize : "1.4rem"
+        fontSize : "2.9rem"
 
     },
     table : {
         direction : "rtl",
-        align : "right",
-        textAlign : "right",
-        maxHeight : "60vh",
+        // align : "right",
+        textAlign : "center",
+        // maxHeight : "60vh",
         // maxWidth : "100%", 
-        margin : "0 auto" //will center the table inside the component its located
+        // margin : "0 auto" //will center the table inside the component its located
 
     },
     cell : {
@@ -32,7 +33,7 @@ const useStyles = makeStyles({
         align: "center"
     }, 
     headerCell : {
-        backgroundColor : "#CCE5FF",
+        backgroundColor : "#cfd8dc",
         textAlign : "center",
         fontSize : "1.3rem",
     }
@@ -83,11 +84,11 @@ export default function GenericTable(props) { //props : {table_data : {data: som
         })
     }
     return (
-        <TableContainer component={Paper} className={classes.table}>
+        <TableContainer className={classes.table} component={Paper} >
             <Table size="small" stickyHeader>
                 <TableHead >
                     {(num_of_cols>0 && title) && <TableRow>
-                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}>{title}</TableCell>
+                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}><Typography variant="h4">{title}</Typography> </TableCell>
                     </TableRow>}
                     {renderTableHeader()}
                     
