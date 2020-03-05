@@ -45,8 +45,8 @@ export default function Student(props) {
 
     const classes_grid = useStyles()
     return (
-        <div className="student">
-
+        // <div className="student">
+        <div style={{textAlign : "center", backgroundColor : "#eeeeee"}}>
             <AppBar position="static" className={classes.AppBar} >
                 <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
             </AppBar>
@@ -65,22 +65,7 @@ export default function Student(props) {
                     </Grid>
                 </Grid>
             </div>
-            
             {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false))), "בקשת שעות חונכות", { _id: user._id }, (id) => RequestHours(id))}
-            
-            {/* <div className="content" >
-                <div className="topDiv">
-                    <div className="rightDiv">
-                        דיב2
-                    </div>
-                    <div className="leftDiv">
-                        דיב1
-                    </div>
-                    <div className="bottomDiv">
-                        
-                    </div>
-                </div>
-            </div> */}
         </div>
     )
 

@@ -11,9 +11,10 @@ import Participants from './participants.component'
 import AddCourse from './add_course.component'
 import TeachersRequestTable from './teachers_req.component'
 import StudentsRequestTable from './students_req.component'
-
+import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
 import Typography from '@material-ui/core/Typography';
+import { Paper } from '@material-ui/core';
 
 const getOpenedPopup = (num_of_popup, total_popups) => {
     let true_false_by_index = {}
@@ -46,6 +47,13 @@ export default function Admin(props) {
     const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
     // console.log('props in admin: ', props);
     const classes = useStylesAppBar();
+    const useStyles = makeStyles(theme => ({
+        paper: {
+        //   height: "90%",
+          width: "45%",
+        },
+      }));
+    const classes_main = useStyles()
     const navbar_operations_by_role = [
         { key : 'participants', header : 'משתתפים' , on_click : ()=>setOpenedPopups(getOpenedPopup(0,total_popups)) , icon : <PeopleAltOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'statistics', header : 'סטטיסטיקות' , on_click : ()=>setOpenedPopups(getOpenedPopup(1,total_popups)) , icon : <PieChartSharpIcon fontSize="large" style={{color:"white"}} />},
@@ -55,21 +63,25 @@ export default function Admin(props) {
     ]
     
     return (
-        <div style={{align : "center", textAlign : "center"}}>
+        <div  style={{textAlign : "center", backgroundColor: "#eceff1" }}>
+            
             <AppBar position="static" className={classes.AppBar} >
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
             {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים" ,{users, teachers, students} ,(args)=>Participants(args))}
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse(), "md")}
-            <Grid container spacing={1} alignItems="stretch" justify="space-evenly" direction="row" style={{margin:"0 auto", direction :"rtl"}}>
-                <Grid item xs>
-                    <Typography variant="h4">בקשות מורים</Typography>
+            <br></br>
+            <Grid container spacing={10}  justify="space-around" direction="row-reverse">
+                <Grid item xs justify="space-around" alignItems="center">
                     <TeachersRequestTable teachers={teachers} />
                 </Grid>
                 <Grid item xs>
-                    <Typography variant="h4">בקשות תלמידים</Typography>
+                    <Paper>
                     <StudentsRequestTable students={students}/>
+
+                    </Paper>
+                    {/* <Typography variant="h4">בקשות תלמידים</Typography> */}
                 </Grid>
             </Grid>
         </div>

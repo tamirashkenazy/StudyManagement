@@ -84,10 +84,10 @@ function FormLogin ()  {
                     />
                 </Form.Field>
                 
-                <Form.Field
+                {/* <Form.Field
                         control={Checkbox}
                         label='שכחתי סיסמה'
-                    />
+                    /> */}
 
                 <Form.Field>
                     <Button onClick={handleSubmit} primary >התחבר</Button>

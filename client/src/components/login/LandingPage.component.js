@@ -29,15 +29,25 @@ function LoginBox() {
                 <Col id="images-login">
                     <ImagesLogin/>
                 </Col>
-                <Col>
-                    <FormLogin/>
+                <Col style={{}}>
+                    <Container style={{height : "100%"}}>
+                        <Row style={{direction : "rtl"}}>
+                            <FormLogin/>
+                        </Row>
+                        <Row>
+                            <Link to={{ pathname: '/signup'}} >
+                                <Button color="teal">להרשמה</Button>
+                            </Link>
+                        </Row>
+                    </Container>
                 </Col>
+               
+
+                
             </Row>
-            <Row style={{direction : "rtl"}}>
-                <Link to={{ pathname: '/signup'}} >
-                    <Button color="teal">להרשמה</Button>
-                </Link>
-            </Row>
+            {/* <Row style={{direction : "rtl"}}>
+                
+            </Row> */}
         </Container>
     );
 }
