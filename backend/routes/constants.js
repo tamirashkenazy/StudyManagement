@@ -16,7 +16,7 @@ router.route('/').get((req, res) => {
  *      /<constant_name>
  */
 router.route('/:constant').get((req,res) => {
-    Constants.find({ uniqe : "constants" }, (err,constants) => {
+    Constants.find({ unique : "constants" }, (err,constants) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (constants && constants.length > 0) {
@@ -39,7 +39,7 @@ router.route('/:constant').get((req,res) => {
  *      "value" : <variable_value>
  */
 router.route('/update').post((req,res) => {
-    Constants.find({ uniqe : "constants" }, (err,constants) => {
+    Constants.find({ unique : "constants" }, (err,constants) => {
         if (!constants || constants.length === 0) {
             return res.send({success : false, message:"!האובייקט אינו קיים"})
         }
@@ -60,7 +60,7 @@ router.route('/update').post((req,res) => {
 }); 
 
 router.route('/add').post((req, res) => {
-    Constants.find({ uniqe : "constants" }, (err,constants) => {
+    Constants.find({ unique : "constants" }, (err,constants) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (constants && constants.length > 0) {
