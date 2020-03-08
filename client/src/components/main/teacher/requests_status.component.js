@@ -26,8 +26,8 @@ const status_to_hebrew = {
     "declined" : {text : "בקשה נדחתה", color: "error"}
 }
 
-const teacher_status_request_array = (teacher)=>{
-    const {teaching_requests} = teacher;
+const teacher_status_request_array = (teaching_requests)=>{
+    // const {teaching_requests} = teacher;
     if (teaching_requests && teaching_requests.length>0){    
         let teacher_requests_status = teaching_requests.map(teaching_request => {
             return (
@@ -45,9 +45,9 @@ const teacher_status_request_array = (teacher)=>{
     }
 }
 
-export default function TeachersStatusRequestsTable({teacher}) {
-    console.log('teacher1: ', teacher);
-    let teacher_req_stat = teacher_status_request_array(teacher)
+export default function TeachersStatusRequestsTable({teaching_requests}) {
+    console.log('teaching_requests: ', teaching_requests);
+    let teacher_req_stat = teacher_status_request_array(teaching_requests)
     // const [teachers, loading] = useAsyncHook(`teachers`, teachers_requests_array);
     return (
         <GenericTable table_data={{data:teacher_req_stat, title:"סטטוס בקשות"}}/>

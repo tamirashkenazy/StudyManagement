@@ -106,7 +106,7 @@ function AccountMenu({handleSubmit, formValues, next_role, userDetails, navbar_o
   }
 
   const fromListToOpterationsInNavBar = navbar_operations_by_role.map(menu_item=>
-    <StyledMenuItem style={{marginRight : "6%", color : "black"}} onClick={menu_item.on_click} key={menu_item.key} >
+    <StyledMenuItem style={{marginRight : "6%" }} onClick={menu_item.on_click} key={menu_item.key} > {/* { color : "black"} */}
           <ListItemIcon>
               {menu_item.icon}
           </ListItemIcon>
