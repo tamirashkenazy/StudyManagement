@@ -18,8 +18,11 @@ const getOpenedPopup = (is_open_select_courses_to_teach, is_update_availability)
 
 const filter_teacher_by_id = (teachers, id) => {
     let teacher_obj = teachers.filter(teacher => teacher._id === id)
-    teacher_obj = teacher_obj[0]
-    return teacher_obj
+    if (teacher_obj.length > 0) {
+        teacher_obj = teacher_obj[0]
+        return teacher_obj
+    }
+    return null
 }
 
 export default function Teacher(props) {
@@ -33,28 +36,30 @@ export default function Teacher(props) {
       ]
     const classes = useStylesAppBar();
     let teacher = filter_teacher_by_id(teachers, user._id)
-    console.log('teacher: ', teacher );
-    console.log('teachers: ', teachers );
     return (
-        <div>
+        teacher ? 
+            <div>
             <AppBar position="static" className={classes.AppBar} >
                 <AccountMenu userDetails={user} next_role='student' navbar_operations_by_role={navbar_operations_by_role} props={{formSubmitButtonName : "עדכן פרטים"}} />
             </AppBar> 
             {Dialog_generator(openedPopups.select_courses, ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false))), "בחירת קורסים ללמד",{_id:user._id, teacher }, (id, teacher)=>CoursesToTeach(id, teacher))}
 
-        {/* <h5> */}
         <Grid container spacing={1} alignItems="stretch" justify="space-evenly" direction="row" style={{margin:"0 auto", direction :"rtl"}}>
             <Grid item xs align="center">
                 <Typography variant="h4">שיעורים</Typography>
                 {/* <TeachersStatusRequestsTable/> */}
             </Grid>
             <Grid item xs align="center">
-                <Typography variant="h4">סטטוס בקשות</Typography>
-                <TeachersStatusRequestsTable teacher={teacher}/>
+                <br></br>
+                {/* <Typography variant="h4">סטטוס בקשות</Typography> */}
+                <TeachersStatusRequestsTable teaching_requests={teacher.teaching_requests}/>
             </Grid>
 
         </Grid>
-        {/* </h5> */}
         </div>
+        : <div>
+            loading teacher
+        </div>
+        
     )
 }
