@@ -1,7 +1,9 @@
 const router = require('express').Router();
 let Course = require('../models/course.model');
 
-
+/**
+ * get list of all the courses.
+ */
 router.route('/').get((req, res) => {
     //mongoose method to find all the courses
     Course.find()
@@ -9,7 +11,11 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).send({success:false, message: "Error: " + err}));
 });
 
-// the /:id is like a variable
+/**
+ * get course info by course number.
+ * request parameters:
+ *      /<course_id>
+ */
 router.route('/:_id').get((req,res) => {
     console.log(req.params._id)
     Course.find({ _id : req.params._id }, (err,course) => {
@@ -23,7 +29,14 @@ router.route('/:_id').get((req,res) => {
     })
 })
 
-// should see this, validation in the backend, https://medium.com/@Keithweaver_/building-a-log-in-system-for-a-mern-stack-39411e9513bd
+/**
+ * Add new course.
+ * request parameters:
+ *      /add
+ * request body:
+ *      "_id" : <course_id>
+ *       "name" : <course name>
+ */
 router.route('/add').post((req, res) => {
     const { body } = req;
     const { name, _id } = body
@@ -39,6 +52,13 @@ router.route('/add').post((req, res) => {
     })
 })
 
+/**
+ * Delete course by id.
+ * request parameters:
+ *      /<course_id>
+ * request body:
+ *     None
+ */
 router.route('/:_id').delete((req,res) => {
     Course.deleteOne({_id: req.params._id})
     .then(course => res.send({success:true, message: "!הקורס נמחק בהצלחה"}))
