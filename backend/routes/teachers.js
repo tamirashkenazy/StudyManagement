@@ -277,6 +277,38 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
        
 
 /**
+ * Add grades file.
+ * request parameters:
+ *      /add/file/<teacher_id>
+ * request body:
+ *      file : <binary_file>
+ *      name : <file_name>
+ */
+router.route('/add/file/:id').post((req, res) => {
+    Teacher.findById((req.params.id), (err,teacher) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!teacher || teacher.length===0) {
+            return res.send({success : false, message:"!המורה אינו קיים במערכת"})
+        } else {
+            
+            console.log(binary(req.files))
+            console.log("---------------------------------------")
+            console.log(req._readableState.buffer.tail.data)
+            teacher.grades_file = binary(req._readableState.buffer.tail.data)
+            teacher.save((err, teacher)=> {
+                if (err) {
+                    return res.send({success:false, message:"Error: Couldn't Save " + err})
+                }
+            })
+            return res.send({success:true, message: "!הקובץ נשמר במערכת"})
+        }
+    })
+})
+
+
+
+/**
  * Add new teacher.
  * request parameters:
  *      /add
