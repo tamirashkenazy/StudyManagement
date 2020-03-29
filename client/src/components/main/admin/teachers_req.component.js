@@ -4,8 +4,10 @@ import GenericTable from '../utils/generic_table.component'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
+import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import get_mongo_api from '../../mongo/paths.component';
+import { Input } from '@material-ui/core';
 
 const approve_decline_teacher_req = (_id, status, course_id) => {
     axios.post(get_mongo_api(`teachers/update/requestStatus/${_id}`),{course_id, status}).then(response=>{
@@ -18,7 +20,9 @@ const approve_decline_teacher_req = (_id, status, course_id) => {
         }
     })
 }
-
+// const get_grades_file = (id) => {
+//     axiosget_mongo_api
+// }
 const teachers_requests_array = (teachers_arr)=>{
     if (teachers_arr && teachers_arr.length>0){
         let teacher_requests = teachers_arr.map(teacher_obj => {
@@ -32,7 +36,7 @@ const teachers_requests_array = (teachers_arr)=>{
                         {
                             "ת.ז" : teacher_id,
                             "קורס" : request.course_name,
-                            "גיליון" : grades_sheet,
+                            "גיליון" :      <form action={get_mongo_api(`teachers/${teacher_id}/grades`)} method="GET"><Input type="submit" value="גיליון ציונים" /></form>,
                             "אישור קורס": <IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "approved", request.course_id)}><CheckIcon style={{color:"green"}}/></IconButton>,
                             "דחיית בקשה":<IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "declined", request.course_id)}><CloseIcon style={{color:"red"}}/></IconButton>
                         }
