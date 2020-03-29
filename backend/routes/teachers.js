@@ -1,6 +1,13 @@
 const router = require('express').Router();
+const express = require('express')
 let Teacher = require('../models/teacher.model');
 let Course = require('../models/course.model');
+const mongodb = require('mongodb')
+const fileUpload = require('express-fileupload')
+const fs = require('fs')
+const binary = mongodb.Binary
+const app = express()
+app.use(fileUpload())
 
 /**
  * get list of all the teachers.
@@ -111,7 +118,10 @@ router.route('/:id/grades').get((req,res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            return res.send({success : true, message: teacher.grades_file})
+            let buffer = teacher.grades_file.buffer
+            console.log(teacher.grades_file.buffer)
+            fs.writeFileSync('./grades.pdf', buffer)
+            return res.send({success : true, message: "test"})
         }
     })
 })

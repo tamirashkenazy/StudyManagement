@@ -78,10 +78,8 @@ export default function Admin(props) {
                 </Grid>
                 <Grid item xs>
                     <Paper>
-                    <StudentsRequestTable students={students}/>
-
+                        <StudentsRequestTable students={students}/>
                     </Paper>
-                    {/* <Typography variant="h4">בקשות תלמידים</Typography> */}
                 </Grid>
             </Grid>
         </div>

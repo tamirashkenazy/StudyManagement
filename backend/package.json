@@ -17,6 +17,7 @@
     "express": "^4.17.1",
     "mongoose": "^5.7.14",
     "node": "^13.3.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "express-fileupload": "^1.1.6"
   }
 }
