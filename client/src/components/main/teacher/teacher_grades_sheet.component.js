@@ -25,7 +25,7 @@ export default function UploadGradesSheet(props){
         })
     }
 
-    const useSignInForm = (callback) => {
+    const useUploadGradesSheetForm = (callback) => {
         const [inputs, setInputs] = useState({ grades_sheet: ''})
         const handleSubmit = (event) => {
             if (event) {
@@ -36,20 +36,28 @@ export default function UploadGradesSheet(props){
         }
         const handleInputChange = (event, {name, value}) => {
             event.persist();
+            console.log('value: ', value);
             setInputs(inputs => ({...inputs, [name] : value}));
         }
         return { handleSubmit, handleInputChange,  inputs};
     }
 
-    const {inputs, handleInputChange, handleSubmit} = useSignInForm(httpPostRequestToUploadFile);
+    const {inputs, handleInputChange, handleSubmit} = useUploadGradesSheetForm(httpPostRequestToUploadFile);
 
     return (
         <>
-        <Form>
+            <form action={get_mongo_api(`teachers/add/file/${id}`)} method="POST" enctype="multipart/form-data">
+                <input type="text" name="name" placeholder="File Name.." /><br />
+                <input type="file" name="uploadedFile" /> <br /> <br />
+                <input type="submit" value="Upload File" />
+             </form>
+            <hr></hr>
+        {/* <Form >
                 <Form.Field>
                     <Form.Input
                         style={{direction:"ltr"}}
                         type="file"
+                        
                         name='grades_sheet'
                         value={inputs.grades_sheet} 
                         onChange={handleInputChange}
@@ -59,8 +67,7 @@ export default function UploadGradesSheet(props){
                 <Form.Field>
                     <Button onClick={handleSubmit} primary >העלאת קובץ</Button>
                 </Form.Field>
-            </Form>
-        
+            </Form> */}
         </>
     )
 }

@@ -1,13 +1,11 @@
 const router = require('express').Router();
-const express = require('express')
 let Teacher = require('../models/teacher.model');
 let Course = require('../models/course.model');
 const mongodb = require('mongodb')
-const fileUpload = require('express-fileupload')
 const fs = require('fs')
 const binary = mongodb.Binary
-const app = express()
-app.use(fileUpload())
+
+
 
 /**
  * get list of all the teachers.
@@ -119,9 +117,19 @@ router.route('/:id/grades').get((req,res) => {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             let buffer = teacher.grades_file.buffer
-            console.log(teacher.grades_file.buffer)
-            fs.writeFileSync('./grades.pdf', buffer)
-            return res.send({success : true, message: "test"})
+            fs.appendFile('./grades.pdf', new Buffer(buffer), function (err) {
+                if (err) {
+                  fut.throw(err);
+                } else {
+                    return res.send({success : true, message: "test"})
+                }
+            });
+            //console.log(buffer)
+            //console.log("----------------------------------------------")
+            //console.log(teacher.grades_file.buffer)
+
+            //fs.writeFileSync('./grades.pdf', buffer)
+            //
         }
     })
 })
@@ -294,18 +302,15 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
  *      file : <binary_file>
  *      name : <file_name>
  */
-router.route('/add/file/:id').post((req, res) => {
+// app.post('/add/file/:id', async (req, res) => {
+router.post('/add/file/:id', async (req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            
-            console.log(binary(req.files))
-            console.log("---------------------------------------")
-            console.log(req._readableState.buffer.tail.data)
-            teacher.grades_file = binary(req._readableState.buffer.tail.data)
+            teacher.grades_file = binary(req.files.uploadedFile.data)
             teacher.save((err, teacher)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
