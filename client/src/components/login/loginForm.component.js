@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory} from 'react-router-dom'
-import {Form , Button, Checkbox} from 'semantic-ui-react'
+import {Form , Button} from 'semantic-ui-react'
 //TALKS to the backend, sends https requests
 import get_mongo_api from '../mongo/paths.component'
 import axios from 'axios'
