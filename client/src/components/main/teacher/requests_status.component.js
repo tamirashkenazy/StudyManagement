@@ -46,7 +46,6 @@ const teacher_status_request_array = (teaching_requests)=>{
 }
 
 export default function TeachersStatusRequestsTable({teaching_requests}) {
-    console.log('teaching_requests: ', teaching_requests);
     let teacher_req_stat = teacher_status_request_array(teaching_requests)
     // const [teachers, loading] = useAsyncHook(`teachers`, teachers_requests_array);
     return (
