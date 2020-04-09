@@ -116,12 +116,12 @@ router.route('/:id/grades').get((req,res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            let buffer = teacher.grades_file.buffer
-            fs.appendFile('./grades.pdf', new Buffer(buffer), function (err) {
+            let buffer = teacher.grades_file.data.buffer
+            fs.appendFile(teacher.grades_file.name, new Buffer(buffer), function (err) {
                 if (err) {
                   fut.throw(err);
                 } else {
-                    return res.send({success : true, message: "test"})
+                    return res.sendfile(teacher.grades_file.name)
                 }
             });
             //console.log(buffer)
@@ -310,7 +310,10 @@ router.post('/add/file/:id', async (req, res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            teacher.grades_file = binary(req.files.uploadedFile.data)
+            console.log(req.files.uploadedFile)
+            teacher.grades_file.name = req.params.id.toString() + ".pdf"
+            console.log(teacher.grades_file.name)
+            teacher.grades_file.data = binary(req.files.uploadedFile.data)
             teacher.save((err, teacher)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
