@@ -104,6 +104,7 @@ router.route('/:id/requests').get((req,res) => {
 })
 */
 
+
 /**
  * get grades file by teacher id
  * request parameters:
@@ -115,21 +116,43 @@ router.route('/:id/grades').get((req,res) => {
             return res.send({success : false, message:"Error: " + err})
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
-        } else {
+        } else if (teacher.grades_file.name == null){
+            return res.send({success : true, message:"!הקובץ אינו קיים במערכת"})
+        }else{
+            var url=process.cwd()
             let buffer = teacher.grades_file.data.buffer
-            fs.appendFile(teacher.grades_file.name, new Buffer(buffer), function (err) {
+            url += teacher.grades_file.name
+            fs.appendFile(teacher.grades_file.name, Buffer.from(buffer), (err) => {
                 if (err) {
-                  fut.throw(err);
+                  console.log(err);
                 } else {
-                    return res.sendfile(teacher.grades_file.name)
+                    return res.sendFile(url)
                 }
             });
-            //console.log(buffer)
-            //console.log("----------------------------------------------")
-            //console.log(teacher.grades_file.buffer)
+        }
+    })
+})
 
-            //fs.writeFileSync('./grades.pdf', buffer)
-            //
+
+
+/**
+ * check if file is existed by teacher id
+ * request parameters:
+ *      /<teacher_id>/checkgrades
+ */
+router.route('/:id/checkgrades').get((req,res) => {
+    Teacher.findById((req.params.id), (err,teacher) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!teacher || teacher.length===0) {
+            return res.send({success : false, message:"!המורה אינו קיים במערכת"})
+        } else {
+            console.log(teacher.grades_file.name)
+            if (teacher.grades_file.name == null){
+            return res.send({success : false, message:"!הקובץ אינו קיים במערכת"})
+            } else{
+                return res.send({success : true, message:"!הקובץ קיים במערכת"})
+            }
         }
     })
 })

@@ -17,8 +17,8 @@ const TeacherSchema = new Schema({
                         course_name : {type : String,  required : true},
                         updated_at : {type : Date,  required : true, default: Date.now()},
                         status : { type : String, required : true, enum: status, default: 'waiting'}}],
-    grades_file : {name : {type : String, minlength: 2},
-                    data :{type : Buffer , default : null}},
+    grades_file : {name : {type : String, minlength: 2, default : null},
+                    data :{type : Buffer, default : null}},
 }, { timestamps:true }, );
 
 
