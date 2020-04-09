@@ -11,9 +11,7 @@ import Participants from './participants.component'
 import AddCourse from './add_course.component'
 import TeachersRequestTable from './teachers_req.component'
 import StudentsRequestTable from './students_req.component'
-import { makeStyles } from '@material-ui/core/styles';
 import Grid from '@material-ui/core/Grid';
-import Typography from '@material-ui/core/Typography';
 import { Paper } from '@material-ui/core';
 
 const getOpenedPopup = (num_of_popup, total_popups) => {
@@ -47,13 +45,6 @@ export default function Admin(props) {
     const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
     // console.log('props in admin: ', props);
     const classes = useStylesAppBar();
-    const useStyles = makeStyles(theme => ({
-        paper: {
-        //   height: "90%",
-          width: "45%",
-        },
-      }));
-    const classes_main = useStyles()
     const navbar_operations_by_role = [
         { key : 'participants', header : 'משתתפים' , on_click : ()=>setOpenedPopups(getOpenedPopup(0,total_popups)) , icon : <PeopleAltOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'statistics', header : 'סטטיסטיקות' , on_click : ()=>setOpenedPopups(getOpenedPopup(1,total_popups)) , icon : <PieChartSharpIcon fontSize="large" style={{color:"white"}} />},

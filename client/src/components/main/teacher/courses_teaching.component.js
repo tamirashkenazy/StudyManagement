@@ -29,13 +29,16 @@ export default function CoursesToTeach(props){
     const { teacher} = props
     const [selectedCourses, setSelectedCourses] = useState([])
     const [courses_options, loading] = useAsyncHook(`courses`, make_courses_option, teacher);
-    const sendCourses = (_id) => {
+
+
+    const sendCourses = (id) => {
         // let courses_msg_arr = []
         Object.entries(selectedCourses).forEach(([key, value])=>{
             if (value === true) {
                 let course_id = key.split('-')[0]
                 let course_name = key.split('-')[1]
-                axios.post(get_mongo_api(`teachers/add/request/${_id}`),{course_id : course_id, course_name: course_name}).then(response=>{
+                console.log(id);
+                axios.post(get_mongo_api(`teachers/add/request/${id}`),{course_id : course_id, course_name: course_name}).then(response=>{
                     if (!response.data.success) {
                         console.log(response.data.message)
                     } else {
@@ -50,7 +53,7 @@ export default function CoursesToTeach(props){
         })
     }
     
-    const onChangeCourse = (e, {value, label, checked}) => {
+    const onChangeCourse = (e, {value, checked}) => {
         let new_selected = Object.assign({},selectedCourses)
         if (checked === true) {
             new_selected[value] = checked
@@ -83,7 +86,7 @@ export default function CoursesToTeach(props){
                 {/* <Dropdown  placeholder='מספר שעות' onChange={(e,{value})=>setHours(value)} options={get_options(4)}/> */}
             {/* </Grid.Row> */}
             {(selectedCourses && Object.entries(selectedCourses).length > 0) && <Grid.Row>
-                <Button onClick={()=>sendCourses(props._id)}>שלח</Button>
+                <Button onClick={()=>sendCourses(props.id)}>שלח</Button>
             </Grid.Row>}
         </Grid>
     )

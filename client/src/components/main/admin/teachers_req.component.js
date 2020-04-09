@@ -1,10 +1,8 @@
 import React from 'react';
-// import {useAsyncHook} from '../../mongo/paths.component'
 import GenericTable from '../utils/generic_table.component'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
-import Button from '@material-ui/core/Button';
 import axios from 'axios';
 import get_mongo_api from '../../mongo/paths.component';
 import { Input } from '@material-ui/core';
@@ -15,21 +13,17 @@ const approve_decline_teacher_req = (_id, status, course_id) => {
             alert(response.data.message)
             window.location.reload(true)
         } else {
-            // alert("הקורס לא התווסף בהצלחה")
             alert(response.data.message)
         }
     })
 }
-// const get_grades_file = (id) => {
-//     axiosget_mongo_api
-// }
+
 const teachers_requests_array = (teachers_arr)=>{
     if (teachers_arr && teachers_arr.length>0){
         let teacher_requests = teachers_arr.map(teacher_obj => {
             let request_courses_to_teach = teacher_obj.teaching_requests
             request_courses_to_teach = request_courses_to_teach.filter(teaching_req => teaching_req.status === "waiting")
             const teacher_id = teacher_obj._id
-            const grades_sheet = "גיליון"
             if (request_courses_to_teach && request_courses_to_teach.length>0){
                 let requests_arr = request_courses_to_teach.map(request => {
                     return (

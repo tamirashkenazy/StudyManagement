@@ -34,20 +34,14 @@ function LoginBox() {
                         <Row style={{direction : "rtl"}}>
                             <FormLogin/>
                         </Row>
-                        <Row>
+                        <Row style={{marginTop: "1rem", direction : "rtl"}}>
                             <Link to={{ pathname: '/signup'}} >
                                 <Button color="teal">להרשמה</Button>
                             </Link>
                         </Row>
                     </Container>
                 </Col>
-               
-
-                
             </Row>
-            {/* <Row style={{direction : "rtl"}}>
-                
-            </Row> */}
         </Container>
     );
 }

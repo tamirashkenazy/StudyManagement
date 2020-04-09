@@ -15,7 +15,6 @@ export function httpPostRequestToAddUser(formValues, history) {
         isAdmin : false,
         study_year: formValues.study_year,
     }
-    console.log("the user is: " + user_to_add);
     axios.post(get_mongo_api('users/add'), user_to_add)
     .then((response)=> {
         if (response.data.success) {
@@ -30,7 +29,6 @@ export function httpPostRequestToAddStudent(id) {
     const student_to_add = {  
         _id : id,
     }
-    console.log("the student is: " + student_to_add);
     axios.post(get_mongo_api('students/add'), student_to_add)
     .then((response)=> {
         if (!response.data.success) {
@@ -43,14 +41,12 @@ export function httpPostRequestToAddTeacher(id) {
     const teacher_to_add = {  
         _id : id,
     }
-    console.log("the teacher is: " + teacher_to_add);
     axios.post(get_mongo_api('teachers/add'), teacher_to_add)
     .then((response)=> {
         if (response.data.success === false) {
             alert(response.data.message)
         } else {
             console.log(response.data.message);
-            // alert(response.data.message)
         }
     })
 } 

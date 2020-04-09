@@ -25,9 +25,9 @@ const RadioGenerator = props => {
     if (props && props.input && props.options) {
       const renderRadioButtons = (key, index) => {
         return (
-              <Form.Field key={`${index}`}>
-                  <label className="sans-serif w-100" key={`${index}`} htmlFor={`${props.input.name}-${index}`}></label>
-                    <Field
+              <Form.Field key={`${index}`} >
+                  <label className="sans-serif w-100" key={`${index}`} htmlFor={`${props.input.name}-${index}`} ></label>
+                    <Field 
                     id={`${index}`}
                     component="input"
                     name={props.input.name}
@@ -40,7 +40,7 @@ const RadioGenerator = props => {
       };
       return (
         <div className="mv3 w-100">
-          <div className="b sans-serif pv2 w-100">
+          <div className="b sans-serif pv2 w-100" >
             {props.label}
           </div>
           <div>
@@ -80,13 +80,13 @@ const RadioGenerator = props => {
 
   const CheckboxGenerator = props => {
     return (
-      <div className="flex items-center mv4 w-100">
-        <input
+      <div className="flex items-center mv4 w-100" style={{margin:"1rem"}}>
+        <input style={{marginLeft:"0.7rem"}}
           {...props.input}
           type="checkbox"
           checked={props.input.value}
         />
-        <div className="sans-serif">{props.label}</div>
+        <div className="sans-serif" style={{display:"inline"}}>{props.label}</div>
       </div>
     );
   }
@@ -137,25 +137,14 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
                 name="study_year"
                 label="שנת לימודים"
                 component={Select}
-                options={{ year_a: 'שנה א', year_b: 'שנה ב', year_c: 'שנה ג', year_d: 'שנה ד', year_e: 'שנה ה' }}
+                options={{ year_a: 'שנה א', year_b: 'שנה ב', year_c: 'שנה ג', year_d: 'שנה ד'}}
             />
         )
     }
-    // NO NEED ANYMORE
-    // const bank_details_field = () => {
-    //     return (
-    //         <Form.Field>
-    //         <Field name='bank_account_name' label="שם החשבון" placeholder='שם החשבון' type="text" component={textField} direction="ltr"/>
-    //         <Field name='bank_number' label="מס' בנק" placeholder="מס' בנק" type="text" component={textField} direction="ltr"/>
-    //         <Field name='bank_branch' label='סניף' placeholder='סניף' type="text" component={textField} direction="ltr"/>
-    //         <Field name='bank_account_number' label="מס' חשבון" placeholder="מס' חשבון" type="text" component={textField} direction="ltr"/>
-    //         </Form.Field>
-    //     )
-    // }
 
     const roles_field = () => {
         return (
-            <Form.Field>
+            <Form.Field > 
                 <Field name="isStudent" label="תלמיד" component={CheckboxGenerator}/>
                 <Field name="isTeacher" label="מורה"  component={CheckboxGenerator}/>
                 {/* {formValues && ('isTeacher' in formValues) && (formValues.isTeacher) && bank_details_field()} */} 
