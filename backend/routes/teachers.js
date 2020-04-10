@@ -4,8 +4,7 @@ let Course = require('../models/course.model');
 const mongodb = require('mongodb')
 const fs = require('fs')
 const binary = mongodb.Binary
-
-
+var path = require('path');
 
 /**
  * get list of all the teachers.
@@ -121,7 +120,8 @@ router.route('/:id/grades').get((req,res) => {
         }else{
             var url=process.cwd()
             let buffer = teacher.grades_file.data.buffer
-            url += teacher.grades_file.name
+            url = path.join(url, teacher.grades_file.name)
+            // url += teacher.grades_file.name
             fs.appendFile(teacher.grades_file.name, Buffer.from(buffer), (err) => {
                 if (err) {
                   console.log(err);
@@ -147,7 +147,6 @@ router.route('/:id/checkgrades').get((req,res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            console.log(teacher.grades_file.name)
             if (teacher.grades_file.name == null){
             return res.send({success : false, message:"!הקובץ אינו קיים במערכת"})
             } else{

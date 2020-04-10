@@ -63,8 +63,8 @@ export default function Admin(props) {
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse(), "md")}
             <br></br>
-            <Grid container spacing={10}  justify="space-around" direction="row-reverse">
-                <Grid item xs justify="space-around" alignItems="center">
+            <Grid container spacing={10} justify="space-around" direction="row-reverse">
+                <Grid item xs  >
                     <TeachersRequestTable teachers={teachers} />
                 </Grid>
                 <Grid item xs>

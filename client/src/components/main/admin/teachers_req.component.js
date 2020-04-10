@@ -5,8 +5,9 @@ import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 import axios from 'axios';
 import get_mongo_api from '../../mongo/paths.component';
-import { Button} from 'semantic-ui-react'
-//import { Input } from '@material-ui/core';
+import Button from '@material-ui/core/Button';
+import Typography from '@material-ui/core/Typography';
+import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 
 const approve_decline_teacher_req = (_id, status, course_id) => {
     axios.post(get_mongo_api(`teachers/update/requestStatus/${_id}`),{course_id, status}).then(response=>{
@@ -35,6 +36,7 @@ const teachers_requests_array = (teachers_arr)=>{
     if (teachers_arr && teachers_arr.length>0){
         let teacher_requests = teachers_arr.map(teacher_obj => {
             let request_courses_to_teach = teacher_obj.teaching_requests
+            let grades_file = teacher_obj.grades_file
             request_courses_to_teach = request_courses_to_teach.filter(teaching_req => teaching_req.status === "waiting")
             const teacher_id = teacher_obj._id
             if (request_courses_to_teach && request_courses_to_teach.length>0){
@@ -43,7 +45,7 @@ const teachers_requests_array = (teachers_arr)=>{
                         {
                             "ת.ז" : teacher_id,
                             "קורס" : request.course_name,
-                            "גיליון" : <Button onClick={()=>open_grades_file(teacher_id)} primary >"גיליון ציונים"</Button>,
+                            "גיליון" : grades_file.name ? <IconButton onClick={()=>open_grades_file(teacher_id)} color="primary" ><DescriptionOutlinedIcon /></IconButton> : <Typography variant="body2">לא קיים גיליון ציונים</Typography>,
                             "אישור קורס": <IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "approved", request.course_id)}><CheckIcon style={{color:"green"}}/></IconButton>,
                             "דחיית בקשה":<IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "declined", request.course_id)}><CloseIcon style={{color:"red"}}/></IconButton>
                         }
