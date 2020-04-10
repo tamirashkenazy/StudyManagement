@@ -5,7 +5,6 @@ import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 import axios from 'axios';
 import get_mongo_api from '../../mongo/paths.component';
-import Button from '@material-ui/core/Button';
 import Typography from '@material-ui/core/Typography';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 

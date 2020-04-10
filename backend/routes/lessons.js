@@ -40,7 +40,7 @@ router.route('/sumLessons').get((req,res) => {
 
     Lesson.find({$or:[{ "status" : "waiting" },{ "status" : "done" }]}, (err,lessons) => {
         if(err) {
-            return res.send({success : false, message:"Error: " + err})
+            return res.send({success : false, message: "Error: " + err})
         } else if (lessons && lessons.length > 0) {
             return res.send({success : true, message: lessons.length})
         } else {
@@ -59,20 +59,34 @@ router.route('/paidMoney').get((req,res) => {
 
     Lesson.find({"status" : "done" }, (err,lessons) => {
         if(err) {
-            return res.send({success : false, message:"Error: " + err})
+            return res.send({success : false, message: "Error: " + err})
         } else if (lessons && lessons.length > 0) {
             Constants.find({}, (err,constant) => {
             constant = constant[0]  
             sum_money = lessons.length * Number(constant.lesson_price)
+
             return res.send({success : true, message: sum_money})
             })
         } else {
             return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
         }
     })
-    
 })
 
+router.route('/annualBudget').get((req,res) => {
+
+    Constants.find({}, (err,constant_arr) => {
+        if(err) {
+            return res.send({success : false, message: "Error: " + err})
+        } else if (Array.isArray(constant_arr) && constant_arr.length > 0) {
+            let constant = constant_arr[0]  
+            let annual_budget = constant.annual_budget
+            return res.send({success : true, message: annual_budget})
+        } else {
+            return res.send({success : false, message: "שגיאה לא ידועה"})
+        }
+    })
+})
 
 /**
  * get all the lessons in specific course.

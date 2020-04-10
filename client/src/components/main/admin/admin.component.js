@@ -12,7 +12,8 @@ import AddCourse from './add_course.component'
 import TeachersRequestTable from './teachers_req.component'
 import StudentsRequestTable from './students_req.component'
 import Grid from '@material-ui/core/Grid';
-import { Paper } from '@material-ui/core';
+import {useAsyncHook} from '../../mongo/paths.component';
+import {AnnualStatistics} from './annual_statistics'
 
 const getOpenedPopup = (num_of_popup, total_popups) => {
     let true_false_by_index = {}
@@ -38,12 +39,12 @@ const closeAllPopups = (total_popups) => {
 }
 
 
+
 export default function Admin(props) {
     const total_popups = 4
     const user = props.history.location.state
     const {teachers, students, users} = props
     const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
-    // console.log('props in admin: ', props);
     const classes = useStylesAppBar();
     const navbar_operations_by_role = [
         { key : 'participants', header : 'משתתפים' , on_click : ()=>setOpenedPopups(getOpenedPopup(0,total_popups)) , icon : <PeopleAltOutlinedIcon fontSize="large" style={{color:"white"}} />},
@@ -52,7 +53,8 @@ export default function Admin(props) {
         { key : 'add_course', header : 'הוסף קורס' , on_click : ()=>setOpenedPopups(getOpenedPopup(3,total_popups)) , icon : <PostAddIcon fontSize="large" style={{color:"white"}} />}
       
     ]
-    
+    const [sum_lessons, isLoading_sumLessons] = useAsyncHook(`lessons/paidMoney`)
+    const [annual_budget, isLoading_budget] = useAsyncHook(`lessons/annualBudget`)
     return (
         <div  style={{textAlign : "center", backgroundColor: "#eceff1" }}>
             
@@ -63,14 +65,20 @@ export default function Admin(props) {
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse(), "md")}
             <br></br>
-            <Grid container spacing={10} justify="space-around" direction="row-reverse">
-                <Grid item xs  >
+            <Grid container spacing={10} justify="space-around" direction="row-reverse" >
+                <Grid item xs  style={{marginRight : "1rem"}}>
                     <TeachersRequestTable teachers={teachers} />
                 </Grid>
-                <Grid item xs>
-                    <Paper>
-                        <StudentsRequestTable students={students}/>
-                    </Paper>
+                <Grid item xs style={{marginLeft : "1rem"}}>
+                    <StudentsRequestTable students={students}/>
+                </Grid>
+            </Grid>
+            <br/><br/>
+            <Grid container justify="center">
+                <Grid item xs={8}>
+                { (!isLoading_sumLessons && !isLoading_budget) ? 
+                        <AnnualStatistics annual_budget={annual_budget} sum_lessons={400}/>
+                         : <div>not finishesd</div>}
                 </Grid>
             </Grid>
         </div>
