@@ -21,7 +21,7 @@ router.route('/:constant').get((req,res) => {
             return res.send({success : false, message:"Error: " + err})
         } else if (constants && constants.length > 0) {
             constants = constants[0]
-            constant = req.params.constant
+            let constant = req.params.constant
             return res.send({success : true, message: constants[constant]})
         }else{
             return res.send({success : false, message:"!המשתנה אינו קיים"})
@@ -46,9 +46,7 @@ router.route('/update').post((req,res) => {
         constants = constants[0]
         name = req.body.name;
         new_value = req.body.value
-        console.log(name)
         constants[name] = new_value
-        console.log(constants)
         constants.save((err, doc)=> {
             if(err) {
                 console.log('Error: ' + err);

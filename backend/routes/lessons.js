@@ -63,30 +63,15 @@ router.route('/paidMoney').get((req,res) => {
         } else if (lessons && lessons.length > 0) {
             Constants.find({}, (err,constant) => {
             constant = constant[0]  
-            sum_money = lessons.length * Number(constant.lesson_price)
-
+            let sum_money = lessons.length * Number(constant.lesson_price)
             return res.send({success : true, message: sum_money})
             })
         } else {
-            return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
+            return res.send({success : true, message: 0})
         }
     })
 })
 
-router.route('/annualBudget').get((req,res) => {
-
-    Constants.find({}, (err,constant_arr) => {
-        if(err) {
-            return res.send({success : false, message: "Error: " + err})
-        } else if (Array.isArray(constant_arr) && constant_arr.length > 0) {
-            let constant = constant_arr[0]  
-            let annual_budget = constant.annual_budget
-            return res.send({success : true, message: annual_budget})
-        } else {
-            return res.send({success : false, message: "שגיאה לא ידועה"})
-        }
-    })
-})
 
 /**
  * get all the lessons in specific course.
@@ -172,7 +157,6 @@ router.route('/add').post((req, res) => {
             student,
             status,
         })
-        console.log(newLesson)
         newLesson.save((err, lesson)=> {
             if (err) {
                 return res.send({success : false, message:"Error: Couldn't Save " + err})
@@ -200,7 +184,6 @@ router.route('/updateStatus').post((req,res) => {
             return res.send({success : false,message : "!השיעור המבוקש אינו קיים"})}
         if (lesson.length == 1){
             lesson = lesson[0]
-            console.log(lesson)
             lesson.status = status
             lesson.save((err, doc)=> {
                 if(err) {
@@ -228,15 +211,13 @@ router.route('/updateStatus').post((req,res) => {
  *      "status" : <status>
  */
 router.route('/update').post((req,res) => {
-    const {date, student, teacher} = req.body
-    console.log(date, student, teacher)  
+    const {date, student, teacher} = req.body 
     Lesson.find({"date": date, "student": student, "teacher": teacher}).
     then((lesson) => {
         if (!lesson || lesson.length != 1) {
             return res.send({success : false,message : "!השיעור המבוקש אינו קיים"})}
         if (lesson.length == 1){
             lesson = lesson[0]
-            console.log(lesson)
             lesson.teacher = req.body.teacher
             lesson.student = req.body.student
             lesson.date = req.body.date
@@ -267,7 +248,6 @@ router.route('/update').post((req,res) => {
  */
 router.route('/delete').post((req,res) => {
     const {date, student_id, teacher_id} = req.body
-    console.log(date, student_id, teacher_id)   
     Lesson.deleteOne({date : date, "student.student_id" : student_id, "teacher.teacher_id" : teacher_id}, (err, lesson)=>{
         if (err) {
             return res.send({
@@ -292,8 +272,7 @@ router.route('/delete').post((req,res) => {
  *      "date" : <date>
  */
 router.route('/findOne').post((req,res) => {
-    const {date, student_id, teacher_id} = req.body
-    console.log(date, student_id, teacher_id)   
+    const {date, student_id, teacher_id} = req.body 
     Lesson.find({date : date    , "student.student_id" : student_id, "teacher.teacher_id" : teacher_id}, (err, lessons)=>{
         if (err) {
             res.status(400).json('Error: ' + err)
@@ -302,7 +281,6 @@ router.route('/findOne').post((req,res) => {
             });
         }
         if (lessons && lessons.length > 0) {
-            console.log(lessons);
             return res.send({success : true, message : lessons[0]});
         } else {
             return res.send({success : true, message : "!השיעור המבוקש אינו קיים במערכת"});

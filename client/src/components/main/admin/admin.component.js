@@ -54,7 +54,7 @@ export default function Admin(props) {
       
     ]
     const [sum_lessons, isLoading_sumLessons] = useAsyncHook(`lessons/paidMoney`)
-    const [annual_budget, isLoading_budget] = useAsyncHook(`lessons/annualBudget`)
+    const [annual_budget, isLoading_budget] = useAsyncHook(`constants/annual_budget`)
     return (
         <div  style={{textAlign : "center", backgroundColor: "#eceff1" }}>
             
@@ -77,7 +77,7 @@ export default function Admin(props) {
             <Grid container justify="center">
                 <Grid item xs={8}>
                 { (!isLoading_sumLessons && !isLoading_budget) ? 
-                        <AnnualStatistics annual_budget={annual_budget} sum_lessons={400}/>
+                        <AnnualStatistics annual_budget={annual_budget} sum_lessons={sum_lessons}/>
                          : <div>not finishesd</div>}
                 </Grid>
             </Grid>
