@@ -17,7 +17,6 @@ router.route('/').get((req, res) => {
  *      /<course_id>
  */
 router.route('/:_id').get((req,res) => {
-    console.log(req.params._id)
     Course.find({ _id : req.params._id }, (err,course) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})

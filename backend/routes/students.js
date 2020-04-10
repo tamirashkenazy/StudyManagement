@@ -202,15 +202,11 @@ router.route('/add/request/:id').post((req, res) => {
         } else {   
 
             course = student.courses.find(({course_id}) => course_id === new_request.course_id )
-            console.log('course: ' + course)
             if (course){
                 gap = Number(student.group.aproved_hours) - Number(course.approved_hours) - Number(course.wating_hours) + Number(course.hours_already_done) 
-                console.log('gap: ' + gap)
                 if (gap > 0){
                     hours_to_add = Math.min(Number(new_request.number_of_hours), gap)
-                    console.log('hours_to_add: ' + hours_to_add)
                     final_hours = hours_to_add + Number(course.wating_hours)
-                    console.log('final_hours: ' + final_hours)
                     new_request.number_of_hours = final_hours.toString()
                     student.requests = student.requests.filter(request => request.course_id != course.course_id)
                     changehours(final_hours,course.course_id, student.courses)
