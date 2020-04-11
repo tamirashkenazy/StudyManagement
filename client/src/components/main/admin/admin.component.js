@@ -14,6 +14,7 @@ import StudentsRequestTable from './students_req.component'
 import Grid from '@material-ui/core/Grid';
 import {useAsyncHook} from '../../mongo/paths.component';
 import {AnnualStatistics} from './annual_statistics'
+import {Statistics} from './statistics.component'
 
 const getOpenedPopup = (num_of_popup, total_popups) => {
     let true_false_by_index = {}
@@ -64,6 +65,7 @@ export default function Admin(props) {
             {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים" ,{users, teachers, students} ,(args)=>Participants(args))}
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse(), "md")}
+            {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות",{}, ()=> Statistics(), "md", "ltr")}
             <br></br>
             <Grid container spacing={10} justify="space-around" direction="row-reverse" >
                 <Grid item xs  style={{marginRight : "1rem"}}>
