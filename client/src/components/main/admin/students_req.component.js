@@ -41,8 +41,8 @@ const students_requests_array = (students_arr)=>{
             let request_courses_to_study = student_obj.requests
             const student_id= student_obj._id
             if (request_courses_to_study && request_courses_to_study.length>0){
-                let requests_arr = request_courses_to_study.map(request => 
-                    RequestRow(request, student_id)
+                let requests_arr = request_courses_to_study.filter(request => request.status !== "approved").map(request => 
+                        RequestRow(request, student_id)
                 )
                 return requests_arr
             } else {
