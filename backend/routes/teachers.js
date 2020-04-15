@@ -71,6 +71,29 @@ router.route('/:id/courses').get((req,res) => {
     })
 })
 
+
+/**
+ * Get the number of teachers that teach a specific course
+ * Request parameters:
+ *      /<course_id>/numOfTeachers
+ */
+router.route('/:course_id/numOfTeachers').get((req,res) => {
+    Teacher.find()
+    .then(teachers => {
+        let num_of_teachers = 0
+        teachers.forEach(teacher =>{
+            let course  = (teacher.teaching_courses.filter(course => course.course_id === req.params.course_id)) 
+            console.log(course)
+            if (course && course.length>0){
+                num_of_teachers += 1
+            }
+        });
+        res.send({success : true, message: num_of_teachers})
+    })
+    .catch(err => res.status(400).json("Error: " + err));
+})
+
+
 /**
  * get list of all the requests by teacher id
  * request parameters:
