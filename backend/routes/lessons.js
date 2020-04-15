@@ -32,6 +32,25 @@ router.route('/byStatus/:status').get((req,res) => {
 
 
 /**
+ * get all the lessons that done in a specific course.
+ * request parameters:
+ *      /doneLessons/<course_id>
+ */
+router.route('/doneLessons/:course_id').get((req,res) => {
+    Lesson.find({ "status" : "done" }, (err,lessons) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (lessons && lessons.length > 0) {
+            lessons = lessons.filter(lesson => lesson.course.course_id === req.params.course_id)
+            return res.send({success : true, message: lessons})
+        } else {
+            return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
+        }
+    })
+})
+
+
+/**
  * get the number of approved lessons.
  * request parameters:
  *      /sumLessons
@@ -109,7 +128,7 @@ router.route('/byTeacherId/:teacherId').get((req,res) => {
 })
 
 /**
- * get all the lessons with a specific teacher.
+ * get all the lessons with a specific student.
  * request parameters:
  *     /byStudentId/<student_id>
  */
@@ -141,7 +160,8 @@ router.route('/add').post((req, res) => {
     // change to req.body
     const { body } = req;
     const { course, date, teacher, student, status } = body
-    if (student.student_id == teacher.teacher_id){
+    if (student.student_id === teacher.teacher_id){
+        console.log(req.body)
         return res.send({success : false, message:"Student cannot be the teacher of himself"})
     }
     Lesson.find({ date: date, status: "waiting", $or:[{"student.student_id" : student.student_id}, {"teacher.teacher_id" : teacher.teacher_id}] }, (err, lessons)=>{
