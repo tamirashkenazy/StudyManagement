@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import axios from 'axios'
 import {Dropdown} from 'semantic-ui-react'
 import get_mongo_api, {useAsyncHook} from '../../mongo/paths.component'
-import { Calendar } from '../utils';
+import { Calendar } from '../utils/calendar/calendar';
 
 //Michael
 //lessons is not CORRECT => lessons is already linked to a student..

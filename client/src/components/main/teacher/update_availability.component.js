@@ -1,7 +1,7 @@
 import React,{ useState } from 'react';
 import axios from 'axios'
 import get_mongo_api from '../../mongo/paths.component'
-import { Calendar } from '../utils';
+import { Calendar } from '../utils/calendar/calendar';
 
 
 export default function UpdateAvailability(props) {
