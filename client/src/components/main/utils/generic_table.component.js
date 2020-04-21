@@ -15,8 +15,7 @@ const useStyles = makeStyles({
         textAlign : "center",
         backgroundColor : "#546e7a", //#01579b
         color : "white",
-        fontSize : "2.9rem"
-
+        fontSize : "2.9rem",
     },
     table : {
         direction : "rtl",
@@ -30,12 +29,18 @@ const useStyles = makeStyles({
     cell : {
         textAlign : "center",
         fontSize : "1.2rem",
-        align: "center"
+        align: "center",
+        border : "0px"
+
+
     }, 
     headerCell : {
         backgroundColor : "#cfd8dc",
         textAlign : "center",
         fontSize : "1.3rem",
+        border : "0px"
+
+
     }
 
 });
