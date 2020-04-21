@@ -53,13 +53,13 @@ export default function RequestHours(props){
         //conditional rendering react: https://reactjs.org/docs/conditional-rendering.html 
         !loading &&
         <Grid columns={1}  style={{margin : "2rem 1rem 5rem 1rem"}}>
-            <Grid.Row centered="true">
+            <Grid.Row centered>
                 <Dropdown direction="right"  placeholder='בחר קורס' scrolling search selection  onChange={(e,{value})=> setSelectedCourse(value)} options={courses_options}  />
             </Grid.Row>
-            <Grid.Row centered="true">
+            <Grid.Row centered>
                 <Dropdown direction="right"  placeholder='מספר שעות' scrolling search selection  onChange={(e,{value})=>setHours(value)} options={get_options(4)}/>
             </Grid.Row >
-            {selectedCourse && hours && <Grid.Row centered="true">
+            {selectedCourse && hours && <Grid.Row centered>
                 <Button onClick={()=>{sendCourse(props._id)}}>שלח</Button>
             </Grid.Row>}
         </Grid>

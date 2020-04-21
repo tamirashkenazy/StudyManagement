@@ -6,6 +6,7 @@ import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedI
 import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined';
 import '../../../styles/students.scss';
 import RequestHours from './request_hours.component'
+import BookHours from './book_hours.component'
 import CoursesTable from './courses_table.component'
 import { Dialog_generator } from '../utils/utils'
 import { Grid } from '@material-ui/core';
@@ -39,7 +40,7 @@ export default function Student(props) {
 
     const navbar_operations_by_role = [
         { key: 'request_tutoring', header: 'בקשת שעות חונכות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(true, false))), icon: <ScheduleOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
-        { key: 'book_class', header: 'קביעת שיעור', on_click: () => { console.log("book_class") }, icon: <AssignmentTurnedInOutlinedIcon fontSize="large" style={{ color: "white" }} /> }
+        { key: 'book_class', header: 'קביעת שיעור', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, true))), icon: <AssignmentTurnedInOutlinedIcon fontSize="large" style={{ color: "white" }} /> }
     ]
     const classes = useStylesAppBar();
 
@@ -66,6 +67,7 @@ export default function Student(props) {
                 </Grid>
             </div>
             {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false))), "בקשת שעות חונכות", { _id: user._id }, (id) => RequestHours(id))}
+            {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false))), "קביעת שעות חונכות", { _id: user._id }, (id) => BookHours(id))}
         </div>
     )
 

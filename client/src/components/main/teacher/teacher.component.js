@@ -5,10 +5,9 @@ import AccountMenu from '../navbar/navbar.component'
 import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutlined';
 import ImportContactsSharpIcon from '@material-ui/icons/ImportContactsSharp';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
-
 import CoursesToTeach from'./courses_teaching.component'
 import UploadGradesSheet from'./teacher_grades_sheet.component'
-
+import UpdateAvailability from'./update_availability.component'
 import {Dialog_generator} from '../utils/utils'
 import TeachersStatusRequestsTable from './requests_status.component'
 import Grid from '@material-ui/core/Grid';
@@ -37,7 +36,7 @@ export default function Teacher(props) {
     // const [user, setUser] = useState(props.history.location.state)
     const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false))
     const navbar_operations_by_role = [
-        { key : 'update_availability', header : 'עדכון זמינות' , on_click : ()=>{console.log("update your zminut")} , icon : <EventAvailableOutlinedIcon fontSize="large" style={{color:"white"}} />},
+        { key : 'update_availability', header : 'עדכון זמינות' , on_click : ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, true, false))) , icon : <EventAvailableOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'courses_to_teach', header : 'בחירת קורסים להוראה' , on_click : ()=>setOpenedPopups(Object.assign({},getOpenedPopup(true, false, false))) , icon : <ImportContactsSharpIcon fontSize="large" style={{color:"white"}} />},
         { key : 'upload_grades_sheet', header : 'העלאת גיליון ציונים' , on_click : ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false, true))) , icon : <AssignmentOutlinedIcon fontSize="large" style={{color:"white"}} />}
       ]
@@ -54,7 +53,8 @@ export default function Teacher(props) {
             </AppBar> 
             {Dialog_generator(openedPopups.select_courses, ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false, false))), "בחירת קורסים ללמד",{id:user._id, teacher }, (id, teacher)=>CoursesToTeach(id, teacher))}
             {Dialog_generator(openedPopups.upload_grades_sheet, ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false, false))), "העלאת גיליון ציונים",{id:user._id }, (id)=>UploadGradesSheet(id))}
-
+            {Dialog_generator(openedPopups.update_availability, ()=>setOpenedPopups(Object.assign({},getOpenedPopup(false, false, false))), "עדכון זמינות",{id:user._id }, (id)=>UpdateAvailability(id))}
+            
         <Grid container spacing={1} alignItems="stretch" justify="space-evenly" direction="row" style={{margin:"0 auto", direction :"rtl"}}>
             <Grid item xs align="center">
                 <Typography variant="h4">שיעורים</Typography>

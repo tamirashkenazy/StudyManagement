@@ -4,7 +4,11 @@ import {useAsyncHook} from '../../mongo/paths.component'
 import GenericTable from '../utils/generic_table.component'
 import { Typography } from '@material-ui/core';
 
-const english_to_hebrew_status = {"waiting" : {text : "ממתין לאישור", color:"red"}, "should_pay" : {text : "ממתין לתשלום", color:"#990099"}, "approved" : {text : "בקשה מאושרת", color:"green"}}
+const status_to_hebrew = {
+    "waiting" : {text : "ממתין לאישור", color: "inherit"},
+    "approved" : {text : "אושר", color: "primary"},
+    "declined" : {text : "בקשה נדחתה", color: "error"}
+}
 
 const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
     if (arr_of_student_courses_requests && arr_of_student_courses_requests.length > 0){
@@ -18,7 +22,7 @@ const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
                     "שם הקורס" : course_obj.course_name,
                     "קוד הקורס" : course_obj.course_id,
                     "שעות מבוקשות" : course_obj.number_of_hours,
-                    "סטטוס" : <Typography variant="h5" color={english_to_hebrew_status[course_obj.status].color}>{english_to_hebrew_status[course_obj.status].text}</Typography>
+                    "סטטוס" : <Typography variant="h5" color={status_to_hebrew[course_obj.status].color}>{status_to_hebrew[course_obj.status].text}</Typography>
                 }
             )
         })
