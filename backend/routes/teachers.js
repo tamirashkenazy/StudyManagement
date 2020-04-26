@@ -41,7 +41,6 @@ router.route('/byID/:id').get((req,res) => {
  *      /<teacher_id>/hoursAvailable
  */
 router.route('/:id/hoursAvailable').get((req,res) => {
-    console.log()
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
@@ -53,6 +52,47 @@ router.route('/:id/hoursAvailable').get((req,res) => {
     })
 })
 
+
+/**
+ * get teacher name by id
+ * request parameters:
+ *      /<teacher_id>/name
+ */
+router.route('/:id/name').get((req,res) => {
+    Teacher.findById((req.params.id), (err,teacher) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!teacher || teacher.length === 0) {
+            return res.send({success : false, message:"!המורה אינו קיים במערכת"})
+        } else {
+            return res.send({success : true, message: teacher.name})
+        }
+    })
+})
+
+
+
+/**
+ * get list of available dates by teacher id
+ * request parameters:
+ *      /<course_id>/hoursAvailable/allTeachers
+ */
+router.route('/:course_id/hoursAvailable/allTeachers').get((req,res) => {
+    Teacher.find()
+    .then(teachers => {
+        var hours = []
+        teachers.forEach(teacher =>{
+            console.log(teacher)
+            let course  = (teacher.teaching_courses.filter(course => course.course_id === req.params.course_id)) 
+            console.log(course)
+            if (course && course.length>0){
+                hours.push({"teacher_name" : teacher.name, "hours_available" : teacher.hours_available})
+            }
+        });
+        res.send({success : true, message: hours})
+    })
+    .catch(err => res.status(400).json("Error: " + err));
+})
 
 /**
  * get list of all the courses by teacher id
@@ -111,20 +151,6 @@ router.route('/:id/requests').get((req,res) => {
     })
 })
 
-// bank info of teacher
-/*router.route('/:id/bankInfo').get((req,res) => {
-    Teacher.findById((req.params.id), (err,teacher) => {
-        if(err) {
-            return res.send({success : false, message:"Error: " + err})
-        } else if (!Array.isArray(teacher) || !teacher.length) {
-            return res.send({success : false, message:"!המורה אינו קיים במערכת"})
-        } else {
-            return res.send({success : true, message:{bank_number : teacher.bank_number,
-        branch_number :  teacher.bank_branch, bank_account_number : teacher.bank_account_number, bank_account_name : teacher.bank_account_name}})
-        }
-    })
-})
-*/
 
 
 /**
@@ -144,7 +170,6 @@ router.route('/:id/grades').get((req,res) => {
             var url=process.cwd()
             let buffer = teacher.grades_file.data.buffer
             url = path.join(url, teacher.grades_file.name)
-            // url += teacher.grades_file.name
             fs.appendFile(teacher.grades_file.name, Buffer.from(buffer), (err) => {
                 if (err) {
                   console.log(err);
@@ -377,13 +402,14 @@ router.post('/add/file/:id', async (req, res) => {
  *      "_id" : <teacher_id>
  */
 router.route('/add').post((req, res) => {
-    const { _id } = req.body
+    const { _id, name } = req.body
     teaching_requests = []
     hours_available = []
     teaching_courses = []
     grades_file = null
     const newTeacher = new Teacher({
         _id : _id,
+        name : name,
         teaching_requests : teaching_requests,
         hours_available : hours_available,
         teaching_courses : teaching_courses,

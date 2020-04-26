@@ -12,6 +12,27 @@ router.route('/').get((req, res) => {
     .catch(err => res.status(400).json("Error: " + err));
 });
 
+
+/**
+ * get user name by id
+ * request parameters:
+ *      /<user_id>/fullName
+ */
+router.route('/:id/fullName').get((req,res) => {
+    User.findById((req.params.id), (err,user) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!user || user.length === 0) {
+            return res.send({success : false, message:"!המשתמש אינו קיים במערכת"})
+        } else {
+            var full_name = [user.first_name, user.last_name]
+            full_name = full_name.join(" ");
+            return res.send({success : true, message: full_name})
+        }
+    })
+})
+
+
 // the /:id is like a variable
 router.route('/:id').get((req,res) => {
     User.findById((req.params.id), (err,user) => {

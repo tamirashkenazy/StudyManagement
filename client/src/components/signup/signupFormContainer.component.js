@@ -30,10 +30,10 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
             } else {
                 // TODO - need to check if all of the http request returned OK and if no - delete the new student/teacher/user that was uploaded and send error msg
                 if(formValues.isStudent) {
-                    httpPostRequestToAddStudent(formValues._id)
+                    httpPostRequestToAddStudent(formValues._id, formValues.first_name, formValues.last_name)
                 } 
                 if (formValues.isTeacher) {
-                    httpPostRequestToAddTeacher(formValues._id)
+                    httpPostRequestToAddTeacher(formValues._id, formValues.first_name, formValues.last_name)
                 }
                 httpPostRequestToAddUser(formValues, history)
             }

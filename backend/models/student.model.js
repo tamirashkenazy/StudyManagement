@@ -6,6 +6,7 @@ const onlyNumbers = /^[-0-9\b]+$/;
 const Schema = mongoose.Schema;
 const StudentSchema = new Schema({
     _id :  {type : String, default : '', required : true, match: onlyNumbers, minlength: 9, maxlength: 9},
+    name : {type : String, required : true},
     group : {name: {type : String, default : ''},
              aproved_hours : {type: String, match: onlyNumbers, default : '4'}},   
     requests : [{course_id : {type : String,  required : true, match: onlyNumbers },
