@@ -7,6 +7,7 @@ const onlyEnglishAndHebrew = /^[A-Za-z\u0590-\u05fe]+$/i
 const Schema = mongoose.Schema;
 const TeacherSchema = new Schema({
     _id :  {type : String, required : true, match: onlyNumbers, minlength: 9, maxlength: 9},
+    name : {type : String, required : true},
     // list of course number
     teaching_courses : [{course_id : {type : String,  required : true, match: onlyNumbers },
                         course_name : { type : String, required : true, minlength: 2 },
@@ -23,8 +24,3 @@ const TeacherSchema = new Schema({
 
 
 module.exports = mongoose.model('Teachers', TeacherSchema);
-
-    //bank_number : {type : String, required : true, match: onlyNumbers },
-    //bank_branch :  {type : String, required : true },
-    //bank_account_number : {type : String,  required : true, match: onlyNumbers},
-    //bank_account_name : {type : String, required : true, match: onlyEnglishAndHebrew},
