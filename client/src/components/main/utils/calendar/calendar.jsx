@@ -12,8 +12,12 @@ import {
     disableDatesBeforeToday,
     addActiveElements
 } from "./useCalendar.js";
-
-
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableCell from '@material-ui/core/TableCell';
 
 export function Calendar(props) {
     // Alldate keeps each week with unique key (year + week number) with weekID() function.
@@ -214,220 +218,223 @@ export function Calendar(props) {
         }
     };
 
-//     if (dateItem === prop.dates[Object.keys(prop.dates)[Object.keys(prop.dates).length - 1]]
-//         && item === dateArr[dateArr.length - 1]) {
+    //     if (dateItem === prop.dates[Object.keys(prop.dates)[Object.keys(prop.dates).length - 1]]
+    //         && item === dateArr[dateArr.length - 1]) {
 
-//         setPickedDates(prev => {
-//             const newPickedDates = new Set([...prev, next4Week, pickedDate]);
-//             return newPickedDates;
-//         });
-//     } else {
-//         setPickedDates(prev => {
-//             return new Set([...prev, next4Week, pickedDate]);
-//         });
-//     }
-// }
-//         daysWithNoCheckboxTrue.push(itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour);
+    //         setPickedDates(prev => {
+    //             const newPickedDates = new Set([...prev, next4Week, pickedDate]);
+    //             return newPickedDates;
+    //         });
+    //     } else {
+    //         setPickedDates(prev => {
+    //             return new Set([...prev, next4Week, pickedDate]);
+    //         });
+    //     }
+    // }
+    //         daysWithNoCheckboxTrue.push(itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour);
 
-//         if (dateItem === prop.dates[Object.keys(prop.dates)[Object.keys(prop.dates).length - 1]]) {
-//             setPickedDates(prev => {
-//                 const newPickedDates = new Set([...prev, ...daysWithNoCheckboxTrue]);
-//                 props.confirmHandler(Array.from(newPickedDates))
-//                 return newPickedDates
-//             });
-//         } else {
-//             setPickedDates(prev => {
-//                 return new Set([...prev, ...daysWithNoCheckboxTrue]);
-//             });
-//         }
-//     }
-// }
-//     }
+    //         if (dateItem === prop.dates[Object.keys(prop.dates)[Object.keys(prop.dates).length - 1]]) {
+    //             setPickedDates(prev => {
+    //                 const newPickedDates = new Set([...prev, ...daysWithNoCheckboxTrue]);
+    //                 props.confirmHandler(Array.from(newPickedDates))
+    //                 return newPickedDates
+    //             });
+    //         } else {
+    //             setPickedDates(prev => {
+    //                 return new Set([...prev, ...daysWithNoCheckboxTrue]);
+    //             });
+    //         }
+    //     }
+    // }
+    //     }
 
 
-const onClickHandlerSubmit = () => {
-    getPickedDays();
-}
+    const onClickHandlerSubmit = () => {
+        getPickedDays();
+    }
 
-return (
-    <div className="calendar-component">
-        <div className="container">
-            <div className="calendar-header">
-                <div className="btn left" onClick={() => onClickHandlerWeekChange('goLeft')}><ArrowBackIosIcon className="fas fa-chevron-left" /></div>
-                <h2 className="calendar-header--title">{""}</h2>
-                <div className="btn right" onClick={() => onClickHandlerWeekChange('goRight')}><ArrowForwardIosIcon className="fas fa-chevron-right" /></div>
+    return (
+        <div className="calendar-component">
+            <div className="container">
+                <div className="calendar-header">
+                    <div className="btn left" onClick={() => onClickHandlerWeekChange('goLeft')}><ArrowBackIosIcon className="fas fa-chevron-left" /></div>
+                    <h2 className="calendar-header--title">{""}</h2>
+                    <div className="btn right" onClick={() => onClickHandlerWeekChange('goRight')}><ArrowForwardIosIcon className="fas fa-chevron-right" /></div>
+                </div>
+                <TableContainer className="calendar-table">
+                    <Table size="small" stickyHeader onClick={e => onClickHandlerCalendar(e)}>
+                        <TableHead className='thead'>
+                            <TableRow className="week-days">
+                                <TableCell>שבת</TableCell>
+                                <TableCell>שישי</TableCell>
+                                <TableCell>חמישי</TableCell>
+                                <TableCell>רביעי</TableCell>
+                                <TableCell>שלישי</TableCell>
+                                <TableCell>שני</TableCell>
+                                <TableCell>ראשון</TableCell>
+                                <TableCell></TableCell>
+                            </TableRow>
+                        </TableHead>
+                        <TableBody>
+                            <TableRow className='0-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">08:00</TableCell>
+                            </TableRow>
+                            <TableRow className='1-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">09:00</TableCell>
+                            </TableRow>
+                            <TableRow className='2-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">10:00</TableCell>
+                            </TableRow>
+                            <TableRow className='3-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">11:00</TableCell>
+                            </TableRow>
+                            <TableRow className='4-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">12:00</TableCell>
+                            </TableRow>
+                            <TableRow className='5-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">13:00</TableCell>
+                            </TableRow>
+                            <TableRow className='6-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">14:00</TableCell>
+                            </TableRow>
+                            <TableRow className='7-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">15:00</TableCell>
+                            </TableRow>
+                            <TableRow className='8-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">16:00</TableCell>
+                            </TableRow>
+                            <TableRow className='9-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">17:00</TableCell>
+                            </TableRow>
+                            <TableRow className='10-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">18:00</TableCell>
+                            </TableRow>
+                            <TableRow className='11-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">19:00</TableCell>
+                            </TableRow>
+                            <TableRow className='12-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">20:00</TableCell>
+                            </TableRow>
+                            <TableRow className='13-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">21:00</TableCell>
+                            </TableRow>
+                            <TableRow className='14-row'>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="pickable"></TableCell>
+                                <TableCell className="time">22:00</TableCell>
+                            </TableRow>
+                        </TableBody>
+                    </Table>
+                </TableContainer>
+                <FormControlLabel
+                    control={<Checkbox date={weekID()} checked={allDate[weekID()].checkbox} onChange={onChangeHandlerCheckBox} name="checkbox" />}
+                    label="בחר 4 שבועות קדימה"
+                />
+                <button className="confirm btn" onClick={onClickHandlerSubmit}>שלח</button>
             </div>
-
-            <table className="calendar-table" onClick={e => onClickHandlerCalendar(e)}>
-                <thead className='thead'>
-                    <tr className="week-days">
-                        <th>שבת</th>
-                        <th>שישי</th>
-                        <th>חמישי</th>
-                        <th>רביעי</th>
-                        <th>שלישי</th>
-                        <th>שני</th>
-                        <th>ראשון</th>
-                        <th></th>
-                    </tr>
-                    <tr className='0-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">08:00</th>
-                    </tr>
-                    <tr className='1-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">09:00</th>
-                    </tr>
-                    <tr className='2-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">10:00</th>
-                    </tr>
-                    <tr className='3-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">11:00</th>
-                    </tr>
-                    <tr className='4-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">12:00</th>
-                    </tr>
-                    <tr className='5-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">13:00</th>
-                    </tr>
-                    <tr className='6-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">14:00</th>
-                    </tr>
-                    <tr className='7-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">15:00</th>
-                    </tr>
-                    <tr className='8-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">16:00</th>
-                    </tr>
-                    <tr className='9-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">17:00</th>
-                    </tr>
-                    <tr className='10-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">18:00</th>
-                    </tr>
-                    <tr className='11-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">19:00</th>
-                    </tr>
-                    <tr className='12-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">20:00</th>
-                    </tr>
-                    <tr className='13-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">21:00</th>
-                    </tr>
-                    <tr className='14-row'>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="pickable"></th>
-                        <th className="time">22:00</th>
-                    </tr>
-                </thead>
-            </table>
-            <FormControlLabel
-                control={<Checkbox date={weekID()} checked={allDate[weekID()].checkbox} onChange={onChangeHandlerCheckBox} name="checkbox" />}
-                label="בחר 4 שבועות קדימה"
-            />
-            <button className="confirm btn" onClick={onClickHandlerSubmit}>שלח</button>
         </div>
-    </div>
-)
+    )
 } 

@@ -23,12 +23,17 @@
 
 table, tr, td, th {
     border: 1px solid rgba(128, 128, 128, 0.6);
+    cursor: pointer;
+    .time {
+        cursor: default;
+    }
 }
 
 
 .week-days > th {
     cursor: default !important;
-    padding: 10px 30px;
+    padding: 0px 10px;
+    text-align: center;
 }
 
 th { 
@@ -99,4 +104,8 @@ th:not(:last-child) {
 
 .MuiCheckbox-colorSecondary.Mui-checked {
     color: rgb(26, 135, 185) !important;
+}
+
+.MuiDialogContent-root {
+    overflow-y: visible !important;
 }
