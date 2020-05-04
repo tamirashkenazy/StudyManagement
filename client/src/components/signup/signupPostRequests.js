@@ -25,9 +25,11 @@ export function httpPostRequestToAddUser(formValues, history) {
     })
 } 
 
-export function httpPostRequestToAddStudent(id) {
+export function httpPostRequestToAddStudent(id, first_name, last_name) {
+    var full_name = [first_name,last_name]
     const student_to_add = {  
         _id : id,
+        name : full_name.join(" ")
     }
     axios.post(get_mongo_api('students/add'), student_to_add)
     .then((response)=> {
@@ -37,9 +39,11 @@ export function httpPostRequestToAddStudent(id) {
     })
 } 
 
-export function httpPostRequestToAddTeacher(id) {
+export function httpPostRequestToAddTeacher(id, first_name, last_name) {
+    var full_name = [first_name,last_name]
     const teacher_to_add = {  
         _id : id,
+        name : full_name.join(" ")
     }
     axios.post(get_mongo_api('teachers/add'), teacher_to_add)
     .then((response)=> {

@@ -68,6 +68,23 @@ router.route('/:id/courses').get((req,res) => {
 })
 
 
+/**
+ * get studentname by id
+ * request parameters:
+ *      /<student_id>/name
+ */
+router.route('/:id/name').get((req,res) => {
+    Student.findById((req.params.id), (err,student) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!student || student.length===0) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {
+            return res.send({success : true, message: student.name})
+        }
+    })
+})
+
 
 /**
  * get list of student's requests by course_id
@@ -230,7 +247,7 @@ router.route('/add/request/:id').post((req, res) => {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
                 }
-                return res.send({success:true, message: student})
+                return res.send({success:true, message: "!הבקשה נשלחה בהצלחה"})
             })
         }
     })
@@ -248,6 +265,7 @@ router.route('/add/request/:id').post((req, res) => {
  */
 router.route('/add').post((req, res) => {
     _id = req.body._id
+    name = req.body.name
     group_name = ''
     if (req.body.hasOwnProperty('group_name')){
         group_name = req.body.group_name
@@ -260,7 +278,7 @@ router.route('/add').post((req, res) => {
         }else{
             new_group = { name: group.name, aproved_hours : group.aproved_hours}
         }
-        student_obj = { _id : _id, requests : requests, courses : courses, group : new_group}
+        student_obj = { _id : _id, name : name, requests : requests, courses : courses, group : new_group}
         const newStudent = new Student(student_obj)
         newStudent.save((err, student)=> {
             if (err) {
