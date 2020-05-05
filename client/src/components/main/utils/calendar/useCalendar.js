@@ -130,34 +130,45 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
     //clears previous elements with 'disabled' class
     for (let item of $(".pickable")) {
         $(item).removeClass("disabled");
-
         const date = $(item).attr("date").split("-");
-
         const itemYear = weekID().slice(0, 4);
         const itemHour = date[0];
         const itemDay = date[1].split(".")[0];
         const itemMonth = date[1].split(".")[1] - 1;
-
         const cellDate = new Date(itemYear, itemMonth, itemDay, itemHour.split(":")[0], itemHour.split(":")[1]);
-        if (!isTeacher) {
+
+        if (!isTeacher) { //student
             $(item).addClass("disabled");
-            for (let key of Object.keys(dates)) {
-                const inputDate = new Date(key);
+        } else { //teacher
+            const currentDate = new Date();
+            const anyDate = new Date(itemYear, itemMonth, itemDay)
+            if (anyDate < currentDate) {
+                $(item).addClass("disabled");
+            }
+        }
+        for (let key of Object.keys(dates)) { //DATES INPUT
+            const inputDate = new Date(key);
+            inputDate.setMinutes(0);
+            inputDate.setSeconds(0);
+            inputDate.setMilliseconds(0);
 
-                inputDate.setMinutes(0);
-                inputDate.setSeconds(0);
-                inputDate.setMilliseconds(0);
-
+            if (!isTeacher) { //student
                 if (cellDate.getTime() === inputDate.getTime()) {
                     $(item).removeClass("disabled");
                     $(item).html(dates[key])
                 }
             }
-        } else {
-            const currentDate = new Date();
-
-            if (cellDate < currentDate) {
-                $(item).addClass("disabled");
+            else { //teacher
+                if (cellDate.getTime() === inputDate.getTime()) {
+                    if ($(item).hasClass("disabled")) {
+                        $(item).removeClass("available");
+                    }
+                    else {
+                        $(item).html('פנוי');
+                        $(item).addClass("available");
+                        $(item).removeClass("pickable");
+                    }
+                }
             }
         }
     }

@@ -73,7 +73,7 @@ router.route('/:id/name').get((req,res) => {
 
 
 /**
- * get list of available dates by teacher id
+ * get list of available dates by course id
  * request parameters:
  *      /<course_id>/hoursAvailable/allTeachers
  */

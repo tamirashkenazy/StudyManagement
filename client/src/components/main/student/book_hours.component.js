@@ -52,7 +52,7 @@ export default function BookHours(props) {
     //get Dates saved as availability in teacher (Michael func). For example: 
     //needs to do ForEach on lessons_optins and convert them to this format
     const datesDict = {
-        [new Date('2020-05-05 12:00')]: 'פנוי',
+        [new Date('2020-05-08 12:00')]: 'פנוי',
         [new Date('2020-05-06 13:00')]: 'פנוי',
         [new Date('2020-05-07 18:00')]: 'פנוי',
     }
