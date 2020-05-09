@@ -85,6 +85,11 @@
         background: radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(139,192,225,1) 150%);
     }
 
+    .availabled {
+        cursor: default !important;
+        background: radial-gradient(circle, rgba(108,117,125,0.23) 30%, rgba(139,192,225,1) 150%);
+    }
+
     .confirm {
         display: block;
         background-color: rgba(33,160,219,1);

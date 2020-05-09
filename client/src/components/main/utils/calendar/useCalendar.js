@@ -137,42 +137,47 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
         const itemMonth = date[1].split(".")[1] - 1;
         const cellDate = new Date(itemYear, itemMonth, itemDay, itemHour.split(":")[0], itemHour.split(":")[1]);
 
-        if (!isTeacher) { //student
-            $(item).addClass("disabled");
-        } else { //teacher
-            const currentDate = new Date();
-            const anyDate = new Date(itemYear, itemMonth, itemDay)
-            if (anyDate < currentDate) {
-                $(item).addClass("disabled");
-            }
-        }
-        for (let key of Object.keys(dates)) { //DATES INPUT
-            const inputDate = new Date(key);
-            inputDate.setMinutes(0);
-            inputDate.setSeconds(0);
-            inputDate.setMilliseconds(0);
+        if (isTeacher) { //teacher
+            const currentDate = Date.now();
+            for (let key of Object.keys(dates)) {
+                const inputDate = new Date(key);
+                inputDate.setMinutes(0);
+                inputDate.setSeconds(0);
+                inputDate.setMilliseconds(0);
+                if (cellDate <= currentDate) { // past+present dates
+                    if (cellDate.getTime() === inputDate.getTime()) { //availabled dates
+                        $(item).addClass("availabled");
+                        $(item).html('פנוי')
+                    }
+                    else {
+                        $(item).addClass("disabled");// diabled dates = non-availabled dates
+                    }
+                } else { //future dates
+                    if (cellDate.getTime() === inputDate.getTime()) { //available future
+                        $(item).removeClass("availabled");
+                        $(item).addClass("available");
+                        $(item).removeClass("pickable");
+                        $(item).html('פנוי')
+                    } else { // active dates = non-available dates
 
-            if (!isTeacher) { //student
+                    }
+                }
+            }
+        } else { //student
+            $(item).addClass("disabled");
+            for (let key of Object.keys(dates)) {
+                const inputDate = new Date(key);
+                inputDate.setMinutes(0);
+                inputDate.setSeconds(0);
+                inputDate.setMilliseconds(0);
                 if (cellDate.getTime() === inputDate.getTime()) {
                     $(item).removeClass("disabled");
                     $(item).html(dates[key])
                 }
             }
-            else { //teacher
-                if (cellDate.getTime() === inputDate.getTime()) {
-                    if ($(item).hasClass("disabled")) {
-                        $(item).removeClass("available");
-                    }
-                    else {
-                        $(item).html('פנוי');
-                        $(item).addClass("available");
-                        $(item).removeClass("pickable");
-                    }
-                }
-            }
         }
     }
-};
+}
 
 // Gets all active elements from DOM and adds to array.
 // This array later will be used in AllDate state object.

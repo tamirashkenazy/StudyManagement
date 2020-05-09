@@ -33,3 +33,15 @@
         }
     } 
 } 
+
+.dropdown {
+    text-align: right !important;
+}
+
+.ui.dropdown .menu>.item {
+    text-align: right !important;
+}
+
+.ui.selection.dropdown {
+    margin-bottom: 20px;
+}
