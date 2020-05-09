@@ -47,7 +47,7 @@ export default function AdminMenu({userDetails, navbar_operations_by_role}) {
   }
 
   const fromListToOpterationsInNavBar = navbar_operations_by_role.map(menu_item=>
-    <StyledMenuItem style={{marginRight : "6%"}} onClick={menu_item.on_click} key={menu_item.key}>
+    <StyledMenuItem style={{marginRight : "6%", display:"block",textAlign:"center"}} onClick={menu_item.on_click} key={menu_item.key}>
           <ListItemIcon>
               {menu_item.icon}
           </ListItemIcon>

@@ -64,7 +64,7 @@ export default function Participants(props){
     return (
         <>
          <Tab panes={panes}/>
-        {Dialog_generator(isCardOpen, ()=>setCardOpen(false), "כרטיס סטודנט" ,{}, ()=><UserCard user={user} teacher={filter_by_id(teachers, user)} student={filter_by_id(students, user)}></UserCard>)}
+        {Dialog_generator(isCardOpen, ()=>setCardOpen(false), "כרטיס סטודנט" ,"person_pin",{}, ()=><UserCard user={user} teacher={filter_by_id(teachers, user)} student={filter_by_id(students, user)}></UserCard>)}
         </>
     )
 }

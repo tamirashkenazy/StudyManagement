@@ -7,7 +7,7 @@ import { Typography } from '@material-ui/core';
 const status_to_hebrew = {
     "waiting" : {text : "ממתין לאישור", color: "inherit"},
     "approved" : {text : "אושר", color: "primary"},
-    "declined" : {text : "בקשה נדחתה", color: "error"}
+    "declined" : {text : "בקשה נדחתה", color: "default"}
 }
 
 const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
@@ -18,11 +18,11 @@ const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
             return (
                 {
                     // key : course_obj._id,
-                    "תאריך הבקשה" : <Typography variant="h5" style={{direction : "ltr"}}>{date_str}</Typography> ,
+                    "תאריך הבקשה" : <Typography variant="body1" style={{direction : "ltr"}}>{date_str}</Typography> ,
                     "שם הקורס" : course_obj.course_name,
                     "קוד הקורס" : course_obj.course_id,
                     "שעות מבוקשות" : course_obj.number_of_hours,
-                    "סטטוס" : <Typography variant="h5" color={status_to_hebrew[course_obj.status].color}>{status_to_hebrew[course_obj.status].text}</Typography>
+                    "סטטוס" : <Typography variant="body1" color={status_to_hebrew[course_obj.status].color}>{status_to_hebrew[course_obj.status].text}</Typography>
                 }
             )
         })

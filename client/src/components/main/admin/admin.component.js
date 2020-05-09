@@ -62,10 +62,10 @@ export default function Admin(props) {
             <AppBar position="static" className={classes.AppBar} >
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
-            {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים" ,{users, teachers, students} ,(args)=>Participants(args))}
+            {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים","people_outline" ,{users, teachers, students} ,(args)=>Participants(args))}
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
-            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס",{}, ()=>AddCourse(), "md")}
-            {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות",{}, ()=> Statistics(), "md", "ltr")}
+            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס","playlist_add",{}, ()=>AddCourse(), "md")}
+            {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(), "md", "ltr")}
             <br></br>
             <Grid container spacing={10} justify="space-around" direction="row-reverse" >
                 <Grid item xs  style={{marginRight : "1rem"}}>

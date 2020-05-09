@@ -1,43 +1,51 @@
 .student {
-    .header {
-        .makeStyles-AppBar-1{
-            height: 5%;
-        }
-    }
-
+    font-family: heebo;
+    // .header {
+    //     .makeStyles-AppBar-1{
+    //         height: 5%;
+    //     }
+    // }
+    background: gainsboro;
    .content {
-        height: 95%;
-        margin: 0 auto;
+        height: 86%;
         >div {
-            display: flex;
-            margin: 0;
-            height: 50%;
-            padding: 15px;
-            border: 0.1px solid lightblue;
+            display: block;
+            height: 46%;
             &.bottomDiv {
-                justify-content: center;
-                align-items: center;
+                width: 75%;
+                margin: 0 12.5%;
                 >div {
-                    width: -webkit-fill-available;
+                    display: block;
+                    width: initial;
+                    height: 80%;
+                    margin-top: 4%;
+                }
+                >.noData {
+                    text-align: center;
+                    position: fixed;
+                    /* top: 60px; */
+                    margin: 17%;
                 }
             }
-            >div {
-                // display: flex;
-                border: 0.1px solid lightpink;
-                width: 50%;
-                height: 100%;
-                padding: 15px;
-                justify-content: center;
-                align-items: center;
+            >div { //left & right Divs
+                width: 40%;
+                height: 95%;
+                display: inline-block;
+                margin: 3% 5%;
+                >.noData {
+                    text-align: center;
+                    position: fixed;
+                    /* top: 60px; */
+                    margin: 17%;
+                }
             }
         }
     } 
-} 
+}
 
 .dropdown {
     text-align: right !important;
 }
-
 .ui.dropdown .menu>.item {
     text-align: right !important;
 }
@@ -45,3 +53,8 @@
 .ui.selection.dropdown {
     margin-bottom: 20px;
 }
+
+.MuiTableContainer-root {
+    height: inherit;
+}
+

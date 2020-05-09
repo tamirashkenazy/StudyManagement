@@ -1,5 +1,4 @@
 import React from 'react'
-// import '../../../styles/table.scss';
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableHead from '@material-ui/core/TableHead';
@@ -15,7 +14,7 @@ const useStyles = makeStyles({
         textAlign : "center",
         backgroundColor : "#546e7a", //#01579b
         color : "white",
-        fontSize : "2.9rem",
+        fontSize : "2rem",
     },
     table : {
         direction : "rtl",
@@ -28,7 +27,7 @@ const useStyles = makeStyles({
     },
     cell : {
         textAlign : "center",
-        fontSize : "1.2rem",
+        fontSize : "1rem",
         align: "center",
         border : "0px"
 
@@ -37,7 +36,7 @@ const useStyles = makeStyles({
     headerCell : {
         backgroundColor : "#cfd8dc",
         textAlign : "center",
-        fontSize : "1.3rem",
+        fontSize : "1.2rem",
         border : "0px"
 
 
@@ -89,19 +88,20 @@ export default function GenericTable(props) { //props : {table_data : {data: som
         })
     }
     return (
+        data && data.length > 0 ?
         <TableContainer className={classes.table} component={Paper} >
             <Table size="small" stickyHeader>
                 <TableHead >
                     {(num_of_cols>0 && title) && <TableRow>
-                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}><Typography variant="h4">{title}</Typography> </TableCell>
+                        <TableCell  colSpan={num_of_cols} className={classes.titleRow}><Typography variant="h5">{title}</Typography> </TableCell>
                     </TableRow>}
                     {renderTableHeader()}
-                    
                 </TableHead>
                 <TableBody> 
                     {renderTableData()}
                 </TableBody>
             </Table>
         </TableContainer>
+        : <div className="noData"> <span> לא קיים מידע בנוגע ל{title} </span>  </div>
     )
 }

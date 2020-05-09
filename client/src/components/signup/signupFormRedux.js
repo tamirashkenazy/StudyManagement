@@ -3,6 +3,7 @@ import { Form,  Label, Button} from 'semantic-ui-react'; //Radio,
 import '../../styles/signup-form.scss'
 import '../../styles/general.scss'
 import {Field}  from 'redux-form'
+
 //all form came from here: https://rangle.io/blog/creating-forms-with-redux-part-i , https://rangle.io/blog/creating-forms-with-redux-part-ii
 
 const textField =({label, input, placeholder, type, error, pointer, direction, disable=false, ref}) => {
@@ -68,7 +69,7 @@ const RadioGenerator = props => {
       return (
         <div className="mv3 w-100">
           <div className="b sans-serif pv2 w-100">{props.label}</div>
-          <select {...props.input} className="pa2 input-reset ba b--black-40 w-100">
+          <select {...props.input} className="pa2 input-reset ba b--black-40 w-100" required>
             <option value="">בחר שנת לימוד</option>
             {Object.keys(props.options).map(renderSelectOptions)}
           </select>
@@ -101,7 +102,7 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
     }
     const password_field = () => {
         return (
-            <Field name="password" label="סיסמה" placeholder='סיסמה' type="password" error={errors.password_error} component={textField} direction="ltr"/>
+            <Field name="password" label="סיסמה" placeholder='סיסמה' type="password" error={errors.password_error} pointer={<Label size="tiny" pointing>חייבת להכיל לפחות 4 תווים</Label>} component={textField} direction="ltr"/>
         )
     }
     const email_field = () => {

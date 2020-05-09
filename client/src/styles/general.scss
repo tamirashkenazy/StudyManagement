@@ -13,7 +13,53 @@
 
 #root {
   height: 100%;
+  font-family: Heebo;
   >div{
     height: 100%;
   }
+
+  .MuiPaper-root{
+    .MuiToolbar-root{
+      li {
+        display: block;
+        text-align: center;
+        margin-right: 2% !important;
+        .MuiListItemIcon-root {
+          display: inline-block;
+        }
+        &:focus, &:hover {
+          background-color: #7592a0;
+        }
+      }
+    }
+  }
+}
+
+h1,h2,h3,h4,h5,h6,.MuiTableCell-root,.ui.button,.MuiTypography-root,.MuiTypography-body1,.MuiTypography-h6, .MuiPaper-root,.MuiMenuItem-root {
+  font-family: Heebo !important;
+}
+
+.MuiTable-stickyHeader {
+  height: 100%;
+  border: none;
+}
+
+.MuiDialogTitle-root{
+  text-align: center !important;
+}
+
+.MuiDialog-paperWidthSm {
+  max-width: max-content !important;
+}
+
+.MuiDialog-paperFullWidth {
+   width: -webkit-fill-available; 
+}
+
+button:focus{
+  outline: none !important;
+}
+
+.MuiButtonBase-root:focus{
+  background-color: #9eb4bd !important;
 }

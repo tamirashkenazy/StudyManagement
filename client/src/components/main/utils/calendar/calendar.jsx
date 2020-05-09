@@ -46,7 +46,6 @@ export function Calendar(props) {
         //eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
 
-
     // Buttons click handler for changing week forward and backward
     const onClickHandlerWeekChange = value => {
 
@@ -99,7 +98,6 @@ export function Calendar(props) {
         });
     };
 
-
     // Triggers when user click any cell that is pickable
     const onClickHandlerCalendar = e => {
         const { target } = e;
@@ -124,7 +122,6 @@ export function Calendar(props) {
             };
         });
     };
-
 
     const onChangeHandlerCheckBox = () => {
 
@@ -248,7 +245,6 @@ export function Calendar(props) {
     //     }
     // }
     //     }
-
 
     const onClickHandlerSubmit = () => {
         getPickedDays();
