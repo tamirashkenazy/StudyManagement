@@ -73,7 +73,7 @@ router.route('/:id/name').get((req,res) => {
 
 
 /**
- * get list of available dates by teacher id
+ * get list of available dates by course id
  * request parameters:
  *      /<course_id>/hoursAvailable/allTeachers
  */
@@ -86,7 +86,7 @@ router.route('/:course_id/hoursAvailable/allTeachers').get((req,res) => {
             let course  = (teacher.teaching_courses.filter(course => course.course_id === req.params.course_id)) 
             console.log(course)
             if (course && course.length>0){
-                hours.push({"teacher_name" : teacher.name, "hours_available" : teacher.hours_available})
+                hours.push({"teacher+id": teacher._id,"teacher_name" : teacher.name, "hours_available" : teacher.hours_available})
             }
         });
         res.send({success : true, message: hours})
