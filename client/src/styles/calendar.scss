@@ -1,133 +1,101 @@
-
 * {
     box-sizing: border-box;
 }
 
-.calendar-component {
-    .container {
-        direction: ltr;
-        max-width: 960px;
-        margin: 0;
-        padding: 0;
-        text-align: center;
-    }
-
-    h1 {
-        margin:0;
-    }
-
-    .calendar-table {
-        border-collapse: collapse;
-        border-spacing: 0;
-    }
-
-    table, tr, td, th {
-        border: 1px solid rgba(128, 128, 128, 0.6);
-        cursor: pointer;
-        text-align: center;
-        .time {
-            cursor: default;
-        }
-    }
-
-
-    .week-days > th {
-        cursor: default !important;
-        padding: 0px 10px;
-        text-align: center;
-    }
-
-    th { 
-        padding: 5px;
-    }
-
-    th:not(:last-child) {
-        cursor: pointer;
-        transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .calendar-table {
-        border: 1px solid gray;
-        width: 100%;
-        text-align: center;
-    }
-
-    .calendar-header { 
-        display: flex;
-        margin: 0;
-        padding: 0;
-        justify-content: space-between;
-        background-color: rgba(33,160,219,1);
-        border-top-left-radius: 20px;
-        border-top-right-radius: 20px;
-    }
-
-    .btn {
-        cursor: pointer;
-        margin: auto;
-        padding: 10px;
-    }
-
-    .active { 
-        box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.55);
-        background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(139,192,225,1) 86%);
-    }
-
-    .disabled {
-        cursor: not-allowed !important; 
-        background-color: rgba(0, 0, 0, 0.2);
-        border: 1px solid rgba(0, 0, 0, 0.4);
-        transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-    }
-
-    .available{
-        cursor: default !important;
-        background: radial-gradient(circle, rgba(255,255,255,1) 30%, rgba(139,192,225,1) 150%);
-    }
-
-    .availabled {
-        cursor: default !important;
-        background: radial-gradient(circle, rgba(108,117,125,0.23) 30%, rgba(139,192,225,1) 150%);
-    }
-
-    .confirm {
-        display: block;
-        background-color: rgba(33,160,219,1);
-        padding: 5px 20px;
-        border-radius: 15px;
-        font-size: 15px;
-        color: white;
-        transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        margin-top: 30px;
-        margin-bottom: 20px;
-    }
-
-    .confirm:hover {
-        background-color: rgb(26, 135, 185);
-        box-shadow: 0px 0px 4px 4px rgba(24, 124, 170, 0.4);
-        color: white;
-    }
-
-    .MuiFormControlLabel-root {
-        direction: rtl;
-        display: inline-block;
-        right: 0;
-        position: absolute;
-    }
-
-    .MuiCheckbox-colorSecondary.Mui-checked {
-        color: rgb(26, 135, 185) ;
-    }
-
-    .MuiIconButton-colorSecondary:hover {
-        background-color: rgba(0, 123, 255, 0.17) ;
-    }
-
-    .MuiCheckbox-colorSecondary.Mui-checked:hover {
-        background-color: rgba(0, 123, 255, 0.17);
-    }
+.container {
+    direction: ltr;
+    max-width: 960px;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    // position: absolute;
+    // top: 50%;
+    // left: 50%;
+    // transform: translate(-50%, -50%);
 }
 
-    .MuiDialogContent-root {
-        overflow-y: visible !important;
-    }
+.calendar-table {
+    border-collapse: collapse;
+    border-spacing: 0;
+}
+
+table, tr, td, th {
+    border: 1px solid rgba(128, 128, 128, 0.6);
+}
+
+.week-days > th {
+    cursor: default !important;
+    padding: 10px 30px;
+}
+
+th { 
+    padding: 5px;
+}
+
+th:not(:last-child) {
+    cursor: pointer;
+    transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.calendar-table {
+    border: 1px solid gray;
+    width: 100%;
+    text-align: center;
+}
+
+.calendar-header { 
+    display: flex;
+    margin: 0;
+    padding: 0;
+    justify-content: space-between;
+    background-color: rgba(33,160,219,1);
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+
+.btn {
+    cursor: pointer;
+    margin: auto;
+    padding: 10px;
+}
+
+.active { 
+    box-shadow: 0px 0px 5px 1px rgba(0,0,0,0.55);
+    background: radial-gradient(circle, rgba(255,255,255,1) 0%, rgba(139,192,225,1) 86%);
+}
+
+.disabled {
+    cursor: not-allowed !important; 
+    background-color: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(0, 0, 0, 0.4);
+    transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+
+.confirm {
+    display: block;
+    background-color: rgba(33,160,219,1);
+    padding: 10px 20px;
+    border-radius: 15px;
+    font-size: 15px;
+    color: white;
+    transition: all .3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    margin-top: 20px;
+}
+
+.confirm:hover {
+    background-color: rgb(26, 135, 185);
+    box-shadow: 0px 0px 4px 4px rgba(24, 124, 170, 0.4);
+}
+
+.MuiFormControlLabel-root {
+    direction: rtl;
+    display: inline-block;
+    right: 0;
+    position: absolute;
+}
+
+.MuiCheckbox-colorSecondary.Mui-checked {
+    color: rgb(26, 135, 185) !important;
+}
+
+

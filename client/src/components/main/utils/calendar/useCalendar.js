@@ -20,7 +20,6 @@ export const getFullWeekDate = (value) => {
     // "Sunday, 3/15/2020"
     // "יום ראשון, 15.3.2020"
 
-
     for (let i = 0; i < 7; i++) {
         if (value === "goLeft") {
             if (!i) {
@@ -102,7 +101,6 @@ export const weekID = () => {
     return date.getWeekYear() + '' + date.getWeek();
 }
 
-
 // Creates attribute for each cell that's pickable. They are also unique and whole process goes on it.
 export const addTimeDataToElement = () => {
     const weekDays = $(".calendar-table").find(".week-days").children();
@@ -120,7 +118,6 @@ export const addTimeDataToElement = () => {
     }
 };
 
-
 // Iterate through every cell and get date info from their atributes
 // then it creates Date object with those info and compare with today's Date object.
 // Then adds disabled class if date is past.
@@ -130,6 +127,7 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
     //clears previous elements with 'disabled' class
     for (let item of $(".pickable")) {
         $(item).removeClass("disabled");
+        $(item).html('');
         const date = $(item).attr("date").split("-");
         const itemYear = weekID().slice(0, 4);
         const itemHour = date[0];
@@ -139,41 +137,53 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
 
         if (isTeacher) { //teacher
             const currentDate = Date.now();
-            for (let key of Object.keys(dates)) {
-                const inputDate = new Date(key);
-                inputDate.setMinutes(0);
-                inputDate.setSeconds(0);
-                inputDate.setMilliseconds(0);
-                if (cellDate <= currentDate) { // past+present dates
-                    if (cellDate.getTime() === inputDate.getTime()) { //availabled dates
-                        $(item).addClass("availabled");
-                        $(item).html('פנוי')
-                    }
-                    else {
-                        $(item).addClass("disabled");// diabled dates = non-availabled dates
-                    }
-                } else { //future dates
-                    if (cellDate.getTime() === inputDate.getTime()) { //available future
-                        $(item).removeClass("availabled");
-                        $(item).addClass("available");
-                        $(item).removeClass("pickable");
-                        $(item).html('פנוי')
-                    } else { // active dates = non-available dates
+            if (dates && dates !== undefined && dates !== null) {
+                for (let key of Object.keys(dates)) {
+                    const inputDate = new Date(key);
+                    inputDate.setMinutes(0);
+                    inputDate.setSeconds(0);
+                    inputDate.setMilliseconds(0);
+                    if (cellDate <= currentDate) { // past+present dates
+                        if (cellDate.getTime() === inputDate.getTime()) { //availabled dates
+                            $(item).addClass("availabled");
+                            $(item).html('פנוי')
+                        }
+                        else {
+                            $(item).addClass("disabled");// diabled dates = non-availabled dates
+                        }
+                    } else { //future dates
+                        if (cellDate.getTime() === inputDate.getTime()) { //available future
+                            $(item).removeClass("availabled");
+                            $(item).addClass("available");
+                            $(item).removeClass("pickable");
+                            $(item).html('פנוי')
+                        } else { // active dates = non-available dates
 
+                        }
                     }
                 }
             }
+            else {
+                
+            }
         } else { //student
             $(item).addClass("disabled");
-            for (let key of Object.keys(dates)) {
-                const inputDate = new Date(key);
-                inputDate.setMinutes(0);
-                inputDate.setSeconds(0);
-                inputDate.setMilliseconds(0);
-                if (cellDate.getTime() === inputDate.getTime()) {
-                    $(item).removeClass("disabled");
-                    $(item).html(dates[key])
+            if (dates && dates !== undefined && dates !== null) {
+                for (let key of Object.keys(dates)) {
+                    const inputDate = new Date(key);
+                    inputDate.setMinutes(0);
+                    inputDate.setSeconds(0);
+                    inputDate.setMilliseconds(0);
+                    if (cellDate.getTime() === inputDate.getTime()) {
+                        $(item).removeClass("disabled");
+                        $(item).html(dates[key])
+                    }
                 }
+            }
+            else {
+                console.log("no available dates");
+                $(item).removeClass("pickable");
+                $(item).addClass("disabled");
             }
         }
     }
