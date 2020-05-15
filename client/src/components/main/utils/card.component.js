@@ -43,7 +43,6 @@ const get_student_courses = (student) => {
 }
 
 export default function UserCard({user, teacher, student}) { //user, teacher, student
-    console.log(user, teacher, student);
     let curr_user = {id : user._id, roles : "אין תפקיד"}
     const full_name = `${user.first_name} ${user.last_name}`
     const classes = useStyles();
@@ -58,7 +57,6 @@ export default function UserCard({user, teacher, student}) { //user, teacher, st
     if (user.isStudent && user.isTeacher && student && teacher) {
       curr_user.roles = "מורה, תלמיד"
     }
-    console.log(curr_user.student_courses, curr_user.teacher_courses);
     return (
       <Card >
           <CardContent>
