@@ -22,7 +22,7 @@ router.route('/byStatus/:status').get((req,res) => {
     Lesson.find({ "status" : req.params.status }, (err,lessons) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (lessons && lessons.length > 0) {
+        } else if (lessons) {
             return res.send({success : true, message: lessons})
         } else {
             return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
@@ -40,7 +40,7 @@ router.route('/doneLessons/:course_id').get((req,res) => {
     Lesson.find({ "status" : "done" }, (err,lessons) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (lessons && lessons.length > 0) {
+        } else if (lessons) {
             lessons = lessons.filter(lesson => lesson.course.course_id === req.params.course_id)
             return res.send({success : true, message: lessons})
         } else {
@@ -60,7 +60,7 @@ router.route('/sumLessons').get((req,res) => {
     Lesson.find({$or:[{ "status" : "waiting" },{ "status" : "done" }]}, (err,lessons) => {
         if(err) {
             return res.send({success : false, message: "Error: " + err})
-        } else if (lessons && lessons.length > 0) {
+        } else if (lessons) {
             return res.send({success : true, message: lessons.length})
         } else {
             return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
@@ -101,7 +101,7 @@ router.route('/byCourseId/:courseId').get((req,res) => {
     Lesson.find({ "course.course_id" : req.params.courseId }, (err,lessons) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (lessons && lessons.length > 0) {
+        } else if (lessons) {
             return res.send({success : true, message: lessons})
         } else {
             return res.send({success : true, message: "השיעורים המבוקשים אינם קיימים במערכת"})
@@ -119,7 +119,7 @@ router.route('/byTeacherId/:teacherId').get((req,res) => {
     Lesson.find({ "teacher.teacher_id" : req.params.teacherId }, (err,lessons) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (lessons && lessons.length > 0) {
+        } else if (lessons) {
             return res.send({success : true, message: lessons})
         } else {
             return res.send({success : true, message: "השיעורים המבוקשים אינם קיימים במערכת"})
@@ -136,10 +136,10 @@ router.route('/byStudentId/:studentId').get((req,res) => {
     Lesson.find({ "student.student_id" : req.params.studentId }, (err,lessons) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
-        } else if (lessons && lessons.length > 0) {
+        } else if (lessons) {
             return res.send({success : true, message: lessons})
         } else {
-            return res.send({success : true, message: "השיעורים המבוקשים אינם קיימים במערכת"})
+            return res.send({success : true, message: ["השיעורים המבוקשים אינם קיימים במערכת"]})
         }
     })
 })
