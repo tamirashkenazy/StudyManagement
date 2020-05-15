@@ -12,6 +12,9 @@ import CoursesTable from './courses_table.component'
 import LessonsTable from './lessons_table.component'
 import TrackHoursTable from './track_hours_table.component'
 import { Dialog_generator } from '../utils/utils'
+import Grid from '@material-ui/core/Grid';
+import { Typography } from '@material-ui/core';
+
 const getOpenedPopup = (is_open_request_hours, is_open_book_class, is_open_history_popup) => {
     return (
         { request_hours_popup: is_open_request_hours, book_class_popup: is_open_book_class, history_popup: is_open_history_popup }
@@ -49,19 +52,25 @@ export default function Student(props) {
                 {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), " בקשת שעות חונכות","access_time", { _id: user._id }, (id) => RequestHours(id))}
                 {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id }, (id) => BookHours(id))}
                 {Dialog_generator(openedPopups.history_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "היסטוריית שיעורים","history", { _id: user._id }, (id) => History(id))}
-                <div className="content">
-                    <div className="topDiv">
-                        <div className="leftDiv">
-                            {TrackHoursTable(user._id, setOpenedPopups)}
-                        </div>
-                        <div className="rightDiv">
-                            {LessonsTable(user._id)}
-                        </div>
-                    </div>
-                    <div className="bottomDiv">
-                        {CoursesTable(user._id)}
-                    </div>
-                </div>
+                <br></br>
+                <Typography variant="h3" align="center" >ברוך הבא למסך הסטודנט</Typography>
+                <br></br>   
+                <Grid container spacing={10} justify="space-around" direction="row-reverse" >
+                    <Grid item md={4} xs={4}  style={{marginRight : "1rem"}}>
+                        <TrackHoursTable id={user._id} setOpenedPopup={setOpenedPopups} />
+                    </Grid>
+                    <Grid item md={4} xs={4} style={{marginLeft : "1rem"}}>
+                        <LessonsTable id={user._id} />
+                        {/* <StudentsRequestTable students={students}/> */}
+                    </Grid>
+                </Grid>
+                <br/><br/>
+                <Grid container justify="center">
+                    <Grid item md={4} xs={4}>
+                        <CoursesTable id={user._id} />
+                        {/* <CoursesTableAdmin all_courses={all_courses}/> */}
+                    </Grid>
+                </Grid>
             </div> :
             <div>
                 loading student

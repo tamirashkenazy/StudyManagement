@@ -4,7 +4,7 @@ const onlyNumbers = /^[-0-9\b]+$/;
 const Schema = mongoose.Schema;
 const GroupsSchema = new Schema({
     name : { type : String, required : true, minlength: 2, unique: true },
-    aproved_hours : { type : String, required : true, match: onlyNumbers },
+    approved_hours : { type : String, required : true, match: onlyNumbers },
 }, { timestamps:true }, );
 
 

@@ -28,22 +28,15 @@ const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
         })
         // console.log(options);
         return options
+    } else {
+        return ([{
+            "אין קורסים להציג" : ""
+        }])
     }
 }
 
-// const useStyles = makeStyles({
-//     table: {
-//       direction : "rtl",
-
-//     },
-//     tableHead : {
-//         backgroundColor : "#CCE5FF"
-//     }
-//   });
-
-
-export default function CoursesTable(user_id) {
-    const [table_rows, loading] = useAsyncHook(`students/${user_id}/requests`, make_rows_of_courses_requests);
+export default function CoursesTable({id}) {
+    const [table_rows, loading] = useAsyncHook(`students/${id}/requests`, make_rows_of_courses_requests);
 
     // const classes = useStyles();
     return (
