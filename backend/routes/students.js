@@ -1,6 +1,7 @@
 const router = require('express').Router();
 let Student = require('../models/student.model');
 let Groups = require('../models/group.model');
+let Course = require('../models/course.model');
 
 
 
@@ -250,6 +251,33 @@ router.route('/add/request/:id').post((req, res) => {
                 return res.send({success:true, message: "!הבקשה נשלחה בהצלחה"})
             })
         }
+    })
+})
+
+
+/**
+ * get number of sudents requests devided by course_id.
+ * request parameters:
+ *     /numOfStudentsByCourse/
+ */
+router.route('/numOfStudentsByCourse').get((req,res) => {
+    var num_of_students = []
+    function wait(num_of_students) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(num_of_students);
+          }, 4000);
+        });
+    }
+    Course.find().
+    then(async function(courses){
+        courses.forEach(course => {
+          Student.find({ "courses.course_id" : course._id }, (err,students) => {
+              num_of_students.push({name : course.name, sum: students.length})
+              }) 
+        })
+          num_of_students = await wait(num_of_students)
+          return res.send({success : true, message: num_of_students})
     })
 })
 

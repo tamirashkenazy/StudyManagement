@@ -56,6 +56,9 @@ export default function Admin(props) {
     ]
     const [sum_lessons, isLoading_sumLessons] = useAsyncHook(`lessons/paidMoney`)
     const [annual_budget, isLoading_budget] = useAsyncHook(`constants/annual_budget`)
+    const [lessons_pie, isLoading_lessons] = useAsyncHook(`lessons/numOfLessonsByCourse`)
+    const [students_pie, isLoading_students] = useAsyncHook(`students/numOfStudentsByCourse`)
+    const [teachers_pie, isLoading_teachers] = useAsyncHook(`teachers/numOfSTeachersByCourse`)
     return (
         <div  style={{textAlign : "center", backgroundColor: "#eceff1" }}>
             
@@ -65,7 +68,7 @@ export default function Admin(props) {
             {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים","people_outline" ,{users, teachers, students} ,(args)=>Participants(args))}
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס","playlist_add",{}, ()=>AddCourse(), "md")}
-            {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(), "md", "ltr")}
+            {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(lessons_pie, students_pie, teachers_pie), "md", "ltr")}
             <br></br>
             <Grid container spacing={10} justify="space-around" direction="row-reverse" >
                 <Grid item xs  style={{marginRight : "1rem"}}>
