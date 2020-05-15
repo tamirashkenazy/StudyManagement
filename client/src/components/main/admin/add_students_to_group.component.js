@@ -7,7 +7,7 @@ import IconButton from '@material-ui/core/IconButton';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 const make_button_add_remove = (curr_id, ids, setId) => {
   if (ids.has(curr_id)){
-    return <IconButton size="small" onClick={()=>setId(prev => {
+    return <IconButton size="small" style={{color:"#FA8072"}}onClick={()=>setId(prev => {
       prev.delete(curr_id)
       return (
         new Set(prev)
@@ -47,9 +47,9 @@ const make_arr_students_in_group = (students, setId, in_group=false, ids=null) =
     }])
 }}
 
-const post_request_add_to_group = (ids) => {
-  let arr_ids = Array.from(ids)
-  axios.post(get_mongo_api('students/'), arr_ids).then((response)=> {
+const post_request_add_to_group = (ids, groupNameChosen) => {
+  let post_body = {students_id : Array.from(ids), group_name : groupNameChosen}
+  axios.post(get_mongo_api('students/updateGroup/listOfStudents'), post_body).then((response)=> {
     if (response.data.success) {
         window.location.reload(true)
     } else {
@@ -66,7 +66,7 @@ export default function AddStudentsToGroup({users, students, groupNameChosen}) {
       <>
       <GenericTable table_data={{data:students_in_group, title:`סטודנטים בקבוצה: ${groupNameChosen}`}}></GenericTable>
       <GenericTable table_data={{data:students_not_in_group, title:"סטודנטים שלא בקבוצה"}}></GenericTable>
-      {ids.size > 0 && <Button color="primary" variant="outlined" onClick={()=>post_request_add_to_group(ids)}>הוסף</Button>}
+      {ids.size > 0 && <Button color="primary" variant="outlined" onClick={()=>post_request_add_to_group(ids, groupNameChosen)}>הוסף</Button>}
       </>
     );
 }
