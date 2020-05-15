@@ -55,7 +55,7 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
 }
 
 
-const emptyUser = {   _id : "", password : "", email: "", first_name : "",  last_name: "", tel_number : "", gender : "", 
+const emptyUser = { _id : "", password : "", email: "", first_name : "",  last_name: "", tel_number : "", gender : "", 
                     isTeacher : false, isStudent: false, isAdmin : false,  study_year: ""}
     //bank_account_name : "", bank_account_number : "", bank_branch : "", bank_name : ""
 
