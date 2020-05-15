@@ -79,7 +79,7 @@ const make_rows_of_courses_requests = (lessons) => {
     }
 }
 
-export default function LessonsTable(id) {
+export default function LessonsTable({id}) {
     const [table_rows, loading] = useAsyncHook(`lessons/byTeacherId/${id}`, make_rows_of_courses_requests);
 
     return (

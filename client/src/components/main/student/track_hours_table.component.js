@@ -32,7 +32,7 @@ const make_rows_of_courses_requests = (student, setOpenedPopups) => {
     }
 }
 
-export default function TrackHoursTable(student, setOpenedPopups) {
+export default function TrackHoursTable({student, setOpenedPopups}) {
     const table_rows = make_rows_of_courses_requests(student, setOpenedPopups);
     // const [table_rows, loading] = useAsyncHook(`students/byID/${id}`, make_rows_of_courses_requests, setOpenedPopups);
 

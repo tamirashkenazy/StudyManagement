@@ -70,7 +70,7 @@ const make_rows_of_courses_requests = (lessons, func) => {
     }
 }
 
-export default function LessonsTable(id) {
+export default function LessonsTable({id}) {
     const [isCardOpen, setCardOpen] = useState(false);
     const [user, setUser] = useState(null);
     const [teacher, setTeacher] = useState(null);
