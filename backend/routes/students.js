@@ -221,7 +221,7 @@ router.route('/add/request/:id').post((req, res) => {
 
             course = student.courses.find(({course_id}) => course_id === new_request.course_id )
             if (course){
-                gap = Number(student.group.aproved_hours) - Number(course.approved_hours) - Number(course.wating_hours) + Number(course.hours_already_done) 
+                gap = Number(student.group.approved_hours) - Number(course.approved_hours) - Number(course.wating_hours) + Number(course.hours_already_done) 
                 if (gap > 0){
                     hours_to_add = Math.min(Number(new_request.number_of_hours), gap)
                     final_hours = hours_to_add + Number(course.wating_hours)
@@ -294,7 +294,7 @@ router.route('/numOfStudentsByCourse').get((req,res) => {
 router.route('/add').post((req, res) => {
     _id = req.body._id
     name = req.body.name
-    group_name = ''
+    group_name = 'כללי'
     if (req.body.hasOwnProperty('group_name')){
         group_name = req.body.group_name
     }
@@ -304,7 +304,7 @@ router.route('/add').post((req, res) => {
         if (err || group === null){
             new_group = ""
         }else{
-            new_group = { name: group.name, aproved_hours : group.aproved_hours}
+            new_group = { name: group.name, approved_hours : group.approved_hours}
         }
         student_obj = { _id : _id, name : name, requests : requests, courses : courses, group : new_group}
         const newStudent = new Student(student_obj)
@@ -355,12 +355,12 @@ router.route('/update').post((req,res) => {
         }
         Groups.findOne({ name : req.body.group_name }, (err,group) => {
             if (err || group === null){
-                new_group = {name: "", aproved_hours : "4"}
+                new_group = {name: "", approved_hours : "4"}
             }else{
-                new_group = { name: group.name, aproved_hours : group.aproved_hours}
+                new_group = { name: group.name, approved_hours : group.approved_hours}
             }
             student.group.name = new_group.name
-            student.group.aproved_hours = new_group.aproved_hours
+            student.group.approved_hours = new_group.approved_hours
             student._id = req.body._id.trim();
             student.requests = req.body.requests;
             student.courses = req.body.courses;
@@ -393,7 +393,7 @@ router.route('/update/group/:id').post((req,res) => {
             if (err || group === null){
                 new_group = ""
             }else{
-                new_group = { name: group.name, aproved_hours : group.aproved_hours}
+                new_group = { name: group.name, approved_hours : group.approved_hours}
             }
             student.group = new_group;
             student.save((err, doc)=> {
@@ -405,6 +405,71 @@ router.route('/update/group/:id').post((req,res) => {
             })
         })
     }); 
+});
+
+
+/**
+ * update students' group by id.
+ * request parameters:
+ *     /updateGroup/listOfStudents
+ * request body:
+ *       "group_name" : <group_name>
+ *       "students_id" : <list_of_id>
+ */
+router.route('/updateGroup/listOfStudents').post((req,res) => {
+    let id_list = req.body.students_id
+    let group_name = req.body.group_name
+    let error_ids = []
+    let validate = id_list.length
+    function wait(validate) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(validate);
+          }, 2000);
+        });
+    }
+    console.log(validate)
+    Groups.findOne({ name : group_name }, (err, group) => {
+        if (group) {
+            id_list.forEach(student_id=>{
+                Student.findById((student_id)).then((student) => {
+                    if (student) {
+                        // console.log(student);
+                        student.group.name = group.name
+                        student.group.approved_hours = group.approved_hours
+                        // console.log(student);
+                        student.save((err, student)=>{
+                            validate -= 1;
+                            if(err) {
+                                error_ids.push(student_id) 
+                            }
+                        })
+                    } else {
+                        //if there is no such student
+                        error_ids.push(student_id)
+                        validate -= 1;
+                    }
+                })
+            })
+        } else { //!group
+            res.send({
+                success : false, message : `אינה קיימת במערכת ${group_name}`
+            })
+        }
+    })
+    send_response = async function(){
+        while(validate != 0){
+            await wait(validate)
+        }
+        // compare arrays of error_ids and id_list - if equals - ok, else return the id list of 
+        console.log(error_ids)
+        if (error_ids.length > 0){ // WARNING: not all the students updated
+            res.send({success : false, message : error_ids})
+        }else{
+            res.send({success : true, message : `הסטודנטים שייכים כעת לקבוצה: ${group_name} `})
+        }
+    }
+    send_response()
 });
 
 

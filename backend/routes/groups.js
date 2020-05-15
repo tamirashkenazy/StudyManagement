@@ -34,8 +34,8 @@ router.route('/:name').get((req,res) => {
  * request parameters:
  *      /add
  * request body:
- *      "group_name" : <name_of_group>
- *      "aproved_hours" : <aproved_hours>
+ *      "name" : <name_of_group>
+ *      "approved_hours" : <approved_hours>
  */
 router.route('/add').post((req, res) => {
     const { body } = req;
