@@ -50,7 +50,6 @@ export default function Admin(props) {
     
     const user = props.history.location.state
     const {teachers, students, users} = props
-    console.log(users, teachers, students);
     const total_popups = 5
     const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
     const classes = useStylesAppBar();
@@ -96,7 +95,7 @@ export default function Admin(props) {
                     <CoursesTableAdmin all_courses={all_courses}/>
                 </Grid>
                 <Grid item md={4} xs={4}>
-                    <GroupsTableAdmin all_groups={all_groups}/>
+                    <GroupsTableAdmin all_groups={all_groups} users={users} students={students}/>
                 </Grid>
             </Grid>
             <br/><br/>

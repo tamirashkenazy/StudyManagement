@@ -47,7 +47,6 @@ const useStyles = makeStyles({
 export default function GenericTable(props) { //props : {table_data : {data: some_data-> array of objects , title: string_of_title}}
     const classes = useStyles();
     const {data, title} = props.table_data
-    
     let num_of_cols = 0
     if (data && data.length > 0) {
         num_of_cols = Object.keys(data[0]).length
