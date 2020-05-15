@@ -53,6 +53,7 @@ export default function UserCard({user, teacher, student}) { //user, teacher, st
     if (user.isStudent && student) {
       curr_user.roles = "תלמיד"
       curr_user.student_courses = get_student_courses(student)
+      curr_user.group_name = student.group.name ? student.group.name : "לא משתייך לקבוצה"
     }
     if (user.isStudent && user.isTeacher && student && teacher) {
       curr_user.roles = "מורה, תלמיד"
@@ -87,6 +88,10 @@ export default function UserCard({user, teacher, student}) { //user, teacher, st
                   {(user.isStudent && student) && <TableRow>
                     <TableCell className={classes.tableCell}>קורסים שלומד</TableCell>
                     <TableCell className={classes.tableCell}>{curr_user.student_courses} </TableCell>
+                  </TableRow>}
+                  {(user.isStudent && student) && <TableRow>
+                    <TableCell className={classes.tableCell}>קבוצת לימוד</TableCell>
+                    <TableCell className={classes.tableCell}>{curr_user.group_name} </TableCell>
                   </TableRow>}
                   {(user.isTeacher && teacher) && <TableRow>
                     <TableCell className={classes.tableCell}>קורסים שמלמד</TableCell>
