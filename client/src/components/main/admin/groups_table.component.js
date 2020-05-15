@@ -8,7 +8,7 @@ const all_groups_array  = (all_groups, setGroupNameChosen, setPopUpOpen)=>{
             return {
                 "שם הקבוצה": group.name,
                 "מספר שעות עבור קבוצה": group.approved_hours,
-                "הוסף תלמידים לקבוצה" : <button onClick={()=>{setGroupNameChosen(group.name); setPopUpOpen(true)}}>add</button>
+                "צפייה והוספת תלמידים לקבוצה" : <button onClick={()=>{setGroupNameChosen(group.name); setPopUpOpen(true)}}>add</button>
             }
         })
     } else {
@@ -19,7 +19,6 @@ const all_groups_array  = (all_groups, setGroupNameChosen, setPopUpOpen)=>{
 }
 
 export default function CoursesTableAdmin({all_groups, users, students}) {
-    console.log('stu: ', students);
     const [groupNameChosen, setGroupNameChosen] = useState(null)
     const [isPopUpOpen, setPopUpOpen] = useState(false)
     let group_arr = all_groups_array(all_groups, setGroupNameChosen, setPopUpOpen)
@@ -31,7 +30,7 @@ export default function CoursesTableAdmin({all_groups, users, students}) {
             ()=>setPopUpOpen(false), 
             "הוספת סטודנטים לקבוצה" ,
             "",
-            {users, students, lineChosen : groupNameChosen}, 
+            {users, students, groupNameChosen}, 
             (args)=>AddStudentsToGroup(args) )
         }
         <GenericTable table_data={{data:group_arr, title:"קבוצות קיימות"}}/>

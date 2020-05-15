@@ -91,12 +91,12 @@ export default function Admin(props) {
             </Grid>
             <br/><br/>
             <Grid container spacing={10} justify="space-around" direction="row-reverse">
-                <Grid item md={4} xs={4}>
+                {!isLoadingCourses && <Grid item md={4} xs={4}>
                     <CoursesTableAdmin all_courses={all_courses}/>
-                </Grid>
-                <Grid item md={4} xs={4}>
+                </Grid>}
+                {!isLoadingGroups && <Grid item md={4} xs={4}>
                     <GroupsTableAdmin all_groups={all_groups} users={users} students={students}/>
-                </Grid>
+                </Grid>}
             </Grid>
             <br/><br/>
             <Grid container justify="center">
