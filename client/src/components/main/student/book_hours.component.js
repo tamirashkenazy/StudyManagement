@@ -65,7 +65,7 @@ function get_available_hours_list(selectedCourse) {
 
 const set_available_hours = (selectedCourse) => {
     get_available_hours_list(selectedCourse).then((returnVal) => {
-        HOURS_AVAILABLE_GLOBAL = make_available_hours_list(ARR_OF_HOURS);
+        HOURS_AVAILABLE_GLOBAL = {...make_available_hours_list(ARR_OF_HOURS)};
         // console.log(HOURS_AVAILABLE_GLOBAL);
     })
 }
@@ -97,7 +97,7 @@ export default function BookHours(props) {
     return (
         !loading &&
         <div className="studentCalendar">
-            <Dropdown direction="right" placeholder='בחר קורס' scrolling search selection={courses_options} options={courses_options}  onChange={(e, { value }) => {setSelectedCourse(value); set_available_hours(value)}} />
+            <Dropdown direction="right" placeholder='בחר קורס' scrolling search selection options={courses_options}  onChange={(e, { value }) => {setSelectedCourse(value); set_available_hours(value)}} />
             {/* {console.log(HOURS_AVAILABLE_GLOBAL)} */}
             {HOURS_AVAILABLE_GLOBAL ?
                 <Calendar
