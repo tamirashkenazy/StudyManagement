@@ -57,7 +57,7 @@ export default function Student(props) {
                 <br></br>   
                 <Grid container spacing={10} justify="space-around" direction="row-reverse" >
                     <Grid item md={4} xs={4}  style={{marginRight : "1rem"}}>
-                        <TrackHoursTable id={user._id} setOpenedPopup={setOpenedPopups} />
+                        <TrackHoursTable student={student} setOpenedPopup={setOpenedPopups} />
                     </Grid>
                     <Grid item md={4} xs={4} style={{marginLeft : "1rem"}}>
                         <LessonsTable id={user._id} />
