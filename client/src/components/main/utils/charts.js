@@ -7,7 +7,7 @@ var CanvasJSChart = CanvasJSReact.CanvasJSChart;
  * @param {data_points} - should be array of objects: { y: number, label: string} 
  * 
  */
-export const StatisticsPieChart = ({title, data_points, theme, startAngle}) => {	
+export const StatisticsPieChart = ({title, data_points, theme, startAngle, showPercent}) => {	
     if (!startAngle) {
         startAngle = -90
     }
@@ -20,7 +20,7 @@ export const StatisticsPieChart = ({title, data_points, theme, startAngle}) => {
         },
         data: [{
             type: "pie",
-            indexLabel: "{label}: {y}%",		
+            indexLabel: showPercent ? "{label}: {y}%": "{label}: {y}",		
             startAngle: startAngle,
             dataPoints: data_points
         }]

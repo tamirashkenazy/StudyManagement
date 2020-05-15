@@ -339,6 +339,32 @@ router.route('/add/request/:id').post((req, res) => {
 
 
 /**
+ * get number of teacher teaching each course_id.
+ * request parameters:
+ *     /numOfSTeachersByCourse/
+ */
+router.route('/numOfSTeachersByCourse').get((req,res) => {
+    var num_of_teachers = []
+    function wait(num_of_teachers) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(num_of_teachers);
+          }, 5000);
+        });
+    }
+    Course.find().
+    then(async function(courses){
+        courses.forEach(course => {
+          Teacher.find({ "teaching_courses.course_id" : course._id }, (err,teacher) => {
+              num_of_teachers.push({name : course.name, sum: teacher.length})
+              }) 
+        })
+          num_of_teachers = await wait(num_of_teachers)
+          return res.send({success : true, message: num_of_teachers})
+    })
+})
+
+/**
  * Add dates to teacher hours_available list.
  * request parameters:
  *      /add/hoursAvailable/<teacher_id>
