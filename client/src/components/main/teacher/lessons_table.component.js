@@ -72,6 +72,10 @@ const make_rows_of_courses_requests = (lessons) => {
             )
         });
         return options
+    } else {
+        return ([{
+            "לא קיימים שיעורים":""
+        }])
     }
 }
 

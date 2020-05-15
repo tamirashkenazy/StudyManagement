@@ -13,6 +13,8 @@ import TeachersStatusRequestsTable from './requests_status.component'
 import LessonsTable from './lessons_table.component'
 import ProgressBar from './progress_bar.component'
 import '../../../styles/teachers.scss';
+import { Typography } from '@material-ui/core';
+import Grid from '@material-ui/core/Grid';
 
 const getOpenedPopup = (is_open_select_courses_to_teach, is_update_availability, is_upload_grades_sheet) => {
     return (
@@ -54,19 +56,24 @@ export default function Teacher(props) {
                 {Dialog_generator(openedPopups.select_courses, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "בחירת קורסים להוראה","menu_book", { id: user._id, teacher }, (id, teacher) => CoursesToTeach(id, teacher))}
                 {Dialog_generator(openedPopups.upload_grades_sheet, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "העלאת גיליון ציונים","assignment", { id: user._id }, (id) => UploadGradesSheet(id))}
                 {Dialog_generator(openedPopups.update_availability, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "עדכון זמינות","date_range", { id: user._id }, (id) => UpdateAvailability(id))}
-                <div className="content">
-                    <div className="topDiv">
-                        <div className="leftDiv">
-                            <TeachersStatusRequestsTable teaching_requests={teacher.teaching_requests} />
-                        </div>
-                        <div className="rightDiv">
-                            {LessonsTable(user._id)}
-                        </div>
-                    </div>
-                    <div className="bottomDiv">
-                        {ProgressBar(user._id)}
-                    </div>
-                </div>
+                <br></br>
+                    <Typography variant="h3" align="center" >ברוך הבא למסך המורה</Typography>
+                <br></br>   
+                <Grid container spacing={10} justify="space-around" direction="row-reverse" >
+                    <Grid item md={4} xs={4}  style={{marginRight : "1rem"}}>
+                        <TeachersStatusRequestsTable teaching_requests={teacher.teaching_requests} />
+                    </Grid>
+                    <Grid item md={4} xs={4} style={{marginLeft : "1rem"}}>
+                        <LessonsTable id={user._id} />
+                    </Grid>
+                </Grid>
+                <br/><br/>
+                <Grid container justify="center">
+                    <Grid item md={4} xs={4}>
+                        <ProgressBar id={user._id} />
+                    </Grid>
+                </Grid>
+                
             </div>
             : <div>
                 loading teacher

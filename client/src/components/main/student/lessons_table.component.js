@@ -70,17 +70,26 @@ const make_rows_of_courses_requests = (lessons) => {
             )
         });
         return options
+    } else {
+        return ([{
+            "אין שיעורים" : ""
+        }])
     }
 }
 
-export default function LessonsTable(id) {
+export default function LessonsTable({id}) {
     const [table_rows, loading] = useAsyncHook(`lessons/byStudentId/${id}`, make_rows_of_courses_requests);
 
-    return (
-        !loading && table_rows &&
-        <>
+    if (!loading && table_rows) {
+        return (
+            <>
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
             {Dialog_generator(isCardOpen, () => { isCardOpen = false }, "כרטיס מורה","person_pin", {}, () => <UserCard user={user} teacher={teacher}></UserCard>)}
         </>
-    )
+        )
+    } else {
+        return <div>
+        loading</div>
+    }
+        
 }

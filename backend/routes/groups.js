@@ -39,10 +39,10 @@ router.route('/:name').get((req,res) => {
  */
 router.route('/add').post((req, res) => {
     const { body } = req;
-    const { name, aproved_hours } = body
+    const { name, approved_hours } = body
     const newGroup = new Groups({
         name,
-        aproved_hours
+        approved_hours
     })
     newGroup.save((err, group)=> {
         if (err) {

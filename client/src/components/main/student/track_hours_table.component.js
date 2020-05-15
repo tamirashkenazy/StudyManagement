@@ -13,7 +13,7 @@ const getOpenedPopup = (is_open_request_hours, is_open_book_class,is_open_histor
 
 const make_rows_of_courses_requests = (student, setOpenedPopups) => {
 
-    if (student.courses && student.courses.length > 0) {
+    if (student && student.courses && student.courses.length > 0) {
         let options = student.courses.map(course_obj => {
             var remaining_hours = course_obj.approved_hours - course_obj.hours_already_done;
             var scheduleDisabled = (remaining_hours !== 0) ? false : true;
@@ -29,10 +29,14 @@ const make_rows_of_courses_requests = (student, setOpenedPopups) => {
             )
         })
         return options
+    } else {
+        return ([{
+            "איו שעות למעקב":""
+        }])
     }
 }
 
-export default function TrackHoursTable(id, setOpenedPopups) {
+export default function TrackHoursTable({id, setOpenedPopups}) {
     const [table_rows, loading] = useAsyncHook(`students/byID/${id}`, make_rows_of_courses_requests, setOpenedPopups);
 
     return (

@@ -4,7 +4,7 @@ import get_mongo_api from '../../mongo/paths.component'
 import LinearProgress from '@material-ui/core/LinearProgress';
 
 
-export default function ProgressBar(id) {
+export default function ProgressBar({id}) {
     const [numHours, setNumHours] = useState(0);
     const [loading, setLoading] = useState(true);
 

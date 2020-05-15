@@ -72,9 +72,7 @@ const teachers_requests_array = (teachers_arr)=>{
 }
 
 export default function TeachersRequestTable({teachers}) {
-    // const [teachers, loading] = useAsyncHook(`teachers`, teachers_requests_array);
     let teacher_arr = teachers_requests_array(teachers)
-    // console.log("teacher_arr", teacher_arr);
     return (
         <GenericTable table_data={{data:teacher_arr, title:"בקשות מורים"}}/>
     )

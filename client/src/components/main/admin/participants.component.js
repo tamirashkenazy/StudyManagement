@@ -6,7 +6,6 @@ import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined'
 import IconButton from '@material-ui/core/IconButton';
 import GenericTable from '../utils/generic_table.component';
 
-
 const make_participants = (arr_of_users, args) => {
     const users_by_roles = {teachers : [], students : []}
     const {setCardOpen, setCurrUser} = args
@@ -37,9 +36,9 @@ const make_participants = (arr_of_users, args) => {
 const filter_by_id = (arr_of_users, user) => {
     if (user) {
         if (arr_of_users && Array.isArray(arr_of_users) && arr_of_users.length > 0) {
-            let a = arr_of_users.filter(temp_user => temp_user._id === user._id)
-            if (a.length === 1) {
-                return a[0]
+            let curr_user = arr_of_users.filter(temp_user => temp_user._id === user._id)
+            if (curr_user.length === 1) {
+                return curr_user[0]
             }
             return null
         }
@@ -47,8 +46,7 @@ const filter_by_id = (arr_of_users, user) => {
     }
 }
 
-export default function Participants(props){
-    const {teachers, students, users} = props
+export default function Participants({teachers, students, users}){
     const [isCardOpen, setCardOpen] = useState(false)
     const [user, setCurrUser ] = useState(null)
     let args = {setCardOpen, setCurrUser, teachers, students};
@@ -60,11 +58,17 @@ export default function Participants(props){
             { menuItem: 'תלמידים', render: () => <Tab.Pane>{<GenericTable table_data={{data:users_participants.students, title:null}} />}</Tab.Pane> },
             ]
     }
-
     return (
         <>
          <Tab panes={panes}/>
-        {Dialog_generator(isCardOpen, ()=>setCardOpen(false), "כרטיס סטודנט" ,"person_pin",{}, ()=><UserCard user={user} teacher={filter_by_id(teachers, user)} student={filter_by_id(students, user)}></UserCard>)}
+        {Dialog_generator(
+            isCardOpen, 
+            ()=>setCardOpen(false), 
+            "כרטיס סטודנט" ,
+            "person_pin",
+            {user, teacher:filter_by_id(teachers, user), student:filter_by_id(students, user)}, 
+            (props)=><UserCard user={props.user} teacher={props.teacher} student={props.student}></UserCard>)
+        }
         </>
     )
 }
