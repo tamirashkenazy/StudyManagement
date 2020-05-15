@@ -34,10 +34,10 @@ router.route('/byStatus/:status').get((req,res) => {
 /**
  * get all the lessons that done in a specific course.
  * request parameters:
- *      /doneLessons/<course_id>
+ *      /ByStatusAndCourse/<status_id>/<course_id>
  */
-router.route('/doneLessons/:course_id').get((req,res) => {
-    Lesson.find({ "status" : "done" }, (err,lessons) => {
+router.route('/doneLessons/:status_id/:course_id').get((req,res) => {
+    Lesson.find({ "status" : req.params.status_id }, (err,lessons) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (lessons) {
