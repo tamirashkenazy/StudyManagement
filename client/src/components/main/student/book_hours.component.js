@@ -97,7 +97,7 @@ export default function BookHours(props) {
     return (
         !loading &&
         <div className="studentCalendar">
-            <Dropdown direction="right" placeholder='בחר קורס' scrolling search selection onChange={(e, { value }) => {setSelectedCourse(value); set_available_hours(value)}} options={courses_options} />
+            <Dropdown direction="right" placeholder='בחר קורס' scrolling search selection={courses_options} options={courses_options}  onChange={(e, { value }) => {setSelectedCourse(value); set_available_hours(value)}} />
             {/* {console.log(HOURS_AVAILABLE_GLOBAL)} */}
             {HOURS_AVAILABLE_GLOBAL ?
                 <Calendar

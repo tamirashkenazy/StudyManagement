@@ -6,7 +6,7 @@ import { Grid } from 'semantic-ui-react'
 
 const make_courses_option = (arr_of_courses) => {
     // let local_courses = courses
-    if (arr_of_courses && arr_of_courses!==undefined && arr_of_courses.length > 0){
+    if (arr_of_courses && Array.isArray(arr_of_courses) && arr_of_courses.length > 0){
         let options = arr_of_courses.map(course_obj => {
             return (
                 {
@@ -52,7 +52,7 @@ export default function RequestHours(props){
     return (
         //conditional rendering react: https://reactjs.org/docs/conditional-rendering.html 
         !loading &&
-        <Grid columns={1}  style={{margin : "2rem 1rem 5rem 1rem"}}>
+        <Grid columns={1}  style={{margin : "2rem 1rem 3rem 1rem"}}>
             <Grid.Row centered>
                 <Dropdown direction="right"  placeholder='בחר קורס' scrolling search selection  onChange={(e,{value})=> setSelectedCourse(value)} options={courses_options}  />
             </Grid.Row>

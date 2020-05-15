@@ -154,7 +154,7 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
     }
     
     return (
-        <Form style={{margin:"2%"}}>
+        <Form style={{margin:"2%", direction :"rtl"}}>
             <Form.Group widths='equal'>
                 {id_number_field()}
                 {password_field()}
