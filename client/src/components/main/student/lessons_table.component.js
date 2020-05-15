@@ -51,7 +51,7 @@ const onClickStatus = () => {
 };
 
 const make_rows_of_courses_requests = (lessons) => {
-    if (lessons && lessons.length > 0) {
+    if (lessons && Array.isArray(lessons) && lessons.length > 0) {
         let options = lessons.map(lesson => {
             let done = lesson.status === "done" ? true : false;
             let day = lesson.date.slice(8, 10);

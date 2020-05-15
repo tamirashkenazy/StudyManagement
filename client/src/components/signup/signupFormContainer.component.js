@@ -44,10 +44,10 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
     return (
         <div  id="land-page" className="bg" style={{direction:"rtl"}}>
             <Container id="signup-box"  className="right-align">
+                <Typography style={{margin: "1rem 1.5rem 0rem 0rem"}} variant="h4" color="primary"  display="inline">טופס הרשמה</Typography>
                 <Link to="/" style={{textDecoration: 'none', color: 'black'}}>
                     <Icon size='big' name='arrow right' style={{margin:"2%"}}></Icon>
                 </Link>
-                <Typography style={{margin: "1rem 1.5rem 0rem 0rem"}} variant="h4" color="primary"  display="inline">טופס הרשמה</Typography>
                 <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} formSubmitButtonName="הירשם"/> 
             </Container>
         </div>

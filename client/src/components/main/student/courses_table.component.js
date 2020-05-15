@@ -11,7 +11,7 @@ const status_to_hebrew = {
 }
 
 const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
-    if (arr_of_student_courses_requests && arr_of_student_courses_requests.length > 0){
+    if (arr_of_student_courses_requests && Array.isArray(arr_of_student_courses_requests) && arr_of_student_courses_requests.length > 0){
         let options = arr_of_student_courses_requests.map(course_obj => {
             let date = new Date(course_obj.updated_at)
             let date_str = date.getDate() + " / " + date.getMonth() + " / " + date.getFullYear()
