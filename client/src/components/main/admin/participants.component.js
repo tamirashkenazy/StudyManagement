@@ -10,7 +10,7 @@ import GenericTable from '../utils/generic_table.component';
 const make_participants = (arr_of_users, args) => {
     const users_by_roles = {teachers : [], students : []}
     const {setCardOpen, setCurrUser} = args
-    if (arr_of_users && arr_of_users!==undefined && arr_of_users.length>0){
+    if (arr_of_users && Array.isArray(arr_of_users) && arr_of_users.length>0){
         arr_of_users.forEach(user => {
             const id = user._id
             if (user.isTeacher) {
