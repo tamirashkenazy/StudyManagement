@@ -8,7 +8,7 @@ const StudentSchema = new Schema({
     _id :  {type : String, default : '', required : true, match: onlyNumbers, minlength: 9, maxlength: 9},
     name : {type : String, required : true},
     group : {name: {type : String, default : ''},
-             aproved_hours : {type: String, match: onlyNumbers, default : '4'}},   
+            approved_hours : {type: String, match: onlyNumbers, default : '4'}},   
     requests : [{course_id : {type : String,  required : true, match: onlyNumbers },
                  course_name : { type : String, required : true, minlength: 2},
                  updated_at : {type : Date,  required : true, default: Date.now()},
