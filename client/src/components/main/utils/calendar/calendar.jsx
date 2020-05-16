@@ -129,7 +129,7 @@ export function Calendar(props) {
         setAllDate(prevState => {
             return {
                 ...prevState,
-                [weekID()]: {
+                [weekID()] : {
                     checkbox: !prevState[weekID()].checkbox,
                     dates: [...addActiveElements()]
                 }
@@ -150,59 +150,70 @@ export function Calendar(props) {
             const prop = allDate[stateWeekID];
 
             for (let dateItem of prop.dates) {
-                const itemYear = weekID().slice(0, 4);
-                const itemHour = dateItem.split("-")[0];
-                const itemDayOld = dateItem.split("-")[1].split(".")[0];
-                const itemMonthOld = dateItem.split("-")[1].split(".")[1];
-                let dateArr = [];
+                if (dateItem === undefined  || dateItem === null) {
+                }
+                else {
+                    console.log(dateItem);
+                    const itemYear = weekID().slice(0, 4);
+                    const itemHourOld = dateItem.split("-")[0];
+                    const itemDayOld = dateItem.split("-")[1].split(".")[0];
+                    const itemMonthOld = dateItem.split("-")[1].split(".")[1];
+                    let dateArr = [];
 
-                const itemDay = itemDayOld < 10 ? "0" + itemDayOld : itemDayOld;
-                const itemMonth = itemMonthOld < 10 ? "0" + itemMonthOld : itemMonthOld;
-                if (props.isTeacher) {
+                    const itemDay = itemDayOld < 10 ? "0" + itemDayOld : itemDayOld;
+                    const itemMonth = itemMonthOld < 10 ? "0" + itemMonthOld : itemMonthOld;
+                    const itemHour = itemHourOld < 10 ? "0" + itemHourOld : itemHourOld;
 
-                    if (prop.checkbox === true) {
-                        let addedWeekDate = new Date(itemYear, itemMonth - 1, itemDay);
+                    if (props.isTeacher) {
 
-                        let local = "en-US";
-                        let options = {
-                            day: "numeric",
-                            month: "numeric",
-                            year: "numeric"
-                        };
+                        if (prop.checkbox === true) {
+                            let addedWeekDate = new Date(itemYear, itemMonth - 1, itemDay);
 
-                        for (let i = 0; i < 4; i++) {
-                            addedWeekDate.setDate(addedWeekDate.getDate() + 7);
-                            dateArr.push(addedWeekDate.toLocaleDateString(local, options));
+                            let local = "en-US";
+                            let options = {
+                                day: "numeric",
+                                month: "numeric",
+                                year: "numeric"
+                            };
+
+                            for (let i = 0; i < 4; i++) {
+                                addedWeekDate.setDate(addedWeekDate.getDate() + 7);
+                                dateArr.push(addedWeekDate.toLocaleDateString(local, options));
+                            }
+
+                            const pickedDate = itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour + "Z";
+
+                            for (let item of dateArr) {
+                                const slicedItem = item.split("/");
+                                let dayOld = slicedItem[1];
+                                let monthOld = slicedItem[0];
+                                let year = slicedItem[2];
+
+                                const day = dayOld < 10 ? "0" + dayOld : dayOld;
+                                const month = monthOld < 10 ? "0" + monthOld : monthOld;
+
+                                const next4Week = year + "-" + month + "-" + day + "T" + itemHour + "Z";
+                                newPickedDates.push(next4Week, pickedDate);
+                            }
                         }
-
-                        const pickedDate = itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour;
-
-                        for (let item of dateArr) {
-                            const slicedItem = item.split("/");
-                            let dayOld = slicedItem[1];
-                            let monthOld = slicedItem[0];
-                            let year = slicedItem[2];
-
-                            const day = dayOld < 10 ? "0" + dayOld : dayOld;
-                            const month = monthOld < 10 ? "0" + monthOld : monthOld;
-
-                            const next4Week = year + "-" + month + "-" + day + "T" + itemHour;
-                            newPickedDates.push(next4Week, pickedDate);
+                        else {
+                            daysWithNoCheckboxTrue.push(itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour+ "Z");
+                            newPickedDates.push(...daysWithNoCheckboxTrue);
                         }
                     }
                     else {
-                        daysWithNoCheckboxTrue.push(itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour);
-                        newPickedDates.push(...daysWithNoCheckboxTrue);
-                    }
-                }
-                else {
-                    let pickedDates = new Date(`${itemYear} ${itemMonth} ${itemDay} ${itemHour}`)
+                        let pickedDates = new Date(`${itemYear} ${itemMonth} ${itemDay} ${itemHour}`)
 
-                    for (let key of Object.keys(props.datesDict)) {
-                        const dictDate = new Date(key)
+                        for (let key of Object.keys(props.datesDict)) {
+                            const dictDate = new Date(key)
 
-                        if (pickedDates.getTime() === dictDate.getTime()) {
-                            pickedDictionary[`${dictDate.getDate()}.${dictDate.getMonth() + 1} ${dictDate.getHours()}:00`] = props.datesDict[key]
+                            if (pickedDates.getTime() === dictDate.getTime()) {
+                                const day = dictDate.getDate() < 10 ? "0" + dictDate.getDate() : dictDate.getDate();
+                                const month = ((dictDate.getMonth() + 1) < 10) ? "0" + (dictDate.getMonth() + 1) : (dictDate.getMonth() + 1);
+                                const hour = dictDate.getHours() < 10 ? "0" + dictDate.getHours() : dictDate.getHours();
+
+                                pickedDictionary[`${dictDate.getFullYear()}-${month}-${day}T${hour}:00`] = props.datesDict[key]
+                            }
                         }
                     }
                 }
@@ -260,8 +271,8 @@ export function Calendar(props) {
                     <h1 className="calendar-header--title">{""}</h1>
                     <div className="btn right" onClick={() => onClickHandlerWeekChange('goRight')}><ArrowForwardIosIcon className="fas fa-chevron-right" /></div>
                 </div>
-                <TableContainer className="calendar-table">
-                    <Table size="small" stickyHeader onClick={e => onClickHandlerCalendar(e)}>
+                <TableContainer>
+                    <Table size="small" stickyHeader className="calendar-table" onClick={e => onClickHandlerCalendar(e)}>
                         <TableHead className='thead'>
                             <TableRow className="week-days">
                                 {days.map((value, index) => {

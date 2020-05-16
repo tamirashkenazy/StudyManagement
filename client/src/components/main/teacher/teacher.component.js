@@ -62,18 +62,18 @@ export default function Teacher(props) {
                 <br></br>
                     <Typography variant="h3" align="center" >ברוך הבא למסך המורה</Typography>
                 <br></br>   
-                <Grid container spacing={10} justify="space-around" direction="row-reverse" >
-                    <Grid item md={4} xs={4}  style={{marginRight : "1rem"}}>
+                <Grid container spacing={10} justify="space-around" direction="row-reverse" style={{ height:"66%"}} >
+                    <Grid item md={4} xs={4}  style={{ height: "-webkit-fill-available", marginRight : "1rem"}}>
                         <TeachersStatusRequestsTable teaching_requests={teacher.teaching_requests} />
                     </Grid>
-                    <Grid item md={4} xs={4} style={{marginLeft : "1rem"}}>
+                    <Grid item md={6} xs={4} style={{height: "-webkit-fill-available", marginLeft : "1rem"}}>
                         <LessonsTable id={user._id} />
                     </Grid>
                 </Grid>
                 <br/><br/>
-                <Grid container justify="center">
-                    <Grid item md={4} xs={4}>
-                        <ProgressBar id={user._id} />
+                <Grid container justify="center" style={{ height:"15%"}}>
+                    <Grid item md={8} xs={4} style={{paddingTop: "40px"}}>
+                        <ProgressBar id={user._id} style={{ height: "-webkit-fill-available"}} />
                     </Grid>
                 </Grid>
                 

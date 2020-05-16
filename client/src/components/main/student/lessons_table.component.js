@@ -9,7 +9,8 @@ import { Dialog_generator } from '../utils//utils'
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
     "report": { text: "דווח", color: "primary" },
-    "done": { text: "בוצע", color: "default" }
+    "done": { text: "בוצע", color: "default" },
+    "waiting": { text: "ממתין", color: "default" }
 }
 
 const getUser = async (_id) => {

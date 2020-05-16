@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import GenericTable from '../utils/generic_table.component'
 import Button from '@material-ui/core/Button';
 import UserCard from '../utils/card.component'
@@ -9,42 +9,38 @@ import { Dialog_generator } from '../utils//utils'
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
     "report": { text: "דווח", color: "primary" },
-    "done": { text: "בוצע", color: "default" }
+    "done": { text: "בוצע", color: "default" },
+    "waiting": { text: "ממתין", color: "default" }
 }
-
-var user = null;
-var student = null;
-let isCardOpen = false;
 
 const getUser = async (_id) => {
-    await axios.get(get_mongo_api(`users/${_id}`)).then((response => {
+    return await axios.get(get_mongo_api(`users/${_id}`)).then((response => {
         if (response.data.success) {
             console.log(response.data.message);
-            return user;
+            return response.data.message;
         }
     }))
 }
 
-const getStudent = async (_id) => {
-    await axios.get(get_mongo_api(`students/byID/${_id}`)).then((response => {
+const getTeacher = async (_id) => {
+    return await axios.get(get_mongo_api(`students/byID/${_id}`)).then((response => {
         if (response.data.success) {
             console.log(response.data.message);
-            return student;
+            return response.data.message;
         }
     }))
 }
 
-const onClickUser = async (selectedStudent) => {
+const onClickUser = async (selectedTeacher, func) => {
     console.log("onClickUserPopup");
-    const user = getUser(selectedStudent.student_id);
-    const student = getStudent(selectedStudent.student_id);
+    let user1 = await getUser(selectedTeacher.teacher_id);
+    let teacher1 = await getTeacher(selectedTeacher.teacher_id);
     // const teacher =  teacher
-    const localUser = await user
-    const locacStudent = await student
-    console.log(locacStudent);
-    console.log(localUser);
-    isCardOpen = !isCardOpen;
-    return isCardOpen;
+    let user = await user1;
+    let teacher = await teacher1;
+    await console.log('user', user);
+    await console.log('teacher', teacher);
+    await func(true);
 }
 
 const onClickStatus = () => {
@@ -52,8 +48,8 @@ const onClickStatus = () => {
     //
 };
 
-const make_rows_of_courses_requests = (lessons) => {
-    if (lessons && lessons.length > 0 && typeof lessons !== "string" ){
+const make_rows_of_courses_requests = (lessons, func) => {
+    if (lessons && Array.isArray(lessons) && lessons.length > 0) {
         let options = lessons.map(lesson => {
             let done = lesson.status === "done" ? true : false;
             let day = lesson.date.slice(8, 10);
@@ -66,27 +62,32 @@ const make_rows_of_courses_requests = (lessons) => {
                     "שם הקורס": lesson.course.course_name,
                     "תאריך": shortMonth + " / " + shortDay,
                     "שעה": hour,
-                    "תלמיד": <Button onClick={() => onClickUser(lesson.student)}>{lesson.student.student_name}</Button>,
+                    "תלמיד": <Button onClick={() => onClickUser(lesson.student, func)}>{lesson.student.student_name}</Button>,
                     "סטטוס": <Button disabled={done} color={status_to_hebrew[lesson.status].color} variant="contained" onClick={() => onClickStatus(lesson.status)}>{status_to_hebrew[lesson.status].text} </Button>
                 }
             )
         });
         return options
-    } else {
-        return ([{
-            "לא קיימים שיעורים":""
-        }])
     }
 }
 
 export default function LessonsTable({id}) {
-    const [table_rows, loading] = useAsyncHook(`lessons/byTeacherId/${id}`, make_rows_of_courses_requests);
-
-    return (
-        !loading &&
-        <>
+    const [isCardOpen, setCardOpen] = useState(false);
+    const [user, setUser] = useState(null);
+    const [teacher, setTeacher] = useState(null);
+    const [table_rows, loading] = useAsyncHook(`lessons/byTeacherId/${id}`, make_rows_of_courses_requests, setCardOpen);
+     if (!loading && table_rows) {
+         return (
+            <>
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
-            {Dialog_generator(isCardOpen, () => { isCardOpen = false }, "כרטיס תלמיד","person_pin", {}, () => <UserCard user={user} student={student}></UserCard>)}
-        </>
-    )
+            {isCardOpen && teacher && user ? <> {Dialog_generator(isCardOpen, () => setCardOpen(false), "כרטיס מורה", "person_pin", {}, () => <UserCard user={user} teacher={teacher}></UserCard>)} </> : null}
+            </>
+         )
+
+     } else {
+         return (
+            <GenericTable table_data={{ data: [{"אין מידע בנוגע לשיעורים" : ""}], title: "שיעורים" }} />
+         )
+
+     }
 }
