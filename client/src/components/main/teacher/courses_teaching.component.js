@@ -31,7 +31,7 @@ export default function CoursesToTeach(props) {
     const [selectedCourses, setSelectedCourses] = useState([])
     const [courses_options, loading] = useAsyncHook(`courses`, make_courses_option, teacher);
 
-
+    //needs to change to upload many courses together (change the backend function too)
     const sendCourses = (id) => {
         // let courses_msg_arr = []
         Object.entries(selectedCourses).forEach(([key, value]) => {
@@ -47,7 +47,6 @@ export default function CoursesToTeach(props) {
                         // courses_msg_arr.push(course_name)
                         alert(response.data.message)
                         window.location.reload(true)
-
                     }
                 })
             }

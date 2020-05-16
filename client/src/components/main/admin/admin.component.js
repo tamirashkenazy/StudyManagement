@@ -60,13 +60,14 @@ export default function Admin(props) {
     ]
     const [sum_lessons, isLoading_sumLessons] = useAsyncHook(`lessons/paidMoney`)
     const [annual_budget, isLoading_budget] = useAsyncHook(`constants/annual_budget`)
+    //assigned a value but never used  no-unused-vars
     const [lessons_pie, isLoading_lessons] = useAsyncHook(`lessons/numOfLessonsByCourse`)
     const [students_pie, isLoading_students] = useAsyncHook(`students/numOfStudentsByCourse`)
     const [teachers_pie, isLoading_teachers] = useAsyncHook(`teachers/numOfSTeachersByCourse`)
     const [all_courses, isLoadingCourses] = useAsyncHook(`courses`)
     const [all_groups, isLoadingGroups] = useAsyncHook(`groups`)
     return (
-        <div  style={{textAlign : "center"}}>
+        <div  style={{textAlign : "center" , backgroundColor: "gainsboro"}}>
             
             <AppBar position="static" className={classes.AppBar} >
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
@@ -79,26 +80,26 @@ export default function Admin(props) {
             <br></br>
                 <Typography variant="h3" align="center">ברוכים הבאים למסך המנהל</Typography>
             <br></br>   
-            <Grid container spacing={10} justify="space-around" direction="row-reverse" >
-                <Grid item md={6} xs={4}  >
+            <Grid container spacing={10} justify="space-around" direction="row-reverse" style={{ height: "35%" }} >
+                <Grid item md={5} xs={4} style={{ height: "-webkit-fill-available" , marginRight: "1rem"}} >
                     <TeachersRequestTable teachers={teachers} />
                 </Grid>
-                <Grid item md={6} xs={4}>
+                <Grid item md={5} xs={4} style={{ height: "-webkit-fill-available", marginLeft: "1rem" }}>
                     <StudentsRequestTable students={students}/>
                 </Grid>
             </Grid>
             <br/><br/>
-            <Grid container spacing={10} justify="space-around" direction="row-reverse">
-                {!isLoadingCourses && <Grid item md={4} xs={4}>
+            <Grid container spacing={10} justify="space-around" direction="row-reverse" style={{ height: "35%" }}>
+                {!isLoadingCourses && <Grid item md={4} xs={4} style={{height: "-webkit-fill-available", marginRight: "1rem" }}>
                     <CoursesTableAdmin all_courses={all_courses}/>
                 </Grid>}
-                {!isLoadingGroups && <Grid item md={4} xs={4}>
+                {!isLoadingGroups && <Grid item md={6} xs={4} style={{ height: "-webkit-fill-available", marginLeft: "1rem" }}>
                     <GroupsTableAdmin all_groups={all_groups} users={users} students={students}/>
                 </Grid>}
             </Grid>
             <br/><br/>
-            <Grid container justify="center">
-                <Grid item xs={8}>
+            <Grid container justify="center" style={{ bottom: "1rem", position: "absolute" }}>
+                <Grid item xs={8} style={{ height: "-webkit-fill-available" }}>
                 { (!isLoading_sumLessons && !isLoading_budget) ? 
                         <AnnualStatistics annual_budget={annual_budget} sum_lessons={sum_lessons}/>
                          : <div>not finished</div>}

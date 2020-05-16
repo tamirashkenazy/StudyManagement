@@ -73,3 +73,24 @@
 .MuiTableContainer-root {
     height: inherit;
 }
+
+.progressBar {
+    text-align: center;
+    .progressBarTitle {
+        color: #546e7a;
+        >* {
+            display: inline-block;
+            padding: 5px;
+        }
+    }
+    .MuiLinearProgress-root {
+        border-radius: 10px;
+        height: 20px;
+    }
+    .MuiLinearProgress-barColorPrimary{
+        background-color: #00b2ff;
+    }
+    .MuiLinearProgress-colorPrimary{
+        background-color: rgba(84, 110, 122, 0.32);
+    }     
+}
