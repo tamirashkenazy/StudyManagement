@@ -57,6 +57,7 @@ router.route('/update').post((req,res) => {
     })
 }); 
 
+
 router.route('/add').post((req, res) => {
     Constants.find({ unique : "constants" }, (err,constants) => {
         if(err) {
@@ -66,6 +67,7 @@ router.route('/add').post((req, res) => {
         }else{
             const newConstant = new Constants({
                 lesson_price : req.body.lesson_price,
+                admin_mail : req.body.admin_mail,
                 annual_budget : req.body.annual_budget
             })
             newConstant.save((err, constants)=> {

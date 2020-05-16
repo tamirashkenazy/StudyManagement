@@ -4,6 +4,7 @@ const mongoose = require('mongoose');
 const port = require('./helpers/port');
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser');
+const nodemailer = require('nodemailer');
 
 
 const app = express()
@@ -19,6 +20,7 @@ app.use(cors());
 app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
+
 
 const uri = process.env.ATLAS_URI;
 // uri = 'mongodb+srv://Studymng:Stdmng123@studymng-izhv3.mongodb.net/StudyManagement?replicaSet=StudyManagement'

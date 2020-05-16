@@ -3,8 +3,6 @@ let Student = require('../models/student.model');
 let Groups = require('../models/group.model');
 let Course = require('../models/course.model');
 
-
-
 /**
  * get list of all the students.
  */

@@ -58,7 +58,7 @@ export default function Teacher(props) {
                 {Dialog_generator(openedPopups.select_courses, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "בחירת קורסים להוראה","menu_book", { id: user._id, teacher }, (id, teacher) => CoursesToTeach(id, teacher))}
                 {Dialog_generator(openedPopups.upload_grades_sheet, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "העלאת גיליון ציונים","assignment", { id: user._id }, (id) => UploadGradesSheet(id))}
                 {Dialog_generator(openedPopups.update_availability, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "עדכון זמינות","date_range", { id: user._id }, (id) => UpdateAvailability(id))}
-                {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { user : user }, (args) => SendMessage(args))}
+                {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { user : user, close_popup : () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))) }, (args) => SendMessage(args))}
                 <br></br>
                     <Typography variant="h3" align="center" >ברוך הבא למסך המורה</Typography>
                 <br></br>   

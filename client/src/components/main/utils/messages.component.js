@@ -5,46 +5,30 @@ import {Form} from 'semantic-ui-react'
 import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
 
-const httpPostRequestSendMessage = (user, msg) => {
+const httpPostRequestSendMessage = (user, msg, close_popup) => {
     const post_msg = {
         message : msg,
         user : user
     }
-    axios.post(get_mongo_api("students/mailToAdmin"), post_msg).then((response)=> {
+    axios.post(get_mongo_api("users/mailToAdmin"), post_msg).then((response)=> {
         if (response.data.success) {
             alert(response.data.message)
+            close_popup()
         } else {
             alert("ההודעה לא נשלחה, נסה שוב")
         }
     })
 }
 
-// const get_messages_by_status=(msg_arr) =>{
-//     if (msg_arr) {
-//         let read_messages = msg_arr.filter(msg => msg.read)
-//         if (read_messages.length === 0 ) {
-//             read_messages = [{"אין הודעות" : ""}]
-//         }
-//         let unread_messages = msg_arr.filter(msg => msg.read === false)
-//         if (unread_messages.length === 0 ) {
-//             unread_messages = [{"אין הודעות" : ""}]
-//         }
-//         let messages_by_status = {read : read_messages , unread : unread_messages}
-//         return messages_by_status
-//     } else {
-//         return {read : [{"אין הודעות" : ""}] , unread : [{"אין הודעות" : ""}]}
-//     }
 
-// }
-
-export function SendMessage({user}) {
+export function SendMessage({user, close_popup}) {
     const [msg, setMsg] = useState("")
     const message_box = () => {
         return (
             <>
             <Form>
                 <Form.TextArea label="הודעה חדשה" placeholder="הודעה" autoFocus value={msg} onChange={(e,{value})=>{console.log(value);setMsg(value)}}></Form.TextArea>
-                <Form.Button onClick={()=>httpPostRequestSendMessage(user, msg)}>שליחה</Form.Button>
+                <Form.Button onClick={()=>httpPostRequestSendMessage(user, msg, close_popup)}>שליחה</Form.Button>
             </Form>
             {/* <FilledInput multiline="true" rows="5" rowsMax="10" fullWidth="true" autoFocus="true" value={msg} onChange={(value)=>setMsg(value)}/> */}
             </>
