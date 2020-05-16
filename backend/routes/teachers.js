@@ -82,9 +82,7 @@ router.route('/:course_id/hoursAvailable/allTeachers').get((req,res) => {
     .then(teachers => {
         var hours = []
         teachers.forEach(teacher =>{
-            console.log(teacher)
             let course  = (teacher.teaching_courses.filter(course => course.course_id === req.params.course_id)) 
-            console.log(course)
             if (course && course.length>0){
                 hours.push({"teacher_id": teacher._id,"teacher_name" : teacher.name, "hours_available" : teacher.hours_available})
             }
@@ -123,7 +121,6 @@ router.route('/:course_id/numOfTeachers').get((req,res) => {
         let num_of_teachers = 0
         teachers.forEach(teacher =>{
             let course  = (teacher.teaching_courses.filter(course => course.course_id === req.params.course_id)) 
-            console.log(course)
             if (course && course.length>0){
                 num_of_teachers += 1
             }

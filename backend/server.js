@@ -4,7 +4,7 @@ const mongoose = require('mongoose');
 const port = require('./helpers/port');
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser');
-const nodemailer = require('nodemailer');
+
 
 
 const app = express()
