@@ -36,7 +36,6 @@ const filter_student_by_id = (students, id) => {
 export default function Student(props) {
     const { students } = props
     const user = props.history.location.state
-    console.log('user: ', user);
     const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false, false))
 
     const navbar_operations_by_role = [
