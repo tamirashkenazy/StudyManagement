@@ -7,7 +7,7 @@ import { Typography } from '@material-ui/core';
 const status_to_hebrew = {
     "waiting" : {text : "ממתין לאישור", color: "inherit"},
     "approved" : {text : "אושר", color: "primary"},
-    "declined" : {text : "בקשה נדחתה", color: "default"}
+    "declined" : {text : "בקשה נדחתה", color: "error"}
 }
 
 const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {

@@ -8,9 +8,13 @@ const convert_to_percent = (data_points_arr) => {
     data_points_arr.forEach(data_point_obj=>{
         sum_of_labels += data_point_obj.y
     })
-    data_points_arr.forEach(pie_obj=>
-        pie_obj.y = (pie_obj.y * 100 / sum_of_labels).toFixed(2)
-    )
+    if (sum_of_labels > 0) {
+        data_points_arr.forEach(pie_obj=>
+            pie_obj.y = (pie_obj.y * 100 / sum_of_labels).toFixed(2)
+        )
+    } else {
+        return null
+    }
     return data_points_arr;
 }
 
@@ -31,15 +35,15 @@ export const Statistics = (lessons_pie, students_pie, teachers_pie) => {
     lessons_pie = convert_to_percent(lessons_pie)
     return (
         <Grid container spacing={2}  direction="column" >
-            <Grid item xs >
+            {lessons_pie &&  Array.isArray(lessons_pie) && lessons_pie.length>0 && <Grid item xs >
                 <StatisticsPieChart title={"חלוקת שיעורים"} label_suffix="%" data_points={lessons_pie} theme={"light1"} />
-            </Grid>
-            <Grid item xs >
+            </Grid>}
+            {students_pie &&  Array.isArray(students_pie) && students_pie.length>0 && <Grid item xs >
                 <StatisticsPieChart title={"מספר סטודנטים בכל קורס"} label_suffix=" סטודנטים " data_points={students_pie} theme={"dark2"} />
-            </Grid>
-            <Grid item xs >
+            </Grid>}
+            { teachers_pie &&  Array.isArray(teachers_pie) && teachers_pie.length>0 && <Grid item xs >
                 <StatisticsPieChart title={"מספר המורים בכל קורס"} label_suffix=" מורים " data_points={teachers_pie} theme={"light1"} />
-            </Grid>
+            </Grid> }
         </Grid>
     )
 }

@@ -404,6 +404,9 @@ router.post('/add/file/:id', async (req, res) => {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             teacher.grades_file.name = req.params.id.toString() + ".pdf"
+            // console.log(req.files);
+            console.log(req.files.file);
+
             teacher.grades_file.data = binary(req.files.uploadedFile.data)
             teacher.save((err, teacher)=> {
                 if (err) {
