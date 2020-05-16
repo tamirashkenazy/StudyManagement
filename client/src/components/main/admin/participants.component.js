@@ -54,13 +54,13 @@ export default function Participants({teachers, students, users}){
     let panes=null
     if (users_participants) {
         panes = [
-            { menuItem: 'מורים', render: () => <Tab.Pane>{<GenericTable table_data={{data:users_participants.teachers, title:null}} />}</Tab.Pane> },
-            { menuItem: 'תלמידים', render: () => <Tab.Pane>{<GenericTable table_data={{data:users_participants.students, title:null}} />}</Tab.Pane> },
+            { menuItem: 'מורים', render: () => <Tab.Pane>{<GenericTable table_data={{data:users_participants.teachers, title:"מורים"}} />}</Tab.Pane> },
+            { menuItem: 'תלמידים', render: () => <Tab.Pane>{<GenericTable table_data={{data:users_participants.students, title:"תלמידים"}} />}</Tab.Pane> },
             ]
     }
     return (
         <>
-         <Tab panes={panes}/>
+        {panes &&  <Tab panes={panes}/>}
         {Dialog_generator(
             isCardOpen, 
             ()=>setCardOpen(false), 

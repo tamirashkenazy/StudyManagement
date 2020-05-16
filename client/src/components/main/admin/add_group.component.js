@@ -9,7 +9,6 @@ export default function AddGroup(){
         const group_to_add = {  
             name : inputs.group_name,
             approved_hours : inputs.approved_hours
-            
         }
         axios.post(get_mongo_api('groups/add'), group_to_add).then((response)=> {
             if (!response.data.success) {
@@ -20,7 +19,7 @@ export default function AddGroup(){
         })
     }
 
-    const useCourseForm = (httpRequestFunc) => {
+    const useGroupForm = (httpRequestFunc) => {
         const [inputs, setInputs] = useState({group_name : '', approved_hours : 4})
         // const [wasAdded, setWasAdded] = useState(false)
         const handleSubmit = (event) => {
@@ -36,7 +35,7 @@ export default function AddGroup(){
         }
         return {inputs,  handleInputChange, handleSubmit};
     }
-    const {inputs, handleInputChange, handleSubmit} = useCourseForm(httpPostRequestToAddGroup);
+    const {inputs, handleInputChange, handleSubmit} = useGroupForm(httpPostRequestToAddGroup);
 
     return (
             <Form style={{textAlign : "center"}}>

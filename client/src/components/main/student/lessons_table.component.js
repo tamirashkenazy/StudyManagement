@@ -75,11 +75,18 @@ export default function LessonsTable({id}) {
     const [user, setUser] = useState(null);
     const [teacher, setTeacher] = useState(null);
     const [table_rows, loading] = useAsyncHook(`lessons/byStudentId/${id}`, make_rows_of_courses_requests, setCardOpen);
-    return (
-        !loading && table_rows &&
-        <div>
+     if (!loading && table_rows) {
+         return (
+            <>
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
             {isCardOpen && teacher && user ? <> {Dialog_generator(isCardOpen, () => setCardOpen(false), "כרטיס מורה", "person_pin", {}, () => <UserCard user={user} teacher={teacher}></UserCard>)} </> : null}
-        </div>
-    )
+            </>
+         )
+
+     } else {
+         return (
+            <GenericTable table_data={{ data: [{"אין מידע בנוגע לשיעורים" : ""}], title: "שיעורים" }} />
+         )
+
+     }
 }

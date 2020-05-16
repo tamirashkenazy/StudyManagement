@@ -30,6 +30,9 @@ const make_rows_of_courses_requests = (student, setOpenedPopups) => {
         })
         return options
     }
+    else {
+        return [{"אין מידע בנוגע למעקב השעות": ""}]
+    }
 }
 
 export default function TrackHoursTable({student, setOpenedPopups}) {
