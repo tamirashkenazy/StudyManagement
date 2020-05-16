@@ -51,7 +51,6 @@ export function SendMessage({id, messages_arr}) {
             </>
         )
     }
-    console.log(msg);
     // console.log(id, messages_arr);
     // const messages_by_status = get_messages_by_status(messages_arr)
     let panes = null
