@@ -14,10 +14,12 @@ import TrackHoursTable from './track_hours_table.component'
 import { Dialog_generator } from '../utils/utils'
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
+import { SendMessage } from '../utils/messages.component';
+import MailOutlineIcon from '@material-ui/icons/MailOutline';
 
-const getOpenedPopup = (is_open_request_hours, is_open_book_class, is_open_history_popup) => {
+const getOpenedPopup = (is_open_request_hours, is_open_book_class, is_open_history_popup, is_send_message_open) => {
     return (
-        { request_hours_popup: is_open_request_hours, book_class_popup: is_open_book_class, history_popup: is_open_history_popup }
+        { request_hours_popup: is_open_request_hours, book_class_popup: is_open_book_class, history_popup: is_open_history_popup, send_message : is_send_message_open }
     )
 }
 
@@ -34,24 +36,26 @@ const filter_student_by_id = (students, id) => {
 export default function Student(props) {
     const { students } = props
     const user = props.history.location.state
-
-    const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false))
+    console.log('user: ', user);
+    const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false, false))
 
     const navbar_operations_by_role = [
-        { key: 'request_tutoring', header: 'בקשת שעות חונכות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(true, false, false))), icon: <ScheduleOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
-        { key: 'book_class', header: 'קביעת שעת חונכות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, true, false))), icon: <AssignmentTurnedInOutlinedIcon fontSize="large" style={{ color: "white" }} /> }
+        { key: 'request_tutoring', header: 'בקשת שעות חונכות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(true, false, false, false))), icon: <ScheduleOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
+        { key: 'book_class', header: 'קביעת שעת חונכות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, true, false, false))), icon: <AssignmentTurnedInOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
+        { key: 'send_message', header: 'הודעות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, true))), icon: <MailOutlineIcon fontSize="large" style={{ color: "white" }} /> }
     ]
     const classes = useStylesAppBar();
     let student = filter_student_by_id(students, user._id)
     return (
         student ?
-            <div className="student">
+            <div>
                 <AppBar position="static" className={classes.AppBar} >
                     <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
                 </AppBar>
-                {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), " בקשת שעות חונכות","access_time", { _id: user._id }, (id) => RequestHours(id))}
-                {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id }, (id) => BookHours(id))}
-                {Dialog_generator(openedPopups.history_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "היסטוריית שיעורים","history", { _id: user._id }, (id) => History(id))}
+                {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), " בקשת שעות חונכות","access_time", { _id: user._id }, (id) => RequestHours(id))}
+                {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id }, (id) => BookHours(id))}
+                {Dialog_generator(openedPopups.history_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "היסטוריית שיעורים","history", { _id: user._id }, (id) => History(id))},
+                {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { id: user._id, messages_arr : user.messages }, (args) => SendMessage(args))}
                 <br></br>
                 <Typography variant="h3" align="center" >ברוך הבא למסך הסטודנט</Typography>
                 <br></br>   
