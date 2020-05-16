@@ -25,7 +25,6 @@ export const StatisticsPieChart = ({title, data_points, theme, startAngle, label
             dataPoints: data_points
         }]
     }
-		
     return (
     <div>
         <CanvasJSChart options = {options} 

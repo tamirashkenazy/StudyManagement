@@ -44,7 +44,7 @@ export default function Teacher(props) {
         { key: 'upload_grades_sheet', header: 'העלאת גיליון ציונים', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, true, false))), icon: <AssignmentOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
         { key: 'send_message', header: 'הודעות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, true))), icon: <MailOutlineIcon fontSize="large" style={{ color: "white" }} /> }
     ]
-
+    const close_all = () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false)))
 
     const classes = useStylesAppBar();
     let teacher = filter_teacher_by_id(teachers, user._id)
@@ -55,10 +55,10 @@ export default function Teacher(props) {
                 <AppBar position="static" className={classes.AppBar} >
                     <AccountMenu userDetails={user} next_role='student' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
                 </AppBar>
-                {Dialog_generator(openedPopups.select_courses, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "בחירת קורסים להוראה","menu_book", { id: user._id, teacher }, (id, teacher) => CoursesToTeach(id, teacher))}
-                {Dialog_generator(openedPopups.upload_grades_sheet, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "העלאת גיליון ציונים","assignment", { id: user._id }, (id) => UploadGradesSheet(id))}
-                {Dialog_generator(openedPopups.update_availability, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "עדכון זמינות","date_range", { id: user._id }, (id) => UpdateAvailability(id))}
-                {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { user : user, close_popup : () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))) }, (args) => SendMessage(args))}
+                {Dialog_generator(openedPopups.select_courses, close_all, "בחירת קורסים להוראה","menu_book", { id: user._id, teacher }, (id, teacher) => CoursesToTeach(id, teacher), {height : "30vh"})}
+                {Dialog_generator(openedPopups.upload_grades_sheet, close_all, "העלאת גיליון ציונים","assignment", { id: user._id, close_popup : close_all }, (args) => UploadGradesSheet(args))}
+                {Dialog_generator(openedPopups.update_availability, close_all, "עדכון זמינות","date_range", { id: user._id }, (id) => UpdateAvailability(id))}
+                {Dialog_generator(openedPopups.send_message, close_all, "הודעות","mail_outline", { user : user, close_popup : close_all }, (args) => SendMessage(args))}
                 <br></br>
                     <Typography variant="h3" align="center" >ברוך הבא למסך המורה</Typography>
                 <br></br>   

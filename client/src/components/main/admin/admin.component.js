@@ -73,9 +73,9 @@ export default function Admin(props) {
             </AppBar> 
             {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים", "people_outline" ,{users, teachers, students} ,(args)=>Participants(args))}
             {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
-            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס","playlist_add",{}, ()=>AddCourse(), "md")}
-            {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(lessons_pie, students_pie, teachers_pie), "md", "ltr")}
-            {Dialog_generator(openedPopups[4], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קבוצה", "add_group",{}, ()=>AddGroup(), "md")}
+            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס","playlist_add",{}, ()=>AddCourse(), {maxWidth : "md"})}
+            {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(lessons_pie, students_pie, teachers_pie), {maxWidth : "md", direction:"ltr"})}
+            {Dialog_generator(openedPopups[4], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קבוצה", "add_group",{}, ()=>AddGroup(), {maxWidth : "md"})}
             <br></br>
                 <Typography variant="h3" align="center">ברוכים הבאים למסך המנהל</Typography>
             <br></br>   

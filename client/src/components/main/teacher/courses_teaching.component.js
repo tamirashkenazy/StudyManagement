@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
-import { Button, Checkbox } from 'semantic-ui-react'
+import { Button, Checkbox} from 'semantic-ui-react'
 import { Grid } from 'semantic-ui-react'
 import axios from 'axios'
 import get_mongo_api, { useAsyncHook } from '../../mongo/paths.component'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
+import { Table, TableContainer, TableBody, TableRow, TableCell } from '@material-ui/core';
 
 const make_courses_option = (arr_of_courses, teacher) => {
     const { teaching_requests, teaching_courses } = teacher
@@ -66,19 +67,18 @@ export default function CoursesToTeach(props) {
 
     return (
         (!loading) &&
-        <Grid columns={1} style={{ marginRight: "5%", minHeight: "20%" }} >
+        <Grid columns={1} style={{ marginRight: "5%" }} >
             {(courses_options && Array.isArray(courses_options) && courses_options.length > 0) ?
                 courses_options.map(option_obj => {
                     return (
-                        <Grid.Row  key={option_obj.value}>
-
+                        <Grid.Row  key={option_obj.value} stretched="true" padded="vertically">
                             <FormControlLabel className="checkbox"
                                 control={<Checkbox
                                     checked={option_obj.value in selectedCourses && selectedCourses[option_obj.value]}
                                     value={option_obj.value}
                                     onChange={onChangeCourse}
                                 />}
-                                label={option_obj.value}
+                                label={option_obj.text}
                             />
                         </Grid.Row>
                     )
@@ -93,5 +93,28 @@ export default function CoursesToTeach(props) {
                 <Button onClick={() => sendCourses(props.id)}>שלח</Button>
             </Grid.Row>}
         </Grid>
+        // <Table>
+        //     <TableContainer>
+        //         <TableBody>
+        //         {(courses_options && Array.isArray(courses_options) && courses_options.length > 0) ?
+        //         courses_options.map(option_obj => {
+        //             return (
+        //                 <TableRow  key={option_obj.value}>
+                            
+        //                     <FormControlLabel className="checkbox"
+        //                         control={<Checkbox
+        //                             checked={option_obj.value in selectedCourses && selectedCourses[option_obj.value]}
+        //                             value={option_obj.value}
+        //                             onChange={onChangeCourse}
+        //                         />}
+        //                         label={option_obj.text}
+        //                     />
+        //                 </TableRow>
+        //             )
+
+        //         }) : <div>כל הקורסים נבחרו ונשלחו</div>}
+        //         </TableBody>
+        //     </TableContainer>
+        // </Table>
     )
 }

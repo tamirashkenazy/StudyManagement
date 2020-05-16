@@ -8,12 +8,12 @@ import get_mongo_api from '../../mongo/paths.component';
 
 // import Input from '@material-ui/core/Input';
 const approve_decline_hours_student = (_id, status, course_id) => {
+    console.log(_id, status, course_id);
     axios.post(get_mongo_api(`students/update/requestStatus/${_id}`),{course_id, status}).then(response=>{
         if (response.data.success) {
             alert(response.data.message)
             window.location.reload(true)
         } else {
-            // alert("הקורס לא התווסף בהצלחה")
             alert(response.data.message)
         }
     })
@@ -41,7 +41,7 @@ const students_requests_array = (students_arr)=>{
             let request_courses_to_study = student_obj.requests
             const student_id= student_obj._id
             if (request_courses_to_study && request_courses_to_study.length>0){
-                let requests_arr = request_courses_to_study.filter(request => request.status !== "approved").map(request => 
+                let requests_arr = request_courses_to_study.filter(request => request.status === "waiting").map(request => 
                         RequestRow(request, student_id)
                 )
                 return requests_arr

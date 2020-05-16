@@ -1,16 +1,32 @@
-import React from 'react';
+import React, {useState} from 'react';
 import get_mongo_api from '../../mongo/paths.component'
+import axios from 'axios'
 
 export default function UploadGradesSheet(props){
-    const { id} = props
+    const [file, setFile] = useState(null)
+    const {id, close_popup} = props
+    const httpPostToUploadFile = (e) => {
+        e.preventDefault()
+        let url = get_mongo_api(`teachers/add/file/${id}`)
+        const form_data = new FormData()
+        form_data.append("uploadedFile", file)
+        const config = {headers: {
+            'content-type': 'multipart/form-data'
+        }}
+        axios.post(url, form_data, config).then(response => {
+            if (response.data.success) {
+                alert(response.data.message)
+                close_popup()
+            } else {
+                alert(response.data.message)
+            }
+        })
+    }
     return (
-        <div style={{direction : "ltr"}}>
-            <form action={get_mongo_api(`teachers/add/file/${id}`)} method="POST" encType="multipart/form-data" >
-                <label for="file"> File Name: </label>
-                <input type="text"  placeholder="File Name.." style={{direction : "ltr"}}/><br />
-                <input type="file" name="uploadedFile" /> <br /> <br />
-                <input type="submit" value="Upload File"/>
-             </form>
-        </div>
+        <form onSubmit={(e)=>httpPostToUploadFile(e)}>
+            <input type="file" style={{direction:"ltr"}} onChange={(e)=>setFile(e.target.files[0])} className="ui button"/>
+            <br></br><br></br>
+            <button type="submit" className="ui button blue">העלה קובץ</button>
+        </form>
     )
 }
