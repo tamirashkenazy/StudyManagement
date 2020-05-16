@@ -4,29 +4,37 @@ import {Form , Button} from 'semantic-ui-react'
 import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
 
-export default function AddGroup(){
-    const httpPostRequestToAddGroup = (inputs) => {
-        const group_to_add = {  
-            name : inputs.group_name,
-            approved_hours : inputs.approved_hours
-        }
-        axios.post(get_mongo_api('groups/add'), group_to_add).then((response)=> {
-            if (!response.data.success) {
-               alert("הקבוצה לא התווספה")
-            } else {
-                alert("הקבוצה התווספה בהצלחה")
-            }
-        })
-    }
 
+async function httpPostRequestToAddGroup (inputs) {
+    const group_to_add = {  
+        name : inputs.group_name,
+        approved_hours : inputs.approved_hours
+    }
+    const response = await axios.post(get_mongo_api('groups/add'), group_to_add).then((response)=> {
+        if (!response.data.success) {
+           alert("הקבוצה לא התווספה")
+           return false
+        } else {
+            alert("הקבוצה התווספה בהצלחה")
+            return true
+        }
+    })
+    console.log(response);
+    return response
+}
+
+export default  function AddGroup(){
     const useGroupForm = (httpRequestFunc) => {
         const [inputs, setInputs] = useState({group_name : '', approved_hours : 4})
         // const [wasAdded, setWasAdded] = useState(false)
-        const handleSubmit = (event) => {
+        async function handleSubmit (event) {
             if (event) {
                 event.preventDefault();
-                httpRequestFunc(inputs)
-                window.location.reload(true)
+                let return_val = await httpRequestFunc(inputs)
+                if (return_val) {
+                    window.location.reload(true)
+                }
+                
             }
         }
         const handleInputChange = (event, {name, value}) => {

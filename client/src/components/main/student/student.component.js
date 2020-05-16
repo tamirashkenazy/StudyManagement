@@ -45,15 +45,13 @@ export default function Student(props) {
     ]
     const classes = useStylesAppBar();
     let student = filter_student_by_id(students, user._id)
-    console.log(student);
-
     return (
         student ?
             <div>
                 <AppBar position="static" className={classes.AppBar} >
                     <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
                 </AppBar>
-                {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), " בקשת שעות חונכות","access_time", { _id: user._id }, (id) => RequestHours(id))}
+                {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), " בקשת שעות חונכות","access_time", { id: user._id, number_of_approved_hours: student.group.approved_hours }, (args) => RequestHours(args))}
                 {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id }, (id) => BookHours(id))}
                 {Dialog_generator(openedPopups.history_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "היסטוריית שיעורים","history", { _id: user._id }, (id) => History(id))},
                 {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { user: user }, (args) => SendMessage(args))}
@@ -61,17 +59,17 @@ export default function Student(props) {
                 <Typography variant="h3" align="center" >ברוך הבא למסך הסטודנט</Typography>
                 <br></br>   
                 <Grid container spacing={10} justify="space-around" direction="row-reverse" >
-                    <Grid item md={4} xs={4}  style={{marginRight : "1rem"}}>
+                    <Grid item md={5} xs={4}  style={{marginRight : "1rem"}}>
                         <TrackHoursTable student={student} setOpenedPopup={setOpenedPopups} />
                     </Grid>
-                    <Grid item md={4} xs={4} style={{marginLeft : "1rem"}}>
+                    <Grid item md={5} xs={4} style={{marginLeft : "1rem"}}>
                         <LessonsTable id={user._id} />
                         {/* <StudentsRequestTable students={students}/> */}
                     </Grid>
                 </Grid>
                 <br/><br/>
                 <Grid container justify="center">
-                    <Grid item md={4} xs={4}>
+                    <Grid item md={7} xs={4}>
                         <CoursesTable id={user._id} />
                         {/* <CoursesTableAdmin all_courses={all_courses}/> */}
                     </Grid>
