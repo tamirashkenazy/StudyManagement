@@ -1,5 +1,20 @@
 const router = require('express').Router();
+const nodemailer = require('nodemailer');
+
 let User = require('../models/user.model');
+let Constants = require('../models/constants.model');
+
+const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: 'stdmngqa@gmail.com',
+      pass: 'Stdmng123'
+    }
+  });
+
+
+
+
 //https://stackoverflow.com/questions/34546272/cannot-find-module-bcrypt/41878322
 //npm install -g windows-build-tools, npm install -g node-gyp
 //npm install bcrypt
@@ -32,6 +47,51 @@ router.route('/:id/fullName').get((req,res) => {
     })
 })
 
+
+/**
+ * Send a qeustion to admin by mail.
+ * request parameters:
+ *      /mailToAdmin
+ * request body:
+ *      None
+ */
+router.route('/mailToAdmin').post((req, res) => {
+    let user = req.body.user
+    let message = req.body.message
+    Constants.find({}).then((constant) => {
+        let admin_mail = constant[0].admin_mail
+        let QA_mail = constant[0].QA_mail
+        console.log(admin_mail)
+        let mailDetails = {
+            from: QA_mail,
+            to: admin_mail,
+            subject: `New question from ${user.first_name} ${user.last_name}`,
+            html: `<!DOCTYPE html>
+            <html>
+                    <body direction="rtl">
+                        <h1>פרטי הסטודנט:</h1>
+                        <div>
+                        תז: ${user._id}
+                        <br>טלפון: ${user.tel_number}
+                        <br>מייל: ${user.email}
+                        </div>
+                        <hr></hr>
+                        <h2>תוכן ההודעה:</h2>
+                        <div>${message}</div>
+                        <a href="mailto:${user.email}?subject=תשובה"><h2><b>להשבה לשולח לחץ כאן</b><h2/></a>
+                    </body>
+            </html>
+            `
+          };
+        transporter.sendMail(mailDetails, function(error, info){
+            if (error) {
+                return res.send({success : false, message: error})
+            } else {
+                return res.send({success : true, message: "ההודעה נשלחה בהצלחה"})
+            }
+        })
+    })
+});
 
 // the /:id is like a variable
 router.route('/:id').get((req,res) => {
