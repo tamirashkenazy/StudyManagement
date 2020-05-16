@@ -45,6 +45,8 @@ export default function Student(props) {
     ]
     const classes = useStylesAppBar();
     let student = filter_student_by_id(students, user._id)
+    console.log(student);
+
     return (
         student ?
             <div>
@@ -54,7 +56,7 @@ export default function Student(props) {
                 {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), " בקשת שעות חונכות","access_time", { _id: user._id }, (id) => RequestHours(id))}
                 {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id }, (id) => BookHours(id))}
                 {Dialog_generator(openedPopups.history_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "היסטוריית שיעורים","history", { _id: user._id }, (id) => History(id))},
-                {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { id: user._id, messages_arr : user.messages }, (args) => SendMessage(args))}
+                {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { user: user }, (args) => SendMessage(args))}
                 <br></br>
                 <Typography variant="h3" align="center" >ברוך הבא למסך הסטודנט</Typography>
                 <br></br>   

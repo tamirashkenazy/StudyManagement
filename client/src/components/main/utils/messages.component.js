@@ -5,13 +5,12 @@ import {Form} from 'semantic-ui-react'
 import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
 
-const httpPostRequestSendMessage = (id, msg) => {
+const httpPostRequestSendMessage = (user, msg) => {
     const post_msg = {
-        content : msg,
-        to : "admin",
-        from : id
+        message : msg,
+        user : user
     }
-    axios.post(get_mongo_api(), post_msg).then((response)=> {
+    axios.post(get_mongo_api("students/mailToAdmin"), post_msg).then((response)=> {
         if (response.data.success) {
             alert(response.data.message)
         } else {
@@ -38,14 +37,14 @@ const httpPostRequestSendMessage = (id, msg) => {
 
 // }
 
-export function SendMessage({id, messages_arr}) {
+export function SendMessage({user}) {
     const [msg, setMsg] = useState("")
     const message_box = () => {
         return (
             <>
             <Form>
                 <Form.TextArea label="הודעה חדשה" placeholder="הודעה" autoFocus value={msg} onChange={(e,{value})=>{console.log(value);setMsg(value)}}></Form.TextArea>
-                <Form.Button onClick={()=>httpPostRequestSendMessage(id, msg)}>שליחה</Form.Button>
+                <Form.Button onClick={()=>httpPostRequestSendMessage(user, msg)}>שליחה</Form.Button>
             </Form>
             {/* <FilledInput multiline="true" rows="5" rowsMax="10" fullWidth="true" autoFocus="true" value={msg} onChange={(value)=>setMsg(value)}/> */}
             </>
@@ -53,14 +52,11 @@ export function SendMessage({id, messages_arr}) {
     }
     // console.log(id, messages_arr);
     // const messages_by_status = get_messages_by_status(messages_arr)
-    let panes = null
-    if (messages_arr) {
-        panes = [
-            // { menuItem: 'נקרא', render: () => <Tab.Pane>{<GenericTable table_data={{data:messages_by_status.read, title:"נקראו"}} />}</Tab.Pane> },
-            // { menuItem: 'לא נקרא', render: () => <Tab.Pane>{<GenericTable table_data={{data:messages_by_status.unread, title:"לא נקראו"}} />}</Tab.Pane> },
-            { menuItem: 'שליחת הודעה', render: () => <Tab.Pane>{message_box()}</Tab.Pane> },
-        ]
-    }
+    let panes = [
+        // { menuItem: 'נקרא', render: () => <Tab.Pane>{<GenericTable table_data={{data:messages_by_status.read, title:"נקראו"}} />}</Tab.Pane> },
+        // { menuItem: 'לא נקרא', render: () => <Tab.Pane>{<GenericTable table_data={{data:messages_by_status.unread, title:"לא נקראו"}} />}</Tab.Pane> },
+        { menuItem: 'שליחת הודעה', render: () => <Tab.Pane>{message_box()}</Tab.Pane> },
+    ]
     return (
         <>
         {panes &&  <Tab panes={panes}/>}
