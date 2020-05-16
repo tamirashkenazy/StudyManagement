@@ -21,7 +21,7 @@ const approve_decline_hours_student = (_id, status, course_id) => {
 // function RequestRow (request, student_id) {
 function RequestRow (request, student_id) {
     // const [approved_hours, set_approved_hours] = useState(request.number_of_hours)
-    // console.log(request);
+
     return (
         {
             "ת.ז" : student_id,

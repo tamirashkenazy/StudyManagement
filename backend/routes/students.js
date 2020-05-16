@@ -426,16 +426,13 @@ router.route('/updateGroup/listOfStudents').post((req,res) => {
           }, 2000);
         });
     }
-    console.log(validate)
     Groups.findOne({ name : group_name }, (err, group) => {
         if (group) {
             id_list.forEach(student_id=>{
                 Student.findById((student_id)).then((student) => {
                     if (student) {
-                        // console.log(student);
                         student.group.name = group.name
                         student.group.approved_hours = group.approved_hours
-                        // console.log(student);
                         student.save((err, student)=>{
                             validate -= 1;
                             if(err) {

@@ -19,7 +19,6 @@ async function httpPostRequestToAddGroup (inputs) {
             return true
         }
     })
-    console.log(response);
     return response
 }
 

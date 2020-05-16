@@ -61,7 +61,6 @@ router.route('/mailToAdmin').post((req, res) => {
     Constants.find({}).then((constant) => {
         let admin_mail = constant[0].admin_mail
         let QA_mail = constant[0].QA_mail
-        console.log(admin_mail)
         let mailDetails = {
             from: QA_mail,
             to: admin_mail,

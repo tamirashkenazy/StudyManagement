@@ -190,7 +190,6 @@ router.route('/add').post((req, res) => {
     const { body } = req;
     const { course, date, teacher, student, status } = body
     if (student.student_id === teacher.teacher_id){
-        console.log(req.body)
         return res.send({success : false, message:"Student cannot be the teacher of himself"})
     }
     Lesson.find({ date: date, status: "waiting", $or:[{"student.student_id" : student.student_id}, {"teacher.teacher_id" : teacher.teacher_id}] }, (err, lessons)=>{
