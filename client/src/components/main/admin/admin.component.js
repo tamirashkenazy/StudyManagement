@@ -44,8 +44,6 @@ const closeAllPopups = (total_popups) => {
     return true_false_by_index
 }
 
-
-
 export default function Admin(props) {
     
     const user = props.history.location.state
@@ -79,7 +77,7 @@ export default function Admin(props) {
             {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(lessons_pie, students_pie, teachers_pie), "md", "ltr")}
             {Dialog_generator(openedPopups[4], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קבוצה", "add_group",{}, ()=>AddGroup(), "md")}
             <br></br>
-                <Typography variant="h3" align="center" >ברוכים הבאים למסך המנהל</Typography>
+                <Typography variant="h3" align="center">ברוכים הבאים למסך המנהל</Typography>
             <br></br>   
             <Grid container spacing={10} justify="space-around" direction="row-reverse" >
                 <Grid item md={6} xs={4}  >
