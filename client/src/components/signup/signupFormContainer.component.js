@@ -17,7 +17,6 @@ const SignupConatainer = ({handleSubmit, formValues}) => {
     const history = useHistory()
     const [errors, setErrors] = useState({})
     const submitForm = (formValues) => {
-        console.log('submitting form: ', formValues);
         if(!allFieldsExist(formValues)) {
             alert("אנא מלא את כל השדות")
         } else {

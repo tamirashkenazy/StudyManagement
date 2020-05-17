@@ -19,38 +19,39 @@ export function httpPostRequestToAddUser(formValues, history) {
     .then((response)=> {
         if (response.data.success) {
             history.push('/')
+            window.location.reload(true)
         } else {
             alert(response.data.message)
         }
     })
 } 
 
-export function httpPostRequestToAddStudent(id, first_name, last_name) {
+export async function httpPostRequestToAddStudent(id, first_name, last_name) {
     var full_name = [first_name,last_name]
     const student_to_add = {  
         _id : id,
         name : full_name.join(" ")
     }
-    axios.post(get_mongo_api('students/add'), student_to_add)
+    const response = await axios.post(get_mongo_api('students/add'), student_to_add)
     .then((response)=> {
         if (!response.data.success) {
             alert(response.data.message)
         }
     })
+    return response
 } 
 
-export function httpPostRequestToAddTeacher(id, first_name, last_name) {
+export async function httpPostRequestToAddTeacher(id, first_name, last_name) {
     var full_name = [first_name,last_name]
     const teacher_to_add = {  
         _id : id,
         name : full_name.join(" ")
     }
-    axios.post(get_mongo_api('teachers/add'), teacher_to_add)
+    const response = await axios.post(get_mongo_api('teachers/add'), teacher_to_add)
     .then((response)=> {
         if (response.data.success === false) {
             alert(response.data.message)
-        } else {
-            console.log(response.data.message);
         }
     })
+    return response
 } 

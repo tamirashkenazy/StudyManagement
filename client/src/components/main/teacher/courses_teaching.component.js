@@ -4,7 +4,6 @@ import { Grid } from 'semantic-ui-react'
 import axios from 'axios'
 import get_mongo_api, { useAsyncHook } from '../../mongo/paths.component'
 import FormControlLabel from '@material-ui/core/FormControlLabel';
-import { Table, TableContainer, TableBody, TableRow, TableCell } from '@material-ui/core';
 
 const make_courses_option = (arr_of_courses, teacher) => {
     const { teaching_requests, teaching_courses } = teacher
