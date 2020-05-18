@@ -36,15 +36,10 @@ const filter_student_by_id = (students, id) => {
 export default function Student(props) {
     const { students } = props
     const user = props.history.location.state
-<<<<<<< HEAD
-    const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false, false))
-
-=======
     const [selectedCourse, setSelectedCourse] = useState(null)
     const [hours_options, setHoursOptions] = useState(null)
-    const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false))
+    const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false, false))
     // const fullName = user.first_name + ' '+ user.last_name;
->>>>>>> new branch from master
     const navbar_operations_by_role = [
         { key: 'request_tutoring', header: 'בקשת שעות חונכות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(true, false, false, false))), icon: <ScheduleOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
         { key: 'book_class', header: 'קביעת שעת חונכות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, true, false, false))), icon: <AssignmentTurnedInOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
@@ -58,9 +53,8 @@ export default function Student(props) {
                 <AppBar position="static" className={classes.AppBar} >
                     <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
                 </AppBar>
-<<<<<<< HEAD
                 {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), " בקשת שעות חונכות","access_time", { id: user._id, number_of_approved_hours: student.group.approved_hours }, (args) => RequestHours(args))}
-                {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id }, (id) => BookHours(id))}
+                {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id, selectedCourse, setSelectedCourse, hours_options, setHoursOptions, student }, (args) => BookHours(args))}
                 {Dialog_generator(openedPopups.history_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "היסטוריית שיעורים","history", { _id: user._id }, (id) => History(id))},
                 {Dialog_generator(openedPopups.send_message, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))), "הודעות","mail_outline", { user: user, close_popup : () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false))) }, (args) => SendMessage(args))}
                 <br></br>
@@ -71,32 +65,13 @@ export default function Student(props) {
                         <TrackHoursTable student={student} setOpenedPopup={setOpenedPopups} />
                     </Grid>
                     <Grid item md={5} xs={4} style={{marginLeft : "1rem"}}>
-=======
-                {Dialog_generator(openedPopups.request_hours_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), " בקשת שעות חונכות", "access_time", { _id: user._id }, (id) => RequestHours(id))}
-                {Dialog_generator(openedPopups.book_class_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "קביעת שעות חונכות", "assignment_turned_in", { _id: user._id, selectedCourse, setSelectedCourse, hours_options, setHoursOptions, student }, (id) => BookHours(id))}
-                {Dialog_generator(openedPopups.history_popup, () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false))), "היסטוריית שיעורים", "history", { _id: user._id }, (id) => History(id))}
-                <br></br>
-                <Typography variant="h3" align="center" >ברוך הבא למסך הסטודנט</Typography>
-                <br></br>
-                <Grid container spacing={10} justify="space-around" direction="row-reverse" style={{ height:"50%"}} >
-                    <Grid item md={5} xs={4} style={{ height: "-webkit-fill-available", marginRight: "1rem" }}>
-                        <TrackHoursTable student={student} setOpenedPopup={setOpenedPopups} />
-                    </Grid>
-                    <Grid item md={5} xs={4} style={{ height: "-webkit-fill-available", marginLeft: "1rem" }}>
->>>>>>> new branch from master
                         <LessonsTable id={user._id} />
                         {/* <StudentsRequestTable students={students}/> */}
                     </Grid>
                 </Grid>
-<<<<<<< HEAD
                 <br/><br/>
                 <Grid container justify="center">
                     <Grid item md={7} xs={4}>
-=======
-                <br /><br />
-                <Grid container justify="center" style={{ height:"30%"}}>
-                    <Grid item md={8} xs={4} style={{ height: "-webkit-fill-available"}}>
->>>>>>> new branch from master
                         <CoursesTable id={user._id} />
                         {/* <CoursesTableAdmin all_courses={all_courses}/> */}
                     </Grid>

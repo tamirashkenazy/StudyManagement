@@ -80,26 +80,26 @@ export default function Admin(props) {
             <br></br>
                 <Typography variant="h3" align="center">ברוכים הבאים למסך המנהל</Typography>
             <br></br>   
-            <Grid container spacing={10} justify="space-around" direction="row-reverse" style={{ height: "35%" }} >
-                <Grid item md={5} xs={4} style={{ height: "-webkit-fill-available" , marginRight: "1rem"}} >
+            <Grid container spacing={10} justify="space-around" direction="row-reverse" >
+                <Grid item md={5} xs={4} style={{marginRight: "1rem"}} >
                     <TeachersRequestTable teachers={teachers} />
                 </Grid>
-                <Grid item md={5} xs={4} style={{ height: "-webkit-fill-available", marginLeft: "1rem" }}>
+                <Grid item md={5} xs={4} style={{ marginLeft: "1rem" }}>
                     <StudentsRequestTable students={students}/>
                 </Grid>
             </Grid>
             <br/><br/>
-            <Grid container spacing={10} justify="space-around" direction="row-reverse" style={{ height: "35%" }}>
-                {!isLoadingCourses && <Grid item md={4} xs={4} style={{height: "-webkit-fill-available", marginRight: "1rem" }}>
+            <Grid container spacing={10} justify="space-around" direction="row-reverse">
+                {!isLoadingCourses && <Grid item md={4} xs={4} style={{marginRight: "1rem" }}>
                     <CoursesTableAdmin all_courses={all_courses}/>
                 </Grid>}
-                {!isLoadingGroups && <Grid item md={6} xs={4} style={{ height: "-webkit-fill-available", marginLeft: "1rem" }}>
+                {!isLoadingGroups && <Grid item md={6} xs={4} style={{ marginLeft: "1rem" }}>
                     <GroupsTableAdmin all_groups={all_groups} users={users} students={students}/>
                 </Grid>}
             </Grid>
             <br/><br/>
-            <Grid container justify="center" style={{ bottom: "1rem", position: "absolute" }}>
-                <Grid item xs={8} style={{ height: "-webkit-fill-available" }}>
+            <Grid container justify="center">
+                <Grid item xs={8} >
                 { (!isLoading_sumLessons && !isLoading_budget) ? 
                         <AnnualStatistics annual_budget={annual_budget} sum_lessons={sum_lessons}/>
                          : <div>not finished</div>}
