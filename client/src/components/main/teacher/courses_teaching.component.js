@@ -69,7 +69,7 @@ export default function CoursesToTeach(props) {
             {(courses_options && Array.isArray(courses_options) && courses_options.length > 0) ?
                 courses_options.map(option_obj => {
                     return (
-                        <Grid.Row  key={option_obj.value} stretched="true" padded="vertically">
+                        <Grid.Row  key={option_obj.value} stretched={true} padded="vertically">
                             <FormControlLabel className="checkbox"
                                 control={<Checkbox
                                     checked={option_obj.value in selectedCourses && selectedCourses[option_obj.value]}
