@@ -11,7 +11,7 @@ const all_groups_array  = (all_groups, setGroupNameChosen, setPopUpOpen)=>{
             return {
                 "שם הקבוצה": group.name,
                 "מספר שעות עבור קבוצה": group.approved_hours,
-                "צפייה והוספת תלמידים לקבוצה" : <IconButton onClick={()=>{setGroupNameChosen(group.name); setPopUpOpen(true)}}><TransferWithinAStationIcon style={{color:"#4682B4"}}/></IconButton>
+                "צפייה והוספת תלמידים לקבוצה" : <IconButton onClick={()=>{setGroupNameChosen(group.name); setPopUpOpen(true)}} style={{padding : " 0.5vh 0px 0.5vh 0px"}}><TransferWithinAStationIcon style={{color:"#4682B4"}}/></IconButton>
             }
         })
     } else {
