@@ -19,6 +19,7 @@ import {AnnualStatistics} from './annual_statistics'
 import {Statistics} from './statistics.component'
 import CoursesTableAdmin from './courses_table.component'
 import GroupsTableAdmin from './groups_table.component'
+import Reports from './reports.component'
 import { Typography } from '@material-ui/core';
 
 const getOpenedPopup = (num_of_popup, total_popups) => {
@@ -55,17 +56,21 @@ export default function Admin(props) {
         { key : 'participants', header : 'משתתפים' , on_click : ()=>setOpenedPopups(getOpenedPopup(0,total_popups)) , icon : <PeopleAltOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'statistics', header : 'סטטיסטיקות' , on_click : ()=>setOpenedPopups(getOpenedPopup(1,total_popups)) , icon : <PieChartSharpIcon fontSize="large" style={{color:"white"}} />},
         { key : 'reports', header : 'דוחות' , on_click : ()=>setOpenedPopups(getOpenedPopup(2,total_popups)) , icon : <AssignmentOutlinedIcon fontSize="large" style={{color:"white"}} />},
-        { key : 'add_course', header : 'הוסף קורס' , on_click : ()=>setOpenedPopups(getOpenedPopup(3,total_popups)) , icon : <PostAddIcon fontSize="large" style={{color:"white"}} />},
-        { key : 'add_group', header : 'הוסף קבוצה' , on_click : ()=>setOpenedPopups(getOpenedPopup(4,total_popups)) , icon : <GroupAddOutlinedIcon fontSize="large" style={{color:"white"}} />}
+        { key : 'add_course', header : 'הוספת קורס' , on_click : ()=>setOpenedPopups(getOpenedPopup(3,total_popups)) , icon : <PostAddIcon fontSize="large" style={{color:"white"}} />},
+        { key : 'add_group', header : 'הוספת קבוצה' , on_click : ()=>setOpenedPopups(getOpenedPopup(4,total_popups)) , icon : <GroupAddOutlinedIcon fontSize="large" style={{color:"white"}} />}
     ]
     const [sum_lessons, isLoading_sumLessons] = useAsyncHook(`lessons/paidMoney`)
     const [annual_budget, isLoading_budget] = useAsyncHook(`constants/annual_budget`)
     //assigned a value but never used  no-unused-vars
-    const [lessons_pie, isLoading_lessons] = useAsyncHook(`lessons/numOfLessonsByCourse`)
-    const [students_pie, isLoading_students] = useAsyncHook(`students/numOfStudentsByCourse`)
-    const [teachers_pie, isLoading_teachers] = useAsyncHook(`teachers/numOfSTeachersByCourse`)
+    const [lessons_pie, _] = useAsyncHook(`lessons/numOfLessonsByCourse`)
+    const [students_pie, __] = useAsyncHook(`students/numOfStudentsByCourse`)
+    const [teachers_pie, ___] = useAsyncHook(`teachers/numOfSTeachersByCourse`)
     const [all_courses, isLoadingCourses] = useAsyncHook(`courses`)
     const [all_groups, isLoadingGroups] = useAsyncHook(`groups`)
+    const [num_of_lessons_done, isLoadingLessonsDone] = useAsyncHook(`lessons/sumLessons`) // change it to get the only done statuses
+    const [lesson_price_uni, isLoadingLessonPriceUni] = useAsyncHook(`constants/lesson_price`) 
+    const [lesson_price_student, isLoadingLessonPriceStudent] = useAsyncHook(`constants/lesson_price`) // change it to student
+    
     return (
         <div  style={{textAlign : "center" , backgroundColor: "gainsboro"}}>
             
@@ -73,10 +78,10 @@ export default function Admin(props) {
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
             {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים", "people_outline" ,{users, teachers, students} ,(args)=>Participants(args))}
-            {/* <Dialog_generator open={openedPopups[0]} onClose={()=>setOpenedPopups(closeAllPopups(total_popups))} title={"משתתפים"} args={{}} Component={(args)=>Participants(args)}/> */}
-            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קורס","playlist_add",{}, ()=>AddCourse(), {maxWidth : "md"})}
+            {Dialog_generator (openedPopups[2],()=>setOpenedPopups(closeAllPopups(total_popups)),"דוחות", "assignment" ,{num_of_lessons_done, lesson_price_uni} ,(args)=>Reports(args))}
+            {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוספת קורס","playlist_add",{}, ()=>AddCourse(), {maxWidth : "md"})}
             {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(lessons_pie, students_pie, teachers_pie), {maxWidth : "md", direction:"ltr"})}
-            {Dialog_generator(openedPopups[4], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוסף קבוצה", "add_group",{}, ()=>AddGroup(), {maxWidth : "md"})}
+            {Dialog_generator(openedPopups[4], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוספת קבוצה", "add_group",{}, ()=>AddGroup(), {maxWidth : "md"})}
             <br></br>
                 <Typography variant="h3" align="center">ברוכים הבאים למסך המנהל</Typography>
             <br></br>   
