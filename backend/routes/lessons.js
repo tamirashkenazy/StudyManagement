@@ -54,6 +54,31 @@ router.route('/doneLessons/:status_id/:course_id').get((req,res) => {
 
 
 /**
+ * get all the lessons by status, course_id and student_id.
+ * request parameters:
+ *      /ByStatusCourseAndStudent/
+ * request body:
+ *      "status" : <status> 
+ *      "course_id" : <course_id>
+ *      "student_id" : <student_id>
+ **/
+router.route('/ByStatusCourseAndStudent').post((req,res) => {
+   let status = req.body.status
+   let course_id = req.body.course_id
+   let student_id = req.body.student_id
+    Lesson.find({ $and: [{"status" : status} , {"course.course_id" : course_id},  {"student.student_id" : student_id}] }, (err,lessons) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (lessons && lessons.length > 0) {
+            return res.send({success : true, message: lessons, count: lessons})
+        }else {
+            return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
+        }
+    })
+})
+
+
+/**
  * get the number of approved lessons.
  * request parameters:
  *      /sumLessons
@@ -173,6 +198,32 @@ router.route('/numOfLessonsByCourse').get((req,res) => {
             })
 })
 
+/**
+ * get lesson info by date, student_id and teacher_id.
+ * request parameters:
+ *      /findOne
+ * request body:
+ *      "teacher_id" : <teacher_id> 
+ *      "student_id" : <student_id>
+ *      "date" : <date>
+ */
+router.route('/findOne').post((req,res) => {
+    const {date, student_id, teacher_id} = req.body 
+    Lesson.find({date : date    , "student.student_id" : student_id, "teacher.teacher_id" : teacher_id}, (err, lessons)=>{
+        if (err) {
+            res.status(400).json('Error: ' + err)
+            return res.send({
+                success : false, message : 'Error on finג lesson: ' + err,
+            });
+        }
+        if (lessons && lessons.length > 0) {
+            return res.send({success : true, message : lessons[0]});
+        } else {
+            return res.send({success : true, message : "!השיעור המבוקש אינו קיים במערכת"});
+        }
+    })
+})
+
 
 /**
  * Add new lesson.
@@ -222,7 +273,7 @@ router.route('/add').post((req, res) => {
  *      "teacher_id" : <teacher_id> 
  *      "student_id" : <student_id>
  *      "date"       : <date>
- *       "status"    : <status>
+ *      "status"    : <status>
  */
 router.route('/updateStatus').post((req,res) => {
     const {date, student_id, teacher_id, status} = req.body
@@ -306,32 +357,6 @@ router.route('/delete').post((req,res) => {
             return res.send({success : true, message : "!השיעור נמחק בהצלחה",});
         } else if (lesson.deletedCount == 0) {
             return res.send({success : true, message : '!השיעור המבוקש אינו קיים במערכת',});
-        }
-    })
-})
-
-/**
- * get lesson info by date, student_id and teacher_id.
- * request parameters:
- *      /findOne
- * request body:
- *      "teacher_id" : <teacher_id> 
- *      "student_id" : <student_id>
- *      "date" : <date>
- */
-router.route('/findOne').post((req,res) => {
-    const {date, student_id, teacher_id} = req.body 
-    Lesson.find({date : date    , "student.student_id" : student_id, "teacher.teacher_id" : teacher_id}, (err, lessons)=>{
-        if (err) {
-            res.status(400).json('Error: ' + err)
-            return res.send({
-                success : false, message : 'Error on finג lesson: ' + err,
-            });
-        }
-        if (lessons && lessons.length > 0) {
-            return res.send({success : true, message : lessons[0]});
-        } else {
-            return res.send({success : true, message : "!השיעור המבוקש אינו קיים במערכת"});
         }
     })
 })
