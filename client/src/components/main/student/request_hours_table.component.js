@@ -30,7 +30,7 @@ const get_options = (num_of_options) => {
     return options
 }
 
-export default function RequestHours(props){
+export default function RequestHours({id, number_of_approved_hours}){
     const [courses_options, loading] = useAsyncHook(`courses`, make_courses_option);
     const [selectedCourse, setSelectedCourse] = useState(null)
     const [hours, setHours] = useState(null)
@@ -55,12 +55,13 @@ export default function RequestHours(props){
         <Grid columns={1}  style={{margin : "2rem 1rem 3rem 1rem"}}>
             <Grid.Row centered>
                 <Dropdown direction="right"  placeholder='בחר קורס' scrolling search selection  onChange={(e,{value})=> setSelectedCourse(value)} options={courses_options}  />
+
             </Grid.Row>
             <Grid.Row centered>
-                <Dropdown direction="right"  placeholder='מספר שעות' scrolling search selection  onChange={(e,{value})=>setHours(value)} options={get_options(4)}/>
+                <Dropdown direction="right"  placeholder='מספר שעות' scrolling search selection  onChange={(e,{value})=>setHours(value)} options={get_options(number_of_approved_hours)}/>
             </Grid.Row >
             {selectedCourse && hours && <Grid.Row centered>
-                <Button onClick={()=>{sendCourse(props._id)}}>שלח</Button>
+                <Button onClick={()=>{sendCourse(id)}}>שלח</Button>
             </Grid.Row>}
         </Grid>
     )
