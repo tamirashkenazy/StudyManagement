@@ -375,7 +375,8 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
-            teacher.hours_available.push.apply(teacher.hours_available, req.body.dates)
+            let dates_to_add = req.body.dates.map(date => new Date(date))
+            teacher.hours_available.push.apply(teacher.hours_available, dates_to_add)
             teacher.save((err, teacher)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
@@ -644,7 +645,13 @@ router.route('/delete/hoursAvailable/:id').post((req, res) => {
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message: "!המורה אינו קיים במערכת"})
         } else {
-            teacher.hours_available = teacher.hours_available.filter(date => req.body.includes(date))
+            let dates_to_remove = req.body.hours_available.map(date => new Date(date))
+            teacher.hours_available = teacher.hours_available.filter(function(date){
+                let match = dates_to_remove.find(d => d.getTime() === date.getTime())
+                let hasMatch = !!match; // convert to boolean
+                console.log(hasMatch)
+                return !hasMatch
+            })
             teacher.save((err, teacher)=> {
                 if (err) {
                     return res.send({success:false, message:"Error: Couldn't Save " + err})
