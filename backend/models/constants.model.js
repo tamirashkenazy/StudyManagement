@@ -6,6 +6,7 @@ const Schema = mongoose.Schema;
 const ConstantsSchema = new Schema({
     unique : {type : String, default: "constants", unique: true},
     lesson_price : { type : String, match: onlyNumbers },
+    student_fee : { type : String, match: onlyNumbers },
     admin_mail : { type: String, required : true, unique: true, match: validEmailRegex },
     annual_budget : { type : String, match: onlyNumbers }
 }, { timestamps:true }, );

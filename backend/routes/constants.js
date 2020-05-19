@@ -68,7 +68,8 @@ router.route('/add').post((req, res) => {
             const newConstant = new Constants({
                 lesson_price : req.body.lesson_price,
                 admin_mail : req.body.admin_mail,
-                annual_budget : req.body.annual_budget
+                annual_budget : req.body.annual_budget,
+                student_fee : req.body.student_fee
             })
             newConstant.save((err, constants)=> {
                 if (err) {
