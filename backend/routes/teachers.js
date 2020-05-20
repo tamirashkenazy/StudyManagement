@@ -164,7 +164,7 @@ router.route('/:id/grades').get((req,res) => {
         } else if (teacher.grades_file.name == null){
             return res.send({success : true, message:"!הקובץ אינו קיים במערכת"})
         }else{
-            var url=process.cwd()
+            var url = process.cwd()
             let buffer = teacher.grades_file.data.buffer
             url = path.join(url, teacher.grades_file.name)
             fs.appendFile(teacher.grades_file.name, Buffer.from(buffer), (err) => {
@@ -405,8 +405,6 @@ router.post('/add/file/:id', async (req, res) => {
             return res.send({success : false, message:"!המורה אינו קיים במערכת"})
         } else {
             teacher.grades_file.name = req.params.id.toString() + ".pdf"
-            // console.log(req.files);
-            console.log(req.files.file);
 
             teacher.grades_file.data = binary(req.files.uploadedFile.data)
             teacher.save((err, teacher)=> {
