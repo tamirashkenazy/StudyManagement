@@ -98,6 +98,82 @@ router.route('/sumLessons').get((req,res) => {
 
 
 /**
+ * get teachers report.
+ * request parameters:
+ *      /teacherReport/<year>/<month>
+ */
+router.route('/teachersReport/:year/:month').get((req,res) => {
+    let report = []
+    let year = req.params.year
+    let month = req.params.month
+    let fromDate = new Date(year, month, 1);
+    fromDate.setMonth(fromDate.getMonth() - 1)
+    let toDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, 1);
+    Lesson.find( {$and: [{"status" : "done" }, {"date" : {'$gte': fromDate, '$lt': toDate}}]}, (err,lessons) => {
+        if(err) {
+            return res.send({success : false, message: "Error: " + err})
+        } else if (lessons && lessons.length > 0) {
+               Constants.find({}, (err,constant) => {
+                let lesson_price = constant[0].lesson_price
+                while(lessons.length > 0){
+                    let teacher = lessons[0].teacher
+                    let teacher_lessons = lessons.filter(lesson => lesson.teacher.teacher_id === teacher.teacher_id)
+                    report.push(
+                        {id : teacher.teacher_id,
+                        name : teacher.teacher_name,
+                        number_of_lessons : teacher_lessons.length,
+                        amount : (Number(lesson_price) * teacher_lessons.length)
+                        })
+                    lessons = lessons.filter(lesson => lesson.teacher.teacher_id != teacher.teacher_id)
+                }
+                return res.send({success : true, message: report})
+            })
+        } else {
+            return res.send({success : true, message: 0})
+        }
+    })
+})
+
+
+/**
+ * get students report.
+ * request parameters:
+ *      /studentsReport/<year>/<month>
+ */
+router.route('/studentsReport/:year/:month').get((req,res) => {
+    let report = []
+    let year = req.params.year
+    let month = req.params.month
+    let fromDate = new Date(year, month, 1);
+    fromDate.setMonth(fromDate.getMonth() - 1)
+    let toDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, 1);
+    Lesson.find({"status" : "done" }, (err,lessons) => {
+        if(err) {
+            return res.send({success : false, message: "Error: " + err})
+        } else if (lessons && lessons.length > 0) {
+               Constants.find({}, (err,constant) => {
+                let student_fee = constant[0].student_fee
+                while(lessons.length > 0){
+                    let student = lessons[0].student
+                    let student_lessons = lessons.filter(lesson => lesson.student.student_id === student.student_id)
+                    report.push(
+                        {id : student.student_id,
+                        name : student.student_name,
+                        number_of_lessons : student_lessons.length,
+                        amount : (Number(student_fee) * student_lessons.length)
+                        })
+                    lessons = lessons.filter(lesson => lesson.student.student_id != student.student_id)
+                }
+                return res.send({success : true, message: report})
+            })
+        } else {
+            return res.send({success : true, message: 0})
+        }
+    })
+})
+
+
+/**
  * get the money paid so far.
  * request parameters:
  *      /paidMoney
