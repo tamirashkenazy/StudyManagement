@@ -2,6 +2,7 @@ const router = require('express').Router();
 let Student = require('../models/student.model');
 let Groups = require('../models/group.model');
 let Course = require('../models/course.model');
+let Lesson = require('../models/lesson.model');
 
 /**
  * get list of all the students.
@@ -111,14 +112,57 @@ router.route('/:id/requests/byCourseID').post((req,res) => {
  *       /<student_id>/requests/byStatus
  */
 router.route('/:id/requests/byStatus').post((req,res) => {
+    let requests
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (!student || student.length===0) {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
-            student.requests = student.requests.filter(request => request.status === req.body.status)
-            return res.send({success : true, message: student.requests})
+            requests = student.requests.filter(request => request.status === req.body.status)
+            return res.send({success : true, message: requests})
+        }
+    })
+})
+
+
+
+/**
+ * get number of hours available to book 
+ * request parameters:
+ *       /<student_id>/requests/byStatus
+ * 
+ * request body:
+ *      "course_id" : <course_id>
+ *      "student_id" : <student_id>
+ */
+router.route('/availableHours').post((req,res) => {
+    let student_id = req.body.student_id
+    let course_id = req.body.course_id
+    Student.findById((student_id), (err,student) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!student || student.length===0) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {
+            Lesson.find({ $and: [{"status" : "waiting"} , {"course.course_id" : course_id},  {"student.student_id" : student_id}] }, (err,lessons) => {
+                if(err) {
+                    return res.send({success : false, message:"Error: " + err})
+                } else if (lessons && lessons.length > 0) {
+                    let book_lessons = lessons.length
+                    console.log(book_lessons)
+                    current_course = student.courses.filter(course => course.course_id === course_id)
+                    if (current_course.length != 1){
+                        return res.send({success : false, message: "הקורס אינו קיים ברשימת הקורסים של הסטודנט"})
+                    }
+                    let approved_hours = current_course[0].approved_hours
+                    let available_hours = Number(approved_hours) - book_lessons
+                    return res.send({success : true, message: available_hours})
+
+                }else {
+                    return res.send({success : false, message: "השיעורים המבוקשים אינם קיימים במערכת"})
+                }
+            })
         }
     })
 })
