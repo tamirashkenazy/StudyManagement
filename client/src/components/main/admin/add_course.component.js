@@ -1,5 +1,7 @@
 import React, { useState } from 'react'
-import {Form , Button} from 'semantic-ui-react'
+import {Form } from 'semantic-ui-react'
+import { Button} from 'react-bootstrap'
+
 //TALKS to the backend, sends https requests
 import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
@@ -60,7 +62,7 @@ export default function AddCourse(){
                     />
                 </Form.Field>
                 <Form.Field>
-                     <Button onClick={handleSubmit} primary >הוספת קורס</Button>
+                     <Button onClick={handleSubmit} >הוספת קורס</Button>
                 </Form.Field>
             </Form>
     )
