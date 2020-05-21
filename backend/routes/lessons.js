@@ -129,7 +129,7 @@ router.route('/teachersReport/:year/:month').get((req,res) => {
                 return res.send({success : true, message: report})
             })
         } else {
-            return res.send({success : true, message: {}})
+            return res.send({success : true, message: []})
         }
     })
 })
@@ -167,7 +167,7 @@ router.route('/studentsReport/:year/:month').get((req,res) => {
                 return res.send({success : true, message: report})
             })
         } else {
-            return res.send({success : true, message: {}})
+            return res.send({success : true, message: []})
         }
     })
 })
