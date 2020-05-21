@@ -5,10 +5,7 @@ const port = require('./helpers/port');
 const fileUpload = require('express-fileupload')
 const bodyParser = require('body-parser');
 
-
-
 const app = express()
-
 
 // enable files upload
 app.use(fileUpload({
@@ -21,8 +18,11 @@ app.use(express.json());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: true}));
 
+// to hide the password and user name of the data base
+const MongoPassword = process.env.MongoPassword
+const MongoDbName = process.env.MongoDbName
+const uri = `mongodb+srv://Studymng:${MongoPassword}@studymng-izhv3.mongodb.net/${MongoDbName}?replicaSet=${MongoDbName}` 
 
-const uri = process.env.ATLAS_URI;
 // uri = 'mongodb+srv://Studymng:Stdmng123@studymng-izhv3.mongodb.net/StudyManagement?replicaSet=StudyManagement'
 mongoose.connect(uri, { useUnifiedTopology: true, useNewUrlParser: true, useCreateIndex: true  } )
 .then(()=> console.log("MongoDB is connected"))
