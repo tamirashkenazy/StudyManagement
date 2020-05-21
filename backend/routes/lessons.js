@@ -147,7 +147,7 @@ router.route('/studentsReport/:year/:month').get((req,res) => {
     let fromDate = new Date(year, month, 1);
     fromDate.setMonth(fromDate.getMonth() - 1)
     let toDate = new Date(fromDate.getFullYear(), fromDate.getMonth() + 1, 1);
-    Lesson.find({"status" : "done" }, (err,lessons) => {
+    Lesson.find({$and: [{"status" : "done" }, {"date" : {'$gte': fromDate, '$lt': toDate}}]}, (err,lessons) => {
         if(err) {
             return res.send({success : false, message: "Error: " + err})
         } else if (lessons && lessons.length > 0) {

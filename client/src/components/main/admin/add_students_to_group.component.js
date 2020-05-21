@@ -2,7 +2,8 @@ import React, {useState} from 'react'
 import axios from 'axios';
 import get_mongo_api from '../../mongo/paths.component';
 import GenericTable from '../utils/generic_table.component';
-import { Button } from '@material-ui/core';
+import { Button} from 'react-bootstrap'
+
 import IconButton from '@material-ui/core/IconButton';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
 const make_button_add_remove = (curr_id, ids, setId) => {
@@ -66,7 +67,7 @@ export default function AddStudentsToGroup({users, students, groupNameChosen}) {
       <>
       <GenericTable table_data={{data:students_in_group, title:`סטודנטים בקבוצה: ${groupNameChosen}`}}></GenericTable>
       <GenericTable table_data={{data:students_not_in_group, title:"סטודנטים שלא בקבוצה"}}></GenericTable>
-      {ids.size > 0 && <Button color="primary" variant="outlined" onClick={()=>post_request_add_to_group(ids, groupNameChosen)}>הוסף</Button>}
+      {ids.size > 0 && <Button variant="outline-primary" onClick={()=>post_request_add_to_group(ids, groupNameChosen)}>הוסף</Button>}
       </>
     );
 }

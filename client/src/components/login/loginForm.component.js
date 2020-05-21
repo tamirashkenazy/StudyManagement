@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useHistory} from 'react-router-dom'
+// import {} from 'react-bootstrap'
 import {Form , Button} from 'semantic-ui-react'
 //TALKS to the backend, sends https requests
 import get_mongo_api from '../mongo/paths.component'
@@ -90,7 +91,7 @@ function FormLogin ()  {
                     /> */}
 
                 <Form.Field>
-                    <Button onClick={handleSubmit} primary >התחבר</Button>
+                    <Button onClick={handleSubmit} primary>התחבר</Button>
                 </Form.Field>
             </Form>
         </div>

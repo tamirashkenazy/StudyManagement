@@ -46,7 +46,6 @@ const closeAllPopups = (total_popups) => {
 }
 
 export default function Admin(props) {
-    
     const user = props.history.location.state
     const {teachers, students, users} = props
     const total_popups = 5
@@ -67,10 +66,14 @@ export default function Admin(props) {
     const [teachers_pie, ___] = useAsyncHook(`teachers/numOfSTeachersByCourse`)
     const [all_courses, isLoadingCourses] = useAsyncHook(`courses`)
     const [all_groups, isLoadingGroups] = useAsyncHook(`groups`)
-    const [num_of_lessons_done, isLoadingLessonsDone] = useAsyncHook(`lessons/sumLessons`) // change it to get the only done statuses
+    const [lessons_done, isLoadingLessonsDone] = useAsyncHook(`lessons/byStatus/done`) // change it to get the only done statuses
     const [lesson_price_uni, isLoadingLessonPriceUni] = useAsyncHook(`constants/lesson_price`) 
-    const [lesson_price_student, isLoadingLessonPriceStudent] = useAsyncHook(`constants/lesson_price`) // change it to student
-    
+    const [lesson_price_student, isLoadingLessonPriceStudent] = useAsyncHook(`constants/student_fee`) 
+
+
+    const [selectedMonthYear, setMonthYear] = useState({month : new Date().getMonth()+1, year : new Date().getFullYear()})
+    const [arr_teachers_from_db, isTeacherArrOfDone] = useAsyncHook(`lessons/teachersReport/${selectedMonthYear.year}/${selectedMonthYear.month}`) 
+    const [arr_students_from_db, isStudentArrOfDone] = useAsyncHook(`lessons/studentsReport/${selectedMonthYear.year}/${selectedMonthYear.month}`) 
     return (
         <div  style={{textAlign : "center" , backgroundColor: "gainsboro"}}>
             
@@ -78,7 +81,7 @@ export default function Admin(props) {
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
             {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים", "people_outline" ,{users, teachers, students} ,(args)=>Participants(args))}
-            {Dialog_generator (openedPopups[2],()=>setOpenedPopups(closeAllPopups(total_popups)),"דוחות", "assignment" ,{num_of_lessons_done, lesson_price_uni} ,(args)=>Reports(args))}
+            {Dialog_generator (openedPopups[2],()=>setOpenedPopups(closeAllPopups(total_popups)),"דוחות", "assignment" ,{arr_teachers_from_db, arr_students_from_db, lessons_done, lesson_price_uni, lesson_price_student, selectedMonthYear, setMonthYear} ,(args)=>Reports(args))}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוספת קורס","playlist_add",{}, ()=>AddCourse(), {maxWidth : "md"})}
             {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(lessons_pie, students_pie, teachers_pie), {maxWidth : "md", direction:"ltr"})}
             {Dialog_generator(openedPopups[4], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוספת קבוצה", "add_group",{}, ()=>AddGroup(), {maxWidth : "md"})}
