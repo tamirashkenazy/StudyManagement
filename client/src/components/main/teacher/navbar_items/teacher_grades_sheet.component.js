@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import get_mongo_api from '../../mongo/paths.component'
+import get_mongo_api from '../../../mongo/paths.component'
 import axios from 'axios'
 
 export default function UploadGradesSheet(props){

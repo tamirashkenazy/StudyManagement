@@ -28,3 +28,27 @@ export function Dialog_generator(open, onClose, title, icon, args, Component, st
         </Dialog>
     )
 }
+
+
+export const getOpenedPopup = (num_of_popup, total_popups) => {
+    let true_false_by_index = {}
+    let i;
+    for (i=0; i < total_popups; i++){
+        if (i===num_of_popup) {
+            true_false_by_index[i] = true
+        } else {
+            true_false_by_index[i] = false
+        }
+
+    }
+    return true_false_by_index
+}
+
+export const closeAllPopups = (total_popups) => {
+    let true_false_by_index = {}
+    let i;
+    for (i=0; i < total_popups; i++){
+        true_false_by_index[i] = false
+    }
+    return true_false_by_index
+}

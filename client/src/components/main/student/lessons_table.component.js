@@ -73,8 +73,8 @@ const make_rows_of_courses_requests = (lessons, func) => {
 
 export default function LessonsTable({id}) {
     const [isCardOpen, setCardOpen] = useState(false);
-    const [user, setUser] = useState(null);
-    const [teacher, setTeacher] = useState(null);
+    let user = null
+    let teacher = null
     const [table_rows, loading] = useAsyncHook(`lessons/byStudentId/${id}`, make_rows_of_courses_requests, setCardOpen);
      if (!loading && table_rows) {
          return (

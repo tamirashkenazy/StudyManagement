@@ -4,6 +4,8 @@
   "description": "",
   "main": "server.js",
   "scripts": {
+    "start": "nodemon server.js",
+    "build" : "./run_server.sh",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],

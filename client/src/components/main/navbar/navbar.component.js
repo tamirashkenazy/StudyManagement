@@ -49,9 +49,6 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
     history.push("/");
   }
 
-  // useEffect(()=> {
-  //   formValues = userDetails
-  // })
   function onChangeRole() {
     history.push({
       pathname: `/main/`,
@@ -116,7 +113,7 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
   }
 
   const fromListToOpterationsInNavBar = navbar_operations_by_role.map(menu_item =>
-    <StyledMenuItem style={{ marginRight: "6%" }} onClick={menu_item.on_click} key={menu_item.key} > {/* { color : "black"} */}
+    <StyledMenuItem style={{ marginRight: "6%" }} onClick={menu_item.on_click} key={menu_item.key} >
       <ListItemIcon>
         {menu_item.icon}
       </ListItemIcon>
@@ -141,13 +138,12 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
       if (res) {
         axios.post(get_mongo_api(`users/update/${formValues._id}`), formValues).then((response) => {
           if (response.data.success) {
-            console.log("User updated");
+            alert("המשתמש עודכן");
             setUpdated(true)
           } else {
-            alert("Couldn't update: ", response.data.message)
+            alert(":בעיה בעדכון" ,response.data.message)
           }
         })
-        console.log('formvals: ', formValues);
         if (formValues.isTeacher) {
           // if the teacher exists in teachers collection - there will be a failure, so nothing will be changed
           axios.post(get_mongo_api(`teachers/add`), { _id: formValues._id }).then(res => {
@@ -190,7 +186,7 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
       setErrors(local_errors)
       let validForm = validateForm(local_errors)
       if (!validForm) {
-        console.log(local_errors);
+        alert(local_errors);
       } else {
         httpPostRequestToUpdateUser(formValues)
       }

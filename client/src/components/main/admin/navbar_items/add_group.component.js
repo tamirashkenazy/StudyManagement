@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import {Form , Button} from 'semantic-ui-react'
 //TALKS to the backend, sends https requests
-import get_mongo_api from '../../mongo/paths.component'
+import get_mongo_api from '../../../mongo/paths.component'
 import axios from 'axios'
 
 

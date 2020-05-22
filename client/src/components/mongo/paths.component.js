@@ -5,9 +5,8 @@ const GET_MONGO_PATH = () => `http://localhost:${port}`
 const get_mongo_api = (http_request) => {
     return `${GET_MONGO_PATH()}/${http_request}`
 }
-
 // from here https://dev.to/vinodchauhan7/react-hooks-with-async-await-1n9g
-export function useAsyncHook(api, func_to_sort, args=null) {
+export function useAsyncHook(api, func_to_sort, args=null, get_is_loading=true) {
     const [result, setResult] = useState([]);
     const [loading, setLoading] = useState(true);
     // the useEffect function happens every time that the args (api, func_to_sort, args=null) are changing
@@ -36,7 +35,11 @@ export function useAsyncHook(api, func_to_sort, args=null) {
         }
         getDataFromAPI()
     },[api, func_to_sort, args])
-    return [result, loading];
+    if (get_is_loading) {
+        return [result, loading];
+    } else {
+        return result
+    }
 }
 
 export default get_mongo_api

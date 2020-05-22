@@ -6,7 +6,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "preinstall": "cd client && npm install && cd ../backend && npm install",
-    "start": "concurrently \"cd client && npm start\" \"cd backend && nodemon ./server.js\" "
+    "start": "concurrently \"cd client && npm start\" \"cd backend && npm run build\" "
   },
   "repository": {
     "type": "git",

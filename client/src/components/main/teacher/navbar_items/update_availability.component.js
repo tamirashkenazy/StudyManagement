@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import axios from 'axios'
-import { Calendar } from '../utils/calendar/calendar';
-import get_mongo_api, { useAsyncHook } from '../../mongo/paths.component'
+import { Calendar } from '../../utils/calendar/calendar';
+import get_mongo_api, { useAsyncHook } from '../../../mongo/paths.component'
 
 const make_available_hours_list = (arr_of_hours) => {
     if (arr_of_hours && arr_of_hours !== undefined && arr_of_hours.length > 0) {

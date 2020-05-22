@@ -1,6 +1,6 @@
 import React from 'react';
 
-import GenericTable from '../utils/generic_table.component'
+import GenericTable from '../../utils/generic_table.component'
 
 const all_courses_array  = (all_courses)=>{
     if (all_courses && Array.isArray(all_courses) && all_courses.length>0){

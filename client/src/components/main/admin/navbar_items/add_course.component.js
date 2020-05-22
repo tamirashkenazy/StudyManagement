@@ -3,7 +3,7 @@ import {Form } from 'semantic-ui-react'
 import { Button} from 'react-bootstrap'
 
 //TALKS to the backend, sends https requests
-import get_mongo_api from '../../mongo/paths.component'
+import get_mongo_api from '../../../mongo/paths.component'
 import axios from 'axios'
 export default function AddCourse(){
     const httpPostRequestToAddCourse = (inputs) => {
