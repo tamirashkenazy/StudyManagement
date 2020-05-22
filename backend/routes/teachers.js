@@ -336,6 +336,55 @@ router.route('/add/request/:id').post((req, res) => {
 
 
 /**
+ * Add list of requests to teacher requests.
+ * request parameters:
+ *      /add/requestsList/<teacher_id>
+ * request body:
+ *      [
+ *      "course_id" : <course_id>
+ *      "course_name" : <course_name>     
+ *      ]
+ */
+router.route('/add/requestsList/:id').post((req, res) => {
+    Teacher.findById((req.params.id), (err,teacher) => {
+        let new_requests = req.body.requests
+        let response = {success:true, message: ` הבקשה ללמד את הקורסים נשלחה בהצלחה`};
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!teacher || teacher.length===0) {
+            return res.send({success : false, message:"!המורה אינו קיים במערכת"})
+        } else {
+            new_requests.forEach(new_request => {
+                course = teacher.teaching_courses.find(({ course_id }) => course_id === new_request.course_id )
+                if (course){
+                    response = {success : false, message:`הקורס ${new_request.course_name} כבר קיים ברשימת הקורסים שהמורה מלמד` }
+                }
+                course = teacher.teaching_requests.find(({ course_id }) => course_id === new_request.course_id )
+                if (course){
+                    response = {success : false, message:`הקורס ${new_request.course_name} כבר קיים ברשימת הבקשות של המורה ` }
+                }
+                new_request.status = 'waiting'
+                new_request.updated_at = Date.now()
+                teacher.teaching_requests.push(new_request)
+            })
+            if (response.success == true){
+                teacher.save((err, doc)=> {
+                    if (err) {
+                        return res.send({success:false, message:"Error: Couldn't Save " + err})
+                    }
+                    return res.send(response)
+                })  
+            }
+            else{
+                return res.send(response)
+            }
+
+        }
+    })
+})
+
+
+/**
  * get number of teacher teaching each course_id.
  * request parameters:
  *     /numOfSTeachersByCourse/
