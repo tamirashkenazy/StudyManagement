@@ -18,12 +18,9 @@ const useStyles = makeStyles({
     },
     table : {
         direction : "rtl",
-        // align : "right",
+        maxHeight: "50vh",
         textAlign : "center",
-        // maxHeight : "60vh",
-        // maxWidth : "100%", 
-        // margin : "0 auto" //will center the table inside the component its located
-
+        "overflow-y": 'auto',
     },
     cell : {
         textAlign : "center",

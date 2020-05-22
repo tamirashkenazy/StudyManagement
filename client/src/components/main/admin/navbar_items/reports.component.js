@@ -1,10 +1,10 @@
 import React from 'react'
 import Grid from '@material-ui/core/Grid';
 import { Typography, Button } from '@material-ui/core';
-import GenericTable from '../utils/generic_table.component'
+import GenericTable from '../../utils/generic_table.component'
 import axios from "axios"
 import {Dropdown} from 'semantic-ui-react'
-import get_mongo_api from '../../mongo/paths.component'
+import get_mongo_api from '../../../mongo/paths.component'
 
 const httpPostRequestToXslxFile = (arr_of_teachers, arr_of_students, year, month) => {
     let post_msg = {studentsReport : arr_of_students, teachersReport : arr_of_teachers}
@@ -41,7 +41,7 @@ const make_drop_down_months_options = () => {
 
     for (let i = curr_year; i>= curr_year-1; i--){
         let max_month = new Date().getMonth()+1
-        if (i == curr_year) {
+        if (i === curr_year) {
             for (let j = max_month; j>=1; j--) {
                 options_for_month.push({
                     key : `${i}-${j}`,

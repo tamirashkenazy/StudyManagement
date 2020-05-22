@@ -6,10 +6,10 @@ import EventAvailableOutlinedIcon from '@material-ui/icons/EventAvailableOutline
 import ImportContactsSharpIcon from '@material-ui/icons/ImportContactsSharp';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
-import CoursesToTeach from './courses_teaching.component'
-import UploadGradesSheet from './teacher_grades_sheet.component'
-import UpdateAvailability from './update_availability.component'
-import { Dialog_generator } from '../utils/utils'
+import CoursesToTeach from './navbar_items/courses_teaching.component'
+import UploadGradesSheet from './navbar_items/teacher_grades_sheet.component'
+import UpdateAvailability from './navbar_items/update_availability.component'
+import { Dialog_generator, getOpenedPopup, closeAllPopups } from '../utils/utils'
 import TeachersStatusRequestsTable from './requests_status.component'
 import LessonsTable from './lessons_table.component'
 import ProgressBar from './progress_bar.component'
@@ -17,11 +17,11 @@ import '../../../styles/teachers.scss';
 import { Typography } from '@material-ui/core';
 import Grid from '@material-ui/core/Grid';
 import {SendMessage } from '../utils/messages.component'
-const getOpenedPopup = (is_open_select_courses_to_teach, is_update_availability, is_upload_grades_sheet, is_send_message_open) => {
-    return (
-        { select_courses: is_open_select_courses_to_teach, update_availability: is_update_availability, upload_grades_sheet: is_upload_grades_sheet, send_message : is_send_message_open }
-    )
-}
+// const getOpenedPopup = (is_open_select_courses_to_teach, is_update_availability, is_upload_grades_sheet, is_send_message_open) => {
+//     return (
+//         { select_courses: is_open_select_courses_to_teach, update_availability: is_update_availability, upload_grades_sheet: is_upload_grades_sheet, send_message : is_send_message_open }
+//     )
+// }
 
 const filter_teacher_by_id = (teachers, id) => {
     let teacher_obj = teachers.filter(teacher => teacher._id === id)
@@ -37,14 +37,15 @@ export default function Teacher(props) {
     const { teachers } = props
     const user = props.history.location.state
     // const [user, setUser] = useState(props.history.location.state)
-    const [openedPopups, setOpenedPopups] = useState(getOpenedPopup(false, false, false, false))
+    const total_popups = 4
+    const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
     const navbar_operations_by_role = [
-        { key: 'update_availability', header: 'עדכון זמינות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, true, false, false))), icon: <EventAvailableOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
-        { key: 'courses_to_teach', header: 'בחירת קורסים להוראה', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(true, false, false, false))), icon: <ImportContactsSharpIcon fontSize="large" style={{ color: "white" }} /> },
-        { key: 'upload_grades_sheet', header: 'העלאת גיליון ציונים', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, true, false))), icon: <AssignmentOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
-        { key: 'send_message', header: 'הודעות', on_click: () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, true))), icon: <MailOutlineIcon fontSize="large" style={{ color: "white" }} /> }
+        { key: 'update_availability', header: 'עדכון זמינות', on_click: () => setOpenedPopups(getOpenedPopup(1, total_popups)), icon: <EventAvailableOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
+        { key: 'courses_to_teach', header: 'בחירת קורסים להוראה', on_click: () => setOpenedPopups(getOpenedPopup(0, total_popups)), icon: <ImportContactsSharpIcon fontSize="large" style={{ color: "white" }} /> },
+        { key: 'upload_grades_sheet', header: 'העלאת גיליון ציונים', on_click: () => setOpenedPopups(getOpenedPopup(2, total_popups)), icon: <AssignmentOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
+        { key: 'send_message', header: 'הודעות', on_click: () => setOpenedPopups(getOpenedPopup(3, total_popups)), icon: <MailOutlineIcon fontSize="large" style={{ color: "white" }} /> }
     ]
-    const close_all = () => setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, false, false)))
+    const close_all = () => setOpenedPopups(closeAllPopups(total_popups))
 
     const classes = useStylesAppBar();
     let teacher = filter_teacher_by_id(teachers, user._id)
@@ -55,14 +56,14 @@ export default function Teacher(props) {
                 <AppBar position="static" className={classes.AppBar} >
                     <AccountMenu userDetails={user} next_role='student' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
                 </AppBar>
-                {Dialog_generator(openedPopups.select_courses, close_all, "בחירת קורסים להוראה","menu_book", { id: user._id, teacher }, (id, teacher) => CoursesToTeach(id, teacher), {height : "30vh"})}
-                {Dialog_generator(openedPopups.upload_grades_sheet, close_all, "העלאת גיליון ציונים","assignment", { id: user._id, close_popup : close_all }, (args) => UploadGradesSheet(args))}
-                {Dialog_generator(openedPopups.update_availability, close_all, "עדכון זמינות","date_range", { id: user._id }, (id) => UpdateAvailability(id))}
-                {Dialog_generator(openedPopups.send_message, close_all, "הודעות","mail_outline", { user : user, close_popup : close_all }, (args) => SendMessage(args))}
+                {Dialog_generator(openedPopups[0], close_all, "בחירת קורסים להוראה","menu_book", { id: user._id, teacher }, (id, teacher) => CoursesToTeach(id, teacher), {height : "50vh"})}
+                {Dialog_generator(openedPopups[2], close_all, "העלאת גיליון ציונים","assignment", { id: user._id, close_popup : close_all }, (args) => UploadGradesSheet(args))}
+                {Dialog_generator(openedPopups[1], close_all, "עדכון זמינות","date_range", { id: user._id }, (id) => UpdateAvailability(id))}
+                {Dialog_generator(openedPopups[3], close_all, "הודעות","mail_outline", { user : user, close_popup : close_all }, (args) => SendMessage(args))}
                 <br></br>
                     <Typography variant="h3" align="center" >ברוך הבא למסך המורה</Typography>
                 <br></br>   
-                <Grid container spacing={10} justify="space-around" direction="row-reverse"  >
+                <Grid container justify="space-around" direction="row-reverse"  >
                     <Grid item md={4} xs={4}  style={{  marginRight : "1rem"}}>
                         <TeachersStatusRequestsTable teaching_requests={teacher.teaching_requests} />
                     </Grid>

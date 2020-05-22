@@ -1,5 +1,5 @@
 import React from 'react';
-import {StatisticsPieChart} from '../utils/charts'
+import {StatisticsPieChart} from '../../utils/charts'
 import Grid from '@material-ui/core/Grid';
 
 

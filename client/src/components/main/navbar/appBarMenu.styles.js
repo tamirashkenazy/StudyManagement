@@ -37,7 +37,7 @@ export const StyledMenuItem = withStyles(theme => ({
     '&:focus': {
       backgroundColor: theme.palette.primary.main,
       '& .MuiListItemIcon-root, & .MuiListItemText-primary': {
-        color: theme.palette.common.white, // "#1de9b6" //theme.palette.common.white, 
+        color: theme.palette.common.white
       },
     },
   },

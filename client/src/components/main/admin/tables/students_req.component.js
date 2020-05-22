@@ -1,10 +1,10 @@
 import React from 'react';
-import GenericTable from '../utils/generic_table.component'
+import GenericTable from '../../utils/generic_table.component'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 import axios from 'axios';
-import get_mongo_api from '../../mongo/paths.component';
+import get_mongo_api from '../../../mongo/paths.component';
 
 // import Input from '@material-ui/core/Input';
 const approve_decline_hours_student = (_id, status, course_id) => {
@@ -27,8 +27,6 @@ function RequestRow (request, student_id) {
             "ת.ז" : student_id,
             "קורס" : request.course_name,
             "שעות מבוקשות" : request.number_of_hours,
-            // "שעות מאושרות" : <Input type="number"  onChange={()=>console.log('clicked')}></Input>,
-            "קבצים" : "קבצים",
             "אישור": <IconButton size="small" onClick={()=>approve_decline_hours_student(student_id, "approved", request.course_id)}><CheckIcon style={{color:"green"}}/></IconButton>,
             "דחייה":<IconButton size="small" onClick={()=>approve_decline_hours_student(student_id, "declined", request.course_id)}><CloseIcon style={{color:"red"}}/></IconButton>
         }

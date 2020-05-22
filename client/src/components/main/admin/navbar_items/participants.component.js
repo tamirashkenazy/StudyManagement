@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
 import { Tab } from 'semantic-ui-react'
-import UserCard from '../utils/card.component'
-import {Dialog_generator} from '../utils//utils'
+import UserCard from '../../utils/card.component'
+import {Dialog_generator} from '../../utils/utils'
 import AccountCircleOutlinedIcon from '@material-ui/icons/AccountCircleOutlined';
 import IconButton from '@material-ui/core/IconButton';
-import GenericTable from '../utils/generic_table.component';
+import GenericTable from '../../utils/generic_table.component';
 
 const make_participants = (arr_of_users, args) => {
     const users_by_roles = {teachers : [], students : []}
@@ -14,7 +14,7 @@ const make_participants = (arr_of_users, args) => {
             const id = user._id
             if (user.isTeacher) {
                 users_by_roles.teachers.push({
-                    "" : <IconButton onClick={()=>{setCardOpen(true); setCurrUser(user)}}><AccountCircleOutlinedIcon/></IconButton>,
+                    "" : <IconButton onClick={()=>{setCardOpen(true); setCurrUser(user)}} color="primary"><AccountCircleOutlinedIcon/></IconButton>,
                     "ת.ז" : id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,
@@ -22,7 +22,7 @@ const make_participants = (arr_of_users, args) => {
             }
             if (user.isStudent) {
                 users_by_roles.students.push({
-                    "" : <IconButton onClick={()=>{setCardOpen(true); setCurrUser(user)}}><AccountCircleOutlinedIcon/></IconButton>,
+                    "" : <IconButton onClick={()=>{setCardOpen(true); setCurrUser(user)}} color="primary"><AccountCircleOutlinedIcon/></IconButton>,
                     "ת.ז" : id,
                     "שם פרטי" : user.first_name,
                     "שם משפחה" : user.last_name,

@@ -1,10 +1,10 @@
 import React from 'react';
-import GenericTable from '../utils/generic_table.component'
+import GenericTable from '../../utils/generic_table.component'
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import CheckIcon from '@material-ui/icons/Check';
 import axios from 'axios';
-import get_mongo_api from '../../mongo/paths.component';
+import get_mongo_api from '../../../mongo/paths.component';
 import Typography from '@material-ui/core/Typography';
 import DescriptionOutlinedIcon from '@material-ui/icons/DescriptionOutlined';
 
@@ -44,7 +44,7 @@ const teachers_requests_array = (teachers_arr)=>{
                         {
                             "ת.ז" : teacher_id,
                             "קורס" : request.course_name,
-                            "גיליון" : grades_file.name ? <IconButton onClick={()=>open_grades_file(teacher_id)} color="primary" ><DescriptionOutlinedIcon /></IconButton> : <Typography variant="body2">לא קיים גיליון ציונים</Typography>,
+                            "גיליון" : grades_file.name ? <IconButton onClick={()=>open_grades_file(teacher_id)} color="primary" style={{padding : "0"}}><DescriptionOutlinedIcon /></IconButton> : <Typography variant="body2">לא קיים גיליון ציונים</Typography>,
                             "אישור קורס": <IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "approved", request.course_id)}><CheckIcon style={{color:"green"}}/></IconButton>,
                             "דחיית בקשה":<IconButton size="small" onClick={()=>approve_decline_teacher_req(teacher_id, "declined", request.course_id)}><CloseIcon style={{color:"red"}}/></IconButton>
                         }

@@ -7,42 +7,38 @@ import PieChartSharpIcon from '@material-ui/icons/PieChartSharp';
 import AssignmentOutlinedIcon from '@material-ui/icons/AssignmentOutlined';
 import PostAddIcon from '@material-ui/icons/PostAdd';
 import GroupAddOutlinedIcon from '@material-ui/icons/GroupAddOutlined';
-import {Dialog_generator} from '../utils/utils'
-import Participants from './participants.component'
-import AddCourse from './add_course.component'
-import AddGroup from './add_group.component'
-import TeachersRequestTable from './teachers_req.component'
-import StudentsRequestTable from './students_req.component'
+import {Dialog_generator, getOpenedPopup, closeAllPopups} from '../utils/utils'
+import Participants from './navbar_items/participants.component'
+import AddCourse from './navbar_items/add_course.component'
+import AddGroup from './navbar_items/add_group.component'
+import TeachersRequestTable from './tables/teachers_req.component'
+import StudentsRequestTable from './tables/students_req.component'
 import Grid from '@material-ui/core/Grid';
 import {useAsyncHook} from '../../mongo/paths.component';
 import {AnnualStatistics} from './annual_statistics'
-import {Statistics} from './statistics.component'
-import CoursesTableAdmin from './courses_table.component'
-import GroupsTableAdmin from './groups_table.component'
-import Reports from './reports.component'
+import {Statistics} from './navbar_items/statistics.component'
+import CoursesTableAdmin from './tables/courses_table.component'
+import GroupsTableAdmin from './tables/groups_table.component'
+import Reports from './navbar_items/reports.component'
 import { Typography } from '@material-ui/core';
 
-const getOpenedPopup = (num_of_popup, total_popups) => {
-    let true_false_by_index = {}
-    let i;
-    for (i=0; i < total_popups; i++){
-        if (i===num_of_popup) {
-            true_false_by_index[i] = true
-        } else {
-            true_false_by_index[i] = false
-        }
+import '../../../styles/grids.scss'
 
-    }
-    return true_false_by_index
+
+
+const GetAllStatisticsFromDB = () => {
+    const lessons_pie = useAsyncHook(`lessons/numOfLessonsByCourse`, null, null, false)
+    const students_pie = useAsyncHook(`students/numOfStudentsByCourse`, null, null, false)
+    const teachers_pie = useAsyncHook(`teachers/numOfSTeachersByCourse`, null, null, false)
+    return {lessons_pie, students_pie, teachers_pie}
 }
-
-const closeAllPopups = (total_popups) => {
-    let true_false_by_index = {}
-    let i;
-    for (i=0; i < total_popups; i++){
-        true_false_by_index[i] = false
-    }
-    return true_false_by_index
+const GetAllReportsDataFromDB = (selectedMonthYear) => {
+    const lessons_done = useAsyncHook(`lessons/byStatus/done`, null, null, false)
+    const lesson_price_uni = useAsyncHook(`constants/lesson_price`, null, null, false) 
+    const lesson_price_student = useAsyncHook(`constants/student_fee`, null, null, false) 
+    const  arr_teachers_from_db= useAsyncHook(`lessons/teachersReport/${selectedMonthYear.year}/${selectedMonthYear.month}`, null, null, false) 
+    const  arr_students_from_db= useAsyncHook(`lessons/studentsReport/${selectedMonthYear.year}/${selectedMonthYear.month}`, null, null, false) 
+    return {lessons_done, lesson_price_uni, lesson_price_student, arr_teachers_from_db, arr_students_from_db}
 }
 
 export default function Admin(props) {
@@ -58,25 +54,18 @@ export default function Admin(props) {
         { key : 'add_course', header : 'הוספת קורס' , on_click : ()=>setOpenedPopups(getOpenedPopup(3,total_popups)) , icon : <PostAddIcon fontSize="large" style={{color:"white"}} />},
         { key : 'add_group', header : 'הוספת קבוצה' , on_click : ()=>setOpenedPopups(getOpenedPopup(4,total_popups)) , icon : <GroupAddOutlinedIcon fontSize="large" style={{color:"white"}} />}
     ]
+
     const [sum_lessons, isLoading_sumLessons] = useAsyncHook(`lessons/paidMoney`)
     const [annual_budget, isLoading_budget] = useAsyncHook(`constants/annual_budget`)
     //assigned a value but never used  no-unused-vars
-    const [lessons_pie, _] = useAsyncHook(`lessons/numOfLessonsByCourse`)
-    const [students_pie, __] = useAsyncHook(`students/numOfStudentsByCourse`)
-    const [teachers_pie, ___] = useAsyncHook(`teachers/numOfSTeachersByCourse`)
     const [all_courses, isLoadingCourses] = useAsyncHook(`courses`)
     const [all_groups, isLoadingGroups] = useAsyncHook(`groups`)
-    const [lessons_done, isLoadingLessonsDone] = useAsyncHook(`lessons/byStatus/done`) // change it to get the only done statuses
-    const [lesson_price_uni, isLoadingLessonPriceUni] = useAsyncHook(`constants/lesson_price`) 
-    const [lesson_price_student, isLoadingLessonPriceStudent] = useAsyncHook(`constants/student_fee`) 
-
-
+    let {lessons_pie, students_pie, teachers_pie} = GetAllStatisticsFromDB()
     const [selectedMonthYear, setMonthYear] = useState({month : new Date().getMonth()+1, year : new Date().getFullYear()})
-    const [arr_teachers_from_db, isTeacherArrOfDone] = useAsyncHook(`lessons/teachersReport/${selectedMonthYear.year}/${selectedMonthYear.month}`) 
-    const [arr_students_from_db, isStudentArrOfDone] = useAsyncHook(`lessons/studentsReport/${selectedMonthYear.year}/${selectedMonthYear.month}`) 
+    let {lessons_done, lesson_price_uni, lesson_price_student, arr_teachers_from_db, arr_students_from_db} = GetAllReportsDataFromDB(selectedMonthYear)
+
     return (
-        <div  style={{textAlign : "center" , backgroundColor: "gainsboro"}}>
-            
+        <div  style={{textAlign : "center" }}>
             <AppBar position="static" className={classes.AppBar} >
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
@@ -88,8 +77,9 @@ export default function Admin(props) {
             <br></br>
                 <Typography variant="h3" align="center">ברוכים הבאים למסך המנהל</Typography>
             <br></br>   
-            <Grid container spacing={10} justify="space-around" direction="row-reverse" >
-                <Grid item md={5} xs={4} style={{marginRight: "1rem"}} >
+            
+            <Grid container justify="space-around" direction="row-reverse">  
+                <Grid item md={5} xs={4}>
                     <TeachersRequestTable teachers={teachers} />
                 </Grid>
                 <Grid item md={5} xs={4} style={{ marginLeft: "1rem" }}>
@@ -97,20 +87,19 @@ export default function Admin(props) {
                 </Grid>
             </Grid>
             <br/><br/>
-            <Grid container spacing={10} justify="space-around" direction="row-reverse">
-                {!isLoadingCourses && <Grid item md={4} xs={4} style={{marginRight: "1rem" }}>
+            <Grid container justify="space-around" direction="row-reverse">
+                {!isLoadingCourses && <Grid item md={5} xs={4} style={{marginRight: "1rem" }}>
                     <CoursesTableAdmin all_courses={all_courses}/>
                 </Grid>}
-                {!isLoadingGroups && <Grid item md={6} xs={4} style={{ marginLeft: "1rem" }}>
+                {!isLoadingGroups && <Grid item md={5} xs={4} style={{ marginLeft: "1rem" }}>
                     <GroupsTableAdmin all_groups={all_groups} users={users} students={students}/>
                 </Grid>}
             </Grid>
             <br/><br/>
             <Grid container justify="center">
                 <Grid item xs={8} >
-                { (!isLoading_sumLessons && !isLoading_budget) ? 
-                        <AnnualStatistics annual_budget={annual_budget} sum_lessons={sum_lessons}/>
-                         : <div>not finished</div>}
+                {!isLoading_sumLessons && !isLoading_budget && 
+                        <AnnualStatistics annual_budget={annual_budget} sum_lessons={sum_lessons}/>}
                 </Grid>
             </Grid>
         </div>

@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
-import {Dialog_generator} from '../utils/utils'
-import GenericTable from '../utils/generic_table.component'
-import AddStudentsToGroup from './add_students_to_group.component'
+import {Dialog_generator} from '../../utils/utils'
+import GenericTable from '../../utils/generic_table.component'
+import AddStudentsToGroup from '../add_students_to_group.component'
 import TransferWithinAStationIcon from '@material-ui/icons/TransferWithinAStation';
 import IconButton from '@material-ui/core/IconButton';
 
