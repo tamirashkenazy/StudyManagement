@@ -1,5 +1,7 @@
 const router = require('express').Router();
 const nodemailer = require('nodemailer');
+const mail_pass = process.env.mail_pass
+const mail_user = process.env.mail_user
 
 let User = require('../models/user.model');
 let Constants = require('../models/constants.model');
@@ -7,8 +9,8 @@ let Constants = require('../models/constants.model');
 const transporter = nodemailer.createTransport({
     service: 'gmail',
     auth: {
-      user: 'stdmngqa@gmail.com',
-      pass: 'Stdmng123'
+      user: mail_user,
+      pass: mail_pass
     }
   });
 
