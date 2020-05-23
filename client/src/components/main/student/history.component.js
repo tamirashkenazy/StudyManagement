@@ -1,20 +1,16 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import GenericTable from '../utils/generic_table.component'
 import Button from '@material-ui/core/Button';
-import UserCard from '../utils/card.component'
 import axios from 'axios'
-import get_mongo_api, { useAsyncHook } from '../../mongo/paths.component'
-import { Dialog_generator } from '../utils//utils'
-
-var user = null;
-var teacher = null;
-let isCardOpen = false;
+import get_mongo_api from '../../mongo/paths.component'
 
 const getUser = async (_id) => {
     return await axios.get(get_mongo_api(`users/${_id}`)).then((response => {
         if (response.data.success) {
-            console.log(response.data.message);
-            return user;
+            return response.data.message;
+        }
+        else {
+            return false;
         }
     }))
 }
@@ -22,27 +18,55 @@ const getUser = async (_id) => {
 const getTeacher = async (_id) => {
     return await axios.get(get_mongo_api(`teachers/byID/${_id}`)).then((response => {
         if (response.data.success) {
-            console.log(response.data.message);
-            return user;
+            return response.data.message;
+        }
+        else {
+            return false;
         }
     }))
 }
 
-const onClickUser = async (selectedTeacher) => {
-    console.log("onClickUserPopup");
-    user = getUser(selectedTeacher.teacher_id);
-    teacher = getTeacher(selectedTeacher.teacher_id);
-    // const teacher =  teacher
-    console.log(user);
-    console.log(teacher);
-    isCardOpen = !isCardOpen;
-    return isCardOpen;
+const update_teacher_and_user = async (func1, func2) => {
+    return axios.all([func1, func2]).then(axios.spread((...responses) => {
+        const responseOne = responses[0]
+        const responseTwo = responses[1]
+        if (responseOne && responseTwo) {
+            return [responseOne, responseTwo];
+        }
+        else if (responseOne || responseTwo) {
+            console.log('responseOne', responseOne);
+            console.log('responseTwo', responseTwo);
+            return false;
+        }
+        else {
+            console.log('responseOne && responseTwo = false');
+            return false;
+        }
+    })).catch(errors => {
+        console.log('errors in update_teacher_and_student', errors);
+    })
+}
+
+const onClickUser = (selectedTeacherID, setCardOpen, setUser, setTeacher) => {
+    update_teacher_and_user(getTeacher(selectedTeacherID), getUser(selectedTeacherID)).then((returnValue) => {
+        if (returnValue) {
+            console.log("onClickUserPopup");
+            let user1 = returnValue[1];
+            let teacher1 = returnValue[0];
+            setUser(user1);
+            setTeacher(teacher1);
+            setCardOpen(true);
+        } else {
+            console.log('problem in update_teacher_and_user', returnValue);
+        }
+    })
 }
 
 
-const make_rows_of_courses_requests = (lessons) => {
+const make_rows_of_lessons_history = (lessons, args) => {
+    const { setCardOpen, setUser, setTeacher } = args;
     if (lessons && Array.isArray(lessons) && lessons.length > 0) {
-        let options = lessons.map(lesson => {
+        let table = lessons.map(lesson => {
             let day = lesson.date.slice(8, 10);
             let month = lesson.date.slice(5, 7);
             let hour = lesson.date.slice(11, 16);
@@ -53,22 +77,57 @@ const make_rows_of_courses_requests = (lessons) => {
                     "שם הקורס": lesson.course.course_name,
                     "תאריך": shortMonth + " / " + shortDay,
                     "שעה": hour,
-                    "מורה": <Button onClick={() => onClickUser(lesson.teacher)}>{lesson.teacher.teacher_name}</Button>,
+                    "מורה": <Button onClick={() => onClickUser(lesson.teacher.teacher_id, setCardOpen, setUser, setTeacher)}>{lesson.teacher.teacher_name}</Button>,
                 }
             )
         });
-        return options
+        return table;
     }
 }
 
-export default function History(id,courseID) {
-    const [table_rows, loading] = useAsyncHook(`lessons/byStudentId/${id}`, make_rows_of_courses_requests);
+export default function History({ _id, courseID, setCardOpen, setUser, setTeacher }) {
+    const args = { setCardOpen, setUser, setTeacher };
+    const [data, setData] = useState(null);
+    const [table_rows, setTable] = useState(null)
+    const [loading, setLoading] = useState(true);
 
-    return (
-        !loading && table_rows &&
-        <>
+    useEffect(() => {
+        if (courseID !== null) {
+            let obj = {
+                status: "done",
+                course_id: courseID,
+                student_id: _id
+            };
+            setData(obj)
+            async function getDataFromAPI(data) {
+                var table = [];
+                const response = await axios.post(get_mongo_api(`lessons/ByStatusCourseAndStudent/`), data).then(response => {
+                    if (response.data.success) {
+                        return response.data.message
+                    } else {
+                        return null
+                    }
+                })
+                if (typeof response !== 'string' && response !== null) {
+                    table = make_rows_of_lessons_history(response, args)
+                }
+                setTable(table)
+                setLoading(false);
+            }
+            getDataFromAPI(obj);
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [courseID, _id]);
+
+    if (table_rows && !loading && data) {
+        return (
             <GenericTable table_data={{ data: table_rows, title: "היסטוריית שיעורים" }} />
-            {Dialog_generator(isCardOpen, () => { isCardOpen = false }, "כרטיס מורה","person_pin", {}, () => <UserCard user={user} teacher={teacher}></UserCard>)}
-        </>
-    )
+        )
+
+    } else {
+        return (
+            <GenericTable table_data={{ data: [{ "אין מידע בנוגע להיסטוריית שיעורים": "" }], title: "היסטוריית שיעורים" }} />
+        )
+
+    }
 }

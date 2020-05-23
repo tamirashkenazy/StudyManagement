@@ -61,13 +61,14 @@ export default function Participants({teachers, students, users}){
     return (
         <>
         {panes &&  <Tab panes={panes}/>}
+        
         {Dialog_generator(
             isCardOpen, 
             ()=>setCardOpen(false), 
-            "כרטיס סטודנט" ,
-            "person_pin",
+            null, null, 
             {user, teacher:filter_by_id(teachers, user), student:filter_by_id(students, user)}, 
-            (props)=><UserCard user={props.user} teacher={props.teacher} student={props.student}></UserCard>)
+
+            (props)=><UserCard user={props.user} teacher={props.teacher} student={props.student}></UserCard>, "card")
         }
         </>
     )

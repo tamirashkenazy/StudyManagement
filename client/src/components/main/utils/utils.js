@@ -13,15 +13,16 @@ export function Dialog_generator(open, onClose, title, icon, args, Component, st
         direction = styles.direction ? styles.direction : "rtl"
         height = styles.height
     }
-
-    const rtl_style_title = { direction: "rtl", textAlign: "center", paddingBottom : "0px"}
-    const rtl_style_content = { direction: direction, textAlign: "center", height : height}
+    const card = styles === "card" ? true : false;
+    const display_header = title || icon ? true : false;
+    const rtl_style_title = { direction: "rtl", textAlign: "center", padding: display_header? null:"0", paddingBottom : "0px"}
+    const rtl_style_content = { direction: direction, textAlign: "center", height : height, padding: display_header? null:"0"}
 
     return (
-        <Dialog open={open} onClose={onClose} fullWidth={true} maxWidth={maxWidth}>
-            <DialogTitle style={rtl_style_title} ><Typography display="inline" variant="h4" >{title} </Typography><MaterialIcon icon={icon} color='#37474f' />
+        <Dialog open={open} onClose={onClose} fullWidth={card? false: true } maxWidth={maxWidth}>
+            {display_header ? <DialogTitle style={rtl_style_title} ><Typography display="inline" variant="h4" >{title} </Typography><MaterialIcon icon={icon} color='#37474f' />
             <hr color="black"/>
-            </DialogTitle>
+            </DialogTitle>: null}
             <DialogContent style={rtl_style_content}>
                 {Component(args)}
             </DialogContent>

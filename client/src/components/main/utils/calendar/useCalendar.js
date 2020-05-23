@@ -141,16 +141,19 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
             if (cellDate < currentDate) {
                 $(item).addClass("disabled");
             }
-            for (let key of Object.keys(dates)) {
-                const inputDate = new Date(key);
+            if (dates && dates !== undefined && dates !== null) {
 
-                inputDate.setMinutes(0);
-                inputDate.setSeconds(0);
-                inputDate.setMilliseconds(0);
+                for (let key of Object.keys(dates)) {
+                    const inputDate = new Date(key);
 
-                if (cellDate.getTime() === inputDate.getTime()) {
-                    $(item).addClass("disabled");
-                    $(item).html('פנוי')
+                    inputDate.setMinutes(0);
+                    inputDate.setSeconds(0);
+                    inputDate.setMilliseconds(0);
+
+                    if (cellDate.getTime() === inputDate.getTime()) {
+                        $(item).addClass("disabled");
+                        $(item).html(dates[key])
+                    }
                 }
             }
         }
@@ -163,8 +166,12 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
                     inputDate.setSeconds(0);
                     inputDate.setMilliseconds(0);
                     if (cellDate.getTime() === inputDate.getTime()) {
-                        $(item).removeClass("disabled");
-                        $(item).html(dates[key].teacher_name)
+                        if (dates[key].teacher_name === 'שיעור שלי') {
+                            $(item).html(dates[key].teacher_name)
+                        } else {
+                            $(item).removeClass("disabled");
+                            $(item).html(dates[key].teacher_name)
+                        }
                     }
                 }
             }
