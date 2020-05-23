@@ -534,10 +534,6 @@ router.route('/update/:id').post((req,res) => {
             return res.send({success : false,message : "!המורה אינו קיים במערכת"})
         }
         teacher._id = req.body._id.trim();
-        //teacher.bank_number = req.body.bank_number
-        //teacher.bank_branch = req.body.bank_branch.trim();
-        //teacher.bank_account_number = req.body.bank_account_number.trim();
-        //teacher.bank_account_name = req.body.bank_account_name.trim();
         teacher.teaching_courses = req.body.teaching_courses;
         teacher.hours_available = req.body.hours_available;
         teacher.teaching_requests = req.body.teaching_requests;
