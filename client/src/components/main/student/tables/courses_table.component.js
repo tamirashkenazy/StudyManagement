@@ -1,7 +1,7 @@
 import React from 'react';
-import {useAsyncHook} from '../../mongo/paths.component'
+import {useAsyncHook} from '../../../mongo/paths.component'
 // import { makeStyles } from '@material-ui/core/styles';
-import GenericTable from '../utils/generic_table.component'
+import GenericTable from '../../utils/generic_table.component'
 import { Typography } from '@material-ui/core';
 
 const status_to_hebrew = {

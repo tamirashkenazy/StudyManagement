@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios'
 import { Dropdown } from 'semantic-ui-react'
-import get_mongo_api, { useAsyncHook } from '../../mongo/paths.component'
-import { Calendar } from '../utils/calendar/calendar';
+import get_mongo_api, { useAsyncHook } from '../../../mongo/paths.component'
+import { Calendar } from '../../utils/calendar/calendar';
 
 // set up Calendar functions
 var HOURS_AVAILABLE_GLOBAL = {};
@@ -222,6 +222,7 @@ const add_lesson = async (eachDateSelected, selectedCourseID, student) => {
 }
 //still needs to think about 2 teachers at the same time
 export default function BookHours({ _id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student, lessons, courses_options }) {
+    console.log(courses_options);
     const [isTeacher] = useState(false);
     const [no_available_dates, setNoAvailableDates] = useState(true);
 

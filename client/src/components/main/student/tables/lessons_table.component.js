@@ -1,8 +1,8 @@
 import React from 'react';
-import GenericTable from '../utils/generic_table.component'
+import GenericTable from '../../utils/generic_table.component'
 import Button from '@material-ui/core/Button';
 import axios from 'axios'
-import get_mongo_api from '../../mongo/paths.component'
+import get_mongo_api from '../../../mongo/paths.component'
 
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
