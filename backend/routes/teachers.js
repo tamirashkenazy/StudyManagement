@@ -567,15 +567,15 @@ router.route('/update/requestStatus/:id').post((req,res) => {
         if (!teacher || teacher.length === 0) {
             return res.send({success : false, message : "!המורה אינו קיים במערכת"})
         }
-        new_request = req.body;
-        current_request = teacher.teaching_requests.filter(request => request.course_id === new_request.course_id)
+        let new_request = req.body;
+        let current_request = teacher.teaching_requests.filter(request => request.course_id === new_request.course_id)
         if (!current_request || current_request.length === 0) {
             return res.send({success : false, message:"!הבקשה אינה קיימת במערכת" })
         } else{
             current_request = current_request[0]
             current_request.status = new_request.status
             if (new_request.status === 'approved'){
-                new_course = {"course_id" : current_request.course_id,
+                let new_course = {"course_id" : current_request.course_id,
                             "course_name" : current_request.course_name,
                             "hours_already_done" : '0'}
                 teacher.teaching_courses.push(new_course)
