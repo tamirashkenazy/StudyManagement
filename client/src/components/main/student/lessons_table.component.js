@@ -1,23 +1,25 @@
-import React, { useState } from 'react';
+import React from 'react';
 import GenericTable from '../utils/generic_table.component'
 import Button from '@material-ui/core/Button';
-import UserCard from '../utils/card.component'
 import axios from 'axios'
-import get_mongo_api, { useAsyncHook } from '../../mongo/paths.component'
-import { Dialog_generator } from '../utils//utils'
+import get_mongo_api from '../../mongo/paths.component'
 
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
     "report": { text: "דווח", color: "primary" },
     "done": { text: "בוצע", color: "default" },
-    "waiting": { text: "ממתין", color: "default" }
+    "waiting": { text: "ממתין", color: "default" },
+    "canceled": { text: "בוטל", color: "secondary" },
+    "happening": { text: "מתקיים", color: "primary" }
 }
 
 const getUser = async (_id) => {
     return await axios.get(get_mongo_api(`users/${_id}`)).then((response => {
         if (response.data.success) {
-            console.log(response.data.message);
             return response.data.message;
+        }
+        else {
+            return false;
         }
     }))
 }
@@ -25,69 +27,152 @@ const getUser = async (_id) => {
 const getTeacher = async (_id) => {
     return await axios.get(get_mongo_api(`teachers/byID/${_id}`)).then((response => {
         if (response.data.success) {
-            console.log(response.data.message);
             return response.data.message;
+        }
+        else {
+            return false;
         }
     }))
 }
 
-const onClickUser = async (selectedTeacher, func) => {
-    console.log("onClickUserPopup");
-    let user1 = await getUser(selectedTeacher.teacher_id);
-    let teacher1 = await getTeacher(selectedTeacher.teacher_id);
-    // const teacher =  teacher
-    let user = await user1;
-    let teacher = await teacher1;
-    await console.log('user', user);
-    await console.log('teacher', teacher);
-    await func(true);
+const update_teacher_and_user = async (func1, func2) => {
+    return axios.all([func1, func2]).then(axios.spread((...responses) => {
+        const responseOne = responses[0]
+        const responseTwo = responses[1]
+        if (responseOne && responseTwo) {
+            return [responseOne, responseTwo];
+        }
+        else if (responseOne || responseTwo) {
+            console.log('responseOne', responseOne);
+            console.log('responseTwo', responseTwo);
+            return false;
+        }
+        else {
+            console.log('responseOne && responseTwo = false');
+            return false;
+        }
+    })).catch(errors => {
+        console.log('errors in update_teacher_and_student', errors);
+    })
 }
 
-const onClickStatus = () => {
-    console.log("onClickStatus");
-    //
+const onClickUser = (selectedTeacherID, setCardOpen, setUser, setTeacher) => {
+    update_teacher_and_user(getTeacher(selectedTeacherID), getUser(selectedTeacherID)).then((returnValue) => {
+        if (returnValue) {
+            let user = returnValue[1];
+            let teacher = returnValue[0];
+            setUser(user);
+            setTeacher(teacher);
+            setCardOpen(true);
+        } else {
+            console.log('problem in update_teacher_and_user', returnValue);
+        }
+    })
+}
+
+const updateStatus = async (data) => {
+    return await axios.post(get_mongo_api(`lessons/updateStatus`), data).then((response => {
+        return response;
+    }))
+}
+
+const onClickStatus = (status, lesson) => {
+    var data = {
+        teacher_id: lesson.teacher.teacher_id,
+        student_id: lesson.student.student_id,
+        date: lesson.date,
+        status: status
+    }
+    switch (status) {
+        case "report":
+            data.status = "done";
+            updateStatus(data).then((response) => {
+                alert(response.data.message);
+                window.location.reload(true)
+            })
+            break;
+        case "cancel":
+            data.status = "canceled";
+            updateStatus(data).then((response) => {
+                alert(response.data.message);
+                window.location.reload(true)
+            })
+            break;
+        case "done":
+            break;
+        case "waiting":
+            break;
+        case "canceled":
+            break;
+        case "happening":
+            break;
+        default:
+    }
+
 };
 
-const make_rows_of_courses_requests = (lessons, func) => {
+const check_status = (status, lessonDate) => {
+    if (status === "waiting") {
+        var today = Date.now();
+        var tomorrow = new Date();
+        tomorrow.setDate(new Date().getDate() + 1);
+        if (tomorrow < lessonDate) { //lesson in the future
+            return "cancel";
+        } else if (today > lessonDate) { //lesson in the past
+            return "report";
+        } else { // too late to cancel
+            return "happening";
+        }
+    } else {
+        return status;
+    }
+}
+
+const make_rows_of_lesson_table = (lessons, args) => {
+    const { setCardOpen, setUser, setTeacher } = args;
     if (lessons && Array.isArray(lessons) && lessons.length > 0) {
         let options = lessons.map(lesson => {
-            let done = lesson.status === "done" ? true : false;
             let day = lesson.date.slice(8, 10);
             let month = lesson.date.slice(5, 7);
             let hour = lesson.date.slice(11, 16);
             let shortMonth = month.startsWith(0) ? month.slice(1, 2) : month;
             let shortDay = day.startsWith(0) ? day.slice(1, 2) : day;
-            return (
-                {
-                    "שם הקורס": lesson.course.course_name,
-                    "תאריך": shortMonth + " / " + shortDay,
-                    "שעה": hour,
-                    "מורה": <Button onClick={() => onClickUser(lesson.teacher, func)}>{lesson.teacher.teacher_name}</Button>,
-                    "סטטוס": <Button disabled={done} color={status_to_hebrew[lesson.status].color} variant="contained" onClick={() => onClickStatus(lesson.status)}>{status_to_hebrew[lesson.status].text} </Button>
-                }
-            )
+            var lessonDate = new Date(lesson.date);
+            var status = check_status(lesson.status, lessonDate);
+            let done = status === "done" || status === "canceled" || status === "happening" ? true : false;
+            if (lesson.status === "canceled") {
+                return null;
+            } else {
+                return (
+                    {
+                        "שם הקורס": lesson.course.course_name,
+                        "תאריך": shortMonth + " / " + shortDay,
+                        "שעה": hour,
+                        "מורה": <Button onClick={() => onClickUser(lesson.teacher.teacher_id, setCardOpen, setUser, setTeacher)}>{lesson.teacher.teacher_name}</Button>,
+                        "סטטוס": <Button disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
+                    }
+                )
+            }
         });
-        return options
+        var filtered_options = options.filter(function (el) {
+            return el != null;
+        });
+        return filtered_options;
     }
 }
 
-export default function LessonsTable({id}) {
-    const [isCardOpen, setCardOpen] = useState(false);
-    let user = null
-    let teacher = null
-    const [table_rows, loading] = useAsyncHook(`lessons/byStudentId/${id}`, make_rows_of_courses_requests, setCardOpen);
-     if (!loading && table_rows) {
-         return (
-            <>
+export default function LessonsTable({ setCardOpen, setUser, setTeacher, lessons }) {
+    const args = { setCardOpen, setUser, setTeacher };
+    const table_rows = make_rows_of_lesson_table(lessons, args);
+
+    if (table_rows) {
+        return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
-            {isCardOpen && teacher && user ? <> {Dialog_generator(isCardOpen, () => setCardOpen(false), "כרטיס מורה", "person_pin", {}, () => <UserCard user={user} teacher={teacher}></UserCard>)} </> : null}
-            </>
-         )
+        )
+    } else {
+        return (
+            <GenericTable table_data={{ data: [{ "אין מידע בנוגע לשיעורים": "" }], title: "שיעורים" }} />
+        )
 
-     } else {
-         return (
-            <GenericTable table_data={{ data: [{"אין מידע בנוגע לשיעורים" : ""}], title: "שיעורים" }} />
-         )
-
-     }
+    }
 }

@@ -19,6 +19,7 @@ import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableCell from '@material-ui/core/TableCell';
 
+var DATES_COUNTER = 0;
 export function Calendar(props) {
     // Alldate keeps each week with unique key (year + week number) with weekID() function.
     // Inside that it keeps checkbox value for get next 4 weeks and all the selected dates.
@@ -103,6 +104,7 @@ export function Calendar(props) {
         const { target } = e;
         if (target.classList.contains("pickable") && !target.classList.contains("disabled")) {
             $(target).toggleClass("active");
+            DATES_COUNTER = target.classList.contains("active") ? DATES_COUNTER+1 : DATES_COUNTER-1;
         }
 
         // Setting state on every click from user 
@@ -123,13 +125,19 @@ export function Calendar(props) {
         });
     };
 
-    const onChangeHandlerCheckBox = () => {
-
+    const onChangeHandlerCheckBox = (event) => {
+        if (event.target.checked) {
+            $('.btn-right').css('display', 'none');
+            $('.btn-left').css('display', 'none');
+        } else {
+            $('.btn-right').css('display', 'block');
+            $('.btn-left').css('display', 'block');
+        }
         // Updates state when checkbox is clicked
         setAllDate(prevState => {
             return {
                 ...prevState,
-                [weekID()] : {
+                [weekID()]: {
                     checkbox: !prevState[weekID()].checkbox,
                     dates: [...addActiveElements()]
                 }
@@ -150,10 +158,9 @@ export function Calendar(props) {
             const prop = allDate[stateWeekID];
 
             for (let dateItem of prop.dates) {
-                if (dateItem === undefined  || dateItem === null) {
+                if (dateItem === undefined || dateItem === null) {
                 }
                 else {
-                    console.log(dateItem);
                     const itemYear = weekID().slice(0, 4);
                     const itemHourOld = dateItem.split("-")[0];
                     const itemDayOld = dateItem.split("-")[1].split(".")[0];
@@ -197,7 +204,7 @@ export function Calendar(props) {
                             }
                         }
                         else {
-                            daysWithNoCheckboxTrue.push(itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour+ "Z");
+                            daysWithNoCheckboxTrue.push(itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour + "Z");
                             newPickedDates.push(...daysWithNoCheckboxTrue);
                         }
                     }
@@ -267,9 +274,9 @@ export function Calendar(props) {
         <div className="calendar-component">
             <div className="container">
                 <div className="calendar-header">
-                    <div className="btn left" onClick={() => onClickHandlerWeekChange('goLeft')}><ArrowBackIosIcon className="fas fa-chevron-left" /></div>
+                    <div className="btn-left" onClick={() => onClickHandlerWeekChange('goLeft')}><ArrowBackIosIcon className="fas fa-chevron-left" /></div>
                     <h1 className="calendar-header--title">{""}</h1>
-                    <div className="btn right" onClick={() => onClickHandlerWeekChange('goRight')}><ArrowForwardIosIcon className="fas fa-chevron-right" /></div>
+                    <div className="btn-right" onClick={() => onClickHandlerWeekChange('goRight')}><ArrowForwardIosIcon className="fas fa-chevron-right" /></div>
                 </div>
                 <TableContainer>
                     <Table size="small" stickyHeader className="calendar-table" onClick={e => onClickHandlerCalendar(e)}>
@@ -378,7 +385,7 @@ export function Calendar(props) {
                     control={<Checkbox date={weekID()} checked={allDate[weekID()].checkbox} onChange={onChangeHandlerCheckBox} name="checkbox" />}
                     label="בחר 4 שבועות קדימה"
                 />
-                <button className="confirm btn" onClick={onClickHandlerSubmit}>עדכן</button>
+                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={DATES_COUNTER <= 0} >עדכן</button>
             </div>
         </div>
     )
