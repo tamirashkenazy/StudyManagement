@@ -74,24 +74,6 @@ export default function UserCard({ user, teacher, student }) { //user, teacher, 
       <Card.Content>
         <Card.Header className={classes.header}>{full_name}</Card.Header>
         <Card.Meta className={classes.meta}>
-          {/* <TableContainer>
-            <Table size="small" >
-              <TableBody>
-                <TableRow>
-                  <TableCell className={classes.tableCell}>תז</TableCell>
-                  <TableCell className={classes.tableCell}>{user._id} </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className={classes.tableCell}>טלפון</TableCell>
-                  <TableCell className={classes.tableCell}>{user.tel_number} </TableCell>
-                </TableRow>
-                <TableRow>
-                  <TableCell className={classes.tableCell}>מייל</TableCell>
-                  <TableCell className={classes.tableCell}>{user.email} </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
-          </TableContainer> */}
           <span> {user._id} </span>
           <span> {user.tel_number} </span>
           <span> {user.email} </span>

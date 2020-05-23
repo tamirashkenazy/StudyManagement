@@ -10,8 +10,8 @@ import CoursesToTeach from './navbar_items/courses_teaching.component'
 import UploadGradesSheet from './navbar_items/teacher_grades_sheet.component'
 import UpdateAvailability from './navbar_items/update_availability.component'
 import { Dialog_generator, getOpenedPopup, closeAllPopups } from '../utils/utils'
-import TeachersStatusRequestsTable from './requests_status.component'
-import LessonsTable from './lessons_table.component'
+import TeachersStatusRequestsTable from './tables/requests_status.component'
+import LessonsTable from './tables/lessons_table.component'
 import ProgressBar from './progress_bar.component'
 import '../../../styles/teachers.scss';
 import { Typography } from '@material-ui/core';

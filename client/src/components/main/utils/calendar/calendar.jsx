@@ -228,6 +228,7 @@ export function Calendar(props) {
         }
         if (props.isTeacher) {
             const uniqueDates = new Set(newPickedDates);
+            console.log('uniqueDates: ', uniqueDates);
             props.confirmHandler(Array.from(uniqueDates));
         } else {
             props.confirmHandler(pickedDictionary);

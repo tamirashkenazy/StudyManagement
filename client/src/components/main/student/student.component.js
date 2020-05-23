@@ -5,12 +5,12 @@ import AccountMenu from '../navbar/navbar.component'
 import AssignmentTurnedInOutlinedIcon from '@material-ui/icons/AssignmentTurnedInOutlined';
 import ScheduleOutlinedIcon from '@material-ui/icons/ScheduleOutlined';
 import '../../../styles/students.scss';
-import RequestHours from './request_hours_table.component'
-import BookHours from './book_hours.component'
+import RequestHours from './navbar_items//request_hours_table.component'
+import BookHours from './navbar_items/book_hours.component'
 import History from './history.component'
-import CoursesTable from './courses_table.component'
-import LessonsTable from './lessons_table.component'
-import TrackHoursTable from './track_hours_table.component'
+import CoursesTable from './tables/courses_table.component'
+import LessonsTable from './tables/lessons_table.component'
+import TrackHoursTable from './tables/track_hours_table.component'
 import { Dialog_generator, getOpenedPopup, closeAllPopups } from '../utils/utils'
 import Grid from '@material-ui/core/Grid';
 import { Typography } from '@material-ui/core';
@@ -71,7 +71,7 @@ export default function Student(props) {
                     <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
                 </AppBar>
                 {Dialog_generator(openedPopups[0], () => setOpenedPopups(closeAllPopups(total_popups)), " בקשת שעות חונכות","access_time", { id: user._id, number_of_approved_hours: student.group.approved_hours }, (args) => RequestHours(args))}
-                {Dialog_generator(openedPopups[1], () => setOpenedPopups(closeAllPopups(total_popups)), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student }, (args) => BookHours(args))}
+                {Dialog_generator(openedPopups[1], () => setOpenedPopups(closeAllPopups(total_popups)), "קביעת שעות חונכות", "assignment_turned_in",{ _id: user._id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student, courses_options }, (args) => BookHours(args))}
                 {Dialog_generator(openedPopups[2], () => {setSelectedCourse(null);  setOpenedPopups(closeAllPopups(total_popups))} , null, null, { _id: user._id, courseID: selectedCourseID, setCardOpen, setUser: setUserTeacher, setTeacher }, (args) => History(args))},
                 {Dialog_generator(openedPopups[3], () => setOpenedPopups(closeAllPopups(total_popups)), "הודעות","mail_outline", { user: user, close_popup : () => setOpenedPopups(closeAllPopups(total_popups)) }, (args) => SendMessage(args))}
                 {Dialog_generator(isCardOpen, () => setCardOpen(false), null, null, null, () => <UserCard user={userTeacher} teacher={teacher}></UserCard>, "card")}

@@ -25,6 +25,7 @@ const make_available_hours_list = (arr_of_hours) => {
 
 export default function UpdateAvailability(props) {
     const [hours_available, loading] = useAsyncHook(`teachers/${props.id}/hoursAvailable`, make_available_hours_list);
+    console.log(hours_available);
     const sendHours = (selectedHours, id) => {
         if (selectedHours.length > 0) {
             console.log(selectedHours);
@@ -40,7 +41,7 @@ export default function UpdateAvailability(props) {
             })
         }
     }
-
+    
     const [isTeacher] = useState(true);
 
     return (

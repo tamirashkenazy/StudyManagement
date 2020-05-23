@@ -1,7 +1,7 @@
 import React, {useState} from 'react';
 import {Button, Dropdown} from 'semantic-ui-react'
 import axios from 'axios'
-import get_mongo_api, {useAsyncHook} from '../../mongo/paths.component'
+import get_mongo_api, {useAsyncHook} from '../../../mongo/paths.component'
 import { Grid } from 'semantic-ui-react'
 
 const make_courses_option = (arr_of_courses) => {
