@@ -13,41 +13,6 @@ const get_hours_available_to_book = async (data) => {
     }))
 }
 
-// const check_courses = async (arr_of_courses, id) => {
-//     var options = [];
-//     var arr_courses_valid = [];
-//     var itemsProcessed = 0;
-//     arr_of_courses.forEach(course => {
-//         var data = { course_id: course.course_id, student_id: id };
-//         get_hours_available_to_book(data).then((response) => {
-//             itemsProcessed++;
-//             if (response.data.success && response.data.message > 0) {
-//                 arr_courses_valid.push(course);
-//                 if (itemsProcessed === arr_of_courses.length) {
-//                     options.push(make_courses_option(arr_courses_valid));
-//                 }
-//             }
-//         })
-//     });
-//     console.log(options)
-//     return options;
-// }
-
-// const make_courses_option = (arr_of_courses) => {
-//     if (arr_of_courses && Array.isArray(arr_of_courses) && arr_of_courses.length > 0) {
-//         let options = arr_of_courses.map(course_obj => {
-//             return (
-//                 {
-//                     key: course_obj.course_id,
-//                     value: course_obj.course_id,
-//                     text: course_obj.course_name
-//                 }
-//             )
-//         })
-//         return options;
-//     }
-// }
-
 const hasNull = (target) => {
     for (var member in target) {
         if (target[member] == null)
@@ -66,14 +31,12 @@ const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID,
                 var teacher_id = dates_per_teacher.teacher_id;
                 let hours_per_teacher = dates_per_teacher.hours_available.map(hour_available => {
                     var today = Date.now();
-                    var date = new Date(hour_available);
-                    if (today < date) {
-                        var singleDate = hour_available.split("T");
-                        var dateFormat = singleDate[0].replace("-", " ")
-                        var singleHour = singleDate[1].slice(0, 5);
+                    var date = hour_available.slice(0, -1)
+                    var newDate = new Date(date);
+                    if (today < newDate) {
                         return (
                             {
-                                date: [new Date(dateFormat + " " + singleHour)],
+                                date: [newDate],
                                 text: teacher_name,
                                 id: teacher_id
                             }
@@ -105,14 +68,12 @@ const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID,
 const set_lessons = (lessons, array) => {
     let hours_of_lessons = lessons.map(lesson => {
         var today = Date.now();
-        var date = new Date(lesson.date);
-        if (today < date) {
-            var singleDate = lesson.date.split("T");
-            var dateFormat = singleDate[0].replace("-", " ")
-            var singleHour = singleDate[1].slice(0, 5);
+        var date = lesson.date.slice(0, -1)
+        var newDate = new Date(date);
+        if (today < newDate) {
             return (
                 {
-                    date: [new Date(dateFormat + " " + singleHour)],
+                    date: [newDate],
                     text: 'שיעור שלי',
                     id: 'שיעור'
                 }
@@ -176,17 +137,13 @@ const set_available_hours = (selectedCourse, setHoursOptions, setNoAvailableDate
 //after click choose lesson functions
 
 const delete_hours_from_teacher = async (lessonHour) => {
-    console.log('lessonHour', lessonHour);
     var teacherSelectedID = Object.values(lessonHour)[1].teacher_id;
     var hour = Object.values(lessonHour)[0] + "Z";
-    console.log('teacherSelectedID', teacherSelectedID);
-    console.log('hour', hour);
     var hours = [];
     hours.push(hour);
     var data = { hours_available: hours }
     return await axios.post(get_mongo_api(`teachers/delete/hoursAvailable/${teacherSelectedID}`), data).then((response => {
         if (response.data.success) {
-            console.log('teachers/delete/hoursAvailable success message', response.data.message);
         }
         else {
             console.log('teachers/delete/hoursAvailable failure message', response.data.success);
@@ -195,9 +152,19 @@ const delete_hours_from_teacher = async (lessonHour) => {
     }))
 }
 
+const add_lesson_to_student = async (id, courseID) => {
+    var data = { course_id: courseID }
+    return await axios.post(get_mongo_api(`students/update/newLessons/${id}`), data).then((response => {
+        if (response.data.success) {
+        }
+        else {
+            console.log('teachers/delete/hoursAvailable failure message', response.data.success);
+        }
+        return response.data;
+    }))
+}
+
 const add_lesson = async (eachDateSelected, selectedCourseID, student) => {
-    console.log('eachDateSelected', eachDateSelected);
-    console.log('selectedCourseID', selectedCourseID);
     const course = student.courses.find(course => course.course_id === selectedCourseID);
     var courseSelected = { course_id: selectedCourseID, course_name: course.course_name };
     var teacherSelected = Object.values(eachDateSelected)[1];
@@ -212,7 +179,6 @@ const add_lesson = async (eachDateSelected, selectedCourseID, student) => {
     }
     return await axios.post(get_mongo_api(`lessons/add/`), data).then((response => {
         if (response.data.success) {
-            console.log('lessons/add success message', response.data.message);
         }
         else {
             console.log('lessons/add failure message', response.data.message);
@@ -220,9 +186,33 @@ const add_lesson = async (eachDateSelected, selectedCourseID, student) => {
         return response.data;
     }))
 }
+
+const make_courses_option = (arr_of_courses) => {
+    if (arr_of_courses && Array.isArray(arr_of_courses) && arr_of_courses.length > 0) {
+        let options = arr_of_courses.map(course_obj => {
+            var number = parseInt(course_obj.hours_able_to_book);
+            if (number > 0) {
+                return (
+                    {
+                        key: course_obj.course_id,
+                        value: course_obj.course_id,
+                        text: course_obj.course_name
+                    }
+                )
+            }
+            else { return null; }
+        })
+        var filtered_options = options.filter(function (el) {
+            return el != null;
+        });
+        return filtered_options;
+    }
+}
+
+
 //still needs to think about 2 teachers at the same time
-export default function BookHours({ _id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student, lessons, courses_options }) {
-    console.log(courses_options);
+export default function BookHours({ _id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student, lessons }) {
+    const [courses_options, loading2] = useAsyncHook(`students/${_id}/courses`, make_courses_option);
     const [isTeacher] = useState(false);
     const [no_available_dates, setNoAvailableDates] = useState(true);
 
@@ -236,19 +226,24 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                         Object.entries(dateSelected).forEach(oneDateSelected => {
                             add_lesson(oneDateSelected, selectedCourseID, student).then((add_lesson_response) => {
                                 if (add_lesson_response.success) {
-                                    delete_hours_from_teacher(oneDateSelected).then((delete_hours_success) => {
-                                        if (delete_hours_success) {
-                                            trueReturnValueCounter++;
-                                            if (trueReturnValueCounter === Object.entries(dateSelected).length) {
-                                                console.log(trueReturnValueCounter);
-                                                trueReturnValueCounter === 1 ? alert('השיעור נוסף בהצלחה') : alert(trueReturnValueCounter + 'השיעורים נוספו בהצלחה ');
-                                                window.location.reload(true);
-                                            }
-                                            else {
-                                                console.log('problem in delete_hours_from_teacher', trueReturnValueCounter);
-                                            }
+                                    add_lesson_to_student(_id, selectedCourseID).then((add_lesson_to_student) => {
+                                        if (add_lesson_to_student.success) {
+                                            delete_hours_from_teacher(oneDateSelected).then((delete_hours_success) => {
+                                                if (delete_hours_success) {
+                                                    trueReturnValueCounter++;
+                                                    if (trueReturnValueCounter === Object.entries(dateSelected).length) {
+                                                        trueReturnValueCounter === 1 ? alert('השיעור נוסף בהצלחה') : alert(trueReturnValueCounter + 'השיעורים נוספו בהצלחה ');
+                                                        window.location.reload(true);
+                                                    }
+                                                    else {
+                                                        console.log('problem in delete_hours_from_teacher', trueReturnValueCounter);
+                                                    }
+                                                } else {
+                                                    console.log('problem in delete_hours_from_teacher', delete_hours_success);
+                                                }
+                                            })
                                         } else {
-                                            console.log('problem in delete_hours_from_teacher', delete_hours_success);
+                                            console.log('problem in add_lesson_to_student', add_lesson_to_student.message);
                                         }
                                     })
                                 } else {
@@ -274,11 +269,11 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
         }
         else {
         }
-        //// eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedCourseID, _id, lessons,courses_options]);
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [selectedCourseID, _id, lessons]);
 
     return (
-        (courses_options) ?
+        (!loading2 && courses_options && courses_options.length > 0) ?
             <div className="studentCalendar">
                 <Dropdown direction="right" placeholder='בחר קורס' defaultValue={selectedCourseID} scrolling search selection options={courses_options} onChange={(e, { value }) => { setSelectedCourse(value) }} />
                 {(selectedCourseID && selectedCourseID !== null) ?

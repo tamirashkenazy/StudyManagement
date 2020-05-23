@@ -6,9 +6,10 @@ import get_mongo_api, { useAsyncHook } from '../../../mongo/paths.component'
 const make_available_hours_list = (arr_of_hours, lessons) => {
     if (arr_of_hours && arr_of_hours !== undefined && arr_of_hours.length > 0) {
         let datesDict = arr_of_hours.map(date_obj => {
+            var date = date_obj.slice(0, -1)
             return (
                 {
-                    date: [new Date(date_obj).toUTCString()],
+                    date: [new Date(date)],
                     text: 'פנוי'
                 }
             )
@@ -34,14 +35,12 @@ const make_available_hours_list = (arr_of_hours, lessons) => {
 const set_lessons = (lessons, array) => {
     let hours_of_lessons = lessons.map(lesson => {
         var today = Date.now();
-        var date = new Date(lesson.date);
-        if (today < date) {
-            var singleDate = lesson.date.split("T");
-            var dateFormat = singleDate[0].replace("-", " ")
-            var singleHour = singleDate[1].slice(0, 5);
+        var date = lesson.date.slice(0, -1)
+        var newDate = new Date(date);
+        if (today < newDate) {
             return (
                 {
-                    date: [new Date(dateFormat + " " + singleHour)],
+                    date: [newDate],
                     text: 'שיעור שלי',
                     id: 'שיעור'
                 }
@@ -59,19 +58,16 @@ const set_lessons = (lessons, array) => {
 
 export default function UpdateAvailability({ id, lessons }) {
     const [hours_available, loading] = useAsyncHook(`teachers/${id}/hoursAvailable`, make_available_hours_list, lessons);
-    console.log('hours_available: ', hours_available);
     const [isTeacher] = useState(true);
 
     const sendHours = (selectedHours, id) => {
         if (selectedHours.length > 0) {
-            console.log(selectedHours);
             axios.post(get_mongo_api(`teachers/add/hoursAvailable/${id}`), { dates: selectedHours }).then(response => {
                 if (!response.data.success) {
                     console.log(response.data.message)
                     console.log(selectedHours)
                 } else {
                     alert(response.data.message)
-                    console.log(selectedHours)
                     window.location.reload(true)
                 }
             })
