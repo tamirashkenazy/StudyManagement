@@ -5,29 +5,36 @@ import { Button} from 'react-bootstrap'
 //TALKS to the backend, sends https requests
 import get_mongo_api from '../../../mongo/paths.component'
 import axios from 'axios'
-export default function AddCourse(){
-    const httpPostRequestToAddCourse = (inputs) => {
-        const course_to_add = {  
-            _id : inputs.course_id,
-            name : inputs.course_name,
-        }
-        axios.post(get_mongo_api('courses/add'), course_to_add).then((response)=> {
-            if (!response.data.success) {
-               alert("הקורס לא התווסף בהצלחה")
-            } else {
-                alert("הקורס התווסף בהצלחה")
-            }
-        })
-    }
 
+
+const httpPostRequestToAddCourse = async (inputs) => {
+    const course_to_add = {  
+        _id : inputs.course_id,
+        name : inputs.course_name,
+    }
+    const response = await axios.post(get_mongo_api('courses/add'), course_to_add).then((response)=> {
+        if (!response.data.success) {
+           alert("הקורס לא התווסף בהצלחה")
+           return false
+        } else {
+            alert("הקורס התווסף בהצלחה")
+            return true
+        }
+    })
+    return response
+}
+
+export default function AddCourse(){
     const useCourseForm = (httpRequestFunc) => {
         const [inputs, setInputs] = useState({course_name : '', course_id : ''})
         // const [wasAdded, setWasAdded] = useState(false)
-        const handleSubmit = (event) => {
+        const handleSubmit = async (event) => {
             if (event) {
                 event.preventDefault();
-                httpRequestFunc(inputs)
-                window.location.reload(true)
+                let return_val = await httpRequestFunc(inputs)
+                if (return_val) {
+                    window.location.reload(true)
+                }
             }
         }
         const handleInputChange = (event, {name, value}) => {
