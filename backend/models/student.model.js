@@ -18,6 +18,7 @@ const StudentSchema = new Schema({
                 course_name : { type : String, required : true, minlength: 2 },
                 approved_hours : {type : String,  required : true, match: onlyNumbers},
                 wating_hours : {type : String,  required : true, match: onlyNumbers},
+                hours_able_to_book : {type : String,  required : true, match: onlyNumbers},
                 hours_already_done : {type : String,  required : true, match: onlyNumbers, default: '0'}}] 
 }, { timestamps:true }, );
 

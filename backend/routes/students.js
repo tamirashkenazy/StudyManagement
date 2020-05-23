@@ -105,6 +105,28 @@ router.route('/:id/requests/byCourseID').post((req,res) => {
 })
 
 
+/**
+ * get number of hours to book 
+ * request parameters:
+ *      /<student_id>/hoursToBook
+ * request body:
+ *      "course_id" : <course_id> 
+ */
+router.route('/:id/hoursToBook').post((req,res) => {
+    let student_id = req.params.id
+    Student.findById((student_id), (err,student) => {
+        if(err) {
+            return res.send({success : false, message:"Error: " + err})
+        } else if (!student || student.length===0) {
+            return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
+        } else {
+            let request_course = student.courses.filter(course => course.course_id === req.body.course_id)
+            return res.send({success : true, message: request_course.hours_able_to_book})
+        }
+    })
+})
+
+
 
 /**
  * get list of student's requests by status
@@ -279,6 +301,7 @@ router.route('/add/request/:id').post((req, res) => {
                 new_course = {course_id: new_request.course_id,
                             course_name: new_request.course_name,
                             approved_hours: '0',
+                            hours_able_to_book: '0',
                             wating_hours: new_request.number_of_hours,
                             hours_already_done: '0'}
                 student.courses.push(new_course)
@@ -418,7 +441,68 @@ router.route('/update').post((req,res) => {
 });
 
 
+/**
+ * student lesson done.
+ * request parameters:
+ *     /update/courseHours/<student_id>
+ * request body:
+ *       "course_id" : <course_id>
+ */
+router.route('/update/courseHours/:id').post((req,res) => {
+    let course_id = req.body.course_id
+    Student.findById((req.params.id)).then((student) => {
+        if (!student || student.length === 0) {
+            return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
+        }else{
+            let course_to_update = student.courses.findIndex(course => course.course_id === course_id)
+            let approved_hours = Number(student.courses[course_to_update].approved_hours)
+            let hours_already_done = Number(student.courses[course_to_update].hours_already_done)
+            approved_hours--;
+            hours_already_done++;
+            student.courses[course_to_update].approved_hours = approved_hours.toString()
+            student.courses[course_to_update].hours_already_done = hours_already_done.toString()
+            student.save((err, doc)=> {
+                if(err) {
+                   console.log('Error: ' + err);
+                   return res.send({success : false, message : err.errmsg});
+                }
+                return res.send({success : true, message : "השעות עודכנו בהצלחה"});
+            })
+        }
+    }); 
+});
  
+
+/**
+ * added new lesson to student.
+ * request parameters:
+ *     /update/courseHours/<student_id>
+ * request body:
+ *       "course_id" : <course_id>
+ */
+router.route('/update/newLessons/:id').post((req,res) => {
+    let course_id = req.body.course_id
+    console.log("-----------------------------")
+    Student.findById((req.params.id)).then((student) => {
+        if (!student || student.length === 0) {
+            return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
+        }else{
+            let course_to_update = student.courses.findIndex(course => course.course_id === course_id)
+            let hours_able_to_book = Number(student.courses[course_to_update].hours_able_to_book)
+            hours_able_to_book--;
+            student.courses[course_to_update].hours_able_to_book = hours_able_to_book.toString()
+            student.save((err, doc)=> {
+                if(err) {
+                   console.log('Error: ' + err);
+                   return res.send({success : false, message : err.errmsg});
+                }
+                return res.send({success : true, message : "השעות עודכנו בהצלחה"});
+            })
+        }
+    }); 
+});
+
+
 /**
  * update student's group by id.
  * request parameters:
@@ -537,7 +621,10 @@ router.route('/update/requestStatus/:id').post((req,res) => {
             if (new_request.status === 'approved'){
                 current_approved_hours = student.courses[course_to_update].approved_hours
                 updated_hours = Number(current_approved_hours) + Number(current_request.number_of_hours)
+                current_able_to_book = student.courses[course_to_update].hours_able_to_book
+                updated_hours_to_book = Number(current_able_to_book) + Number(current_request.number_of_hours)
                 student.courses[course_to_update].approved_hours = updated_hours.toString()
+                student.courses[course_to_update].hours_able_to_book = updated_hours_to_book.toString()
                 student.courses[course_to_update].wating_hours = '0'
             }else if(new_request.status === 'declined'){
                 student.courses[course_to_update].wating_hours = '0'
