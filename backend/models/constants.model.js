@@ -5,10 +5,10 @@ const validEmailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))
 const Schema = mongoose.Schema;
 const ConstantsSchema = new Schema({
     unique : {type : String, default: "constants", unique: true},
-    lesson_price : { type : String, match: onlyNumbers },
-    student_fee : { type : String, match: onlyNumbers },
-    admin_mail : { type: String, required : true, unique: true, match: validEmailRegex },
-    annual_budget : { type : String, match: onlyNumbers }
+    lesson_price : { type : String, match: onlyNumbers, default: "50" },
+    student_fee : { type : String, match: onlyNumbers, default: "30" },
+    admin_mail : { type: String, required : true, unique: true, match: validEmailRegex, default: "studymng@gmail.com" },
+    annual_budget : { type : String, match: onlyNumbers, default: "5000" }
 }, { timestamps:true }, );
 
 

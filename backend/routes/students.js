@@ -148,7 +148,7 @@ router.route('/availableHours').post((req,res) => {
             Lesson.find({ $and: [{"status" : "waiting"} , {"course.course_id" : course_id},  {"student.student_id" : student_id}] }, (err,lessons) => {
                 if(err) {
                     return res.send({success : false, message:"Error: " + err})
-                } else if (lessons && lessons.length > 0) {
+                } else if (lessons && lessons.length >= 0) {
                     let book_lessons = lessons.length
                     console.log(book_lessons)
                     current_course = student.courses.filter(course => course.course_id === course_id)
