@@ -1,35 +1,23 @@
 import React from 'react';
-import get_mongo_api from '../../../mongo/paths.component'
 import GenericTable from '../../utils/generic_table.component'
 import EventIcon from '@material-ui/icons/Event';
 import UpdateIcon from '@material-ui/icons/Update';
 import IconButton from '@material-ui/core/IconButton';
-import axios from 'axios'
-
-const get_hours_available_to_book = async data => {
-    return functionWithPromise(data);
-}
-
-const functionWithPromise = data => { //a function that returns a promise
-    return axios.post(get_mongo_api(`students/availableHours`), data).then((response => {
-        return Promise.resolve(response)
-    }))
-}
 
 const make_rows_of_hours_table = (student, setOpenedPopups, setSelectedCourse, getOpenedPopup) => {
     if (student.courses && student.courses.length > 0) {
         let options = student.courses.map(course_obj => {
-            // var data = { course_id: course_obj.course_id, student_id: id };
-            let remaining_hours = 0;
-            var scheduleDisabled = (remaining_hours > 0) ? false : true;
-            var historyDisabled = (course_obj.hours_already_done > "0") ? false : true;
+            var hours_done = parseInt(course_obj.hours_already_done);
+            var hours_remain = parseInt(course_obj.hours_able_to_book);
+            var scheduleDisabled = (hours_remain > 0) ? false : true;
+            var historyDisabled = (hours_done > 0) ? false : true;
             return (
                 {
                     "שם הקורס": course_obj.course_name,
                     "שעות שאושרו": course_obj.approved_hours,
                     "שעות שבוצעו": course_obj.hours_already_done,
-                    "היסטוריה": <IconButton disabled={historyDisabled} className="history" onClick={() => { setSelectedCourse(course_obj.course_id); setOpenedPopups(Object.assign({}, getOpenedPopup(false, false, true, false))) }}><UpdateIcon className="UpdateIcon" /></IconButton>,
-                    "קביעת שיעור": <IconButton disabled={scheduleDisabled} className="schedule" onClick={() => { setSelectedCourse(course_obj.course_id); setOpenedPopups(Object.assign({}, getOpenedPopup(false, true, false, false))) }}><EventIcon className="EventIcon" /> </IconButton>
+                    "היסטוריה": <IconButton disabled={historyDisabled} className="history" onClick={() => { setSelectedCourse(course_obj.course_id); setOpenedPopups(getOpenedPopup(2, 4)) }}><UpdateIcon className="UpdateIcon" /></IconButton>,
+                    "קביעת שיעור": <IconButton disabled={scheduleDisabled} className="schedule" onClick={() => { setSelectedCourse(course_obj.course_id); setOpenedPopups(getOpenedPopup(1, 4)) }}><EventIcon className="EventIcon" /> </IconButton>
                 }
             )
         })
@@ -40,8 +28,8 @@ const make_rows_of_hours_table = (student, setOpenedPopups, setSelectedCourse, g
     }
 }
 
-export default function TrackHoursTable({student, setOpenedPopups, setSelectedCourse, getOpenedPopup }) {
-    const table_rows = make_rows_of_hours_table( student, setOpenedPopups, setSelectedCourse, getOpenedPopup);
+export default function TrackHoursTable({student, setOpenedPopups, setSelectedCourse, getOpenedPopup,openedPopups }) {
+    const table_rows = make_rows_of_hours_table( student, setOpenedPopups, setSelectedCourse, getOpenedPopup,openedPopups);
 
     if (table_rows) {
         return (

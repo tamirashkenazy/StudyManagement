@@ -40,7 +40,7 @@ const update_teacher_and_user = async (func1, func2) => {
         const responseOne = responses[0]
         const responseTwo = responses[1]
         if (responseOne && responseTwo) {
-            return [responseOne, responseTwo];
+            return true;
         }
         else if (responseOne || responseTwo) {
             console.log('responseOne', responseOne);
@@ -70,15 +70,55 @@ const onClickUser = (selectedTeacherID, setCardOpen, setUser, setTeacher) => {
     })
 }
 
-const updateStatus = async (data) => {
+const updateStatusLesson = async (data) => {
     return await axios.post(get_mongo_api(`lessons/updateStatus`), data).then((response => {
-        return response;
+        return response.data;
     }))
 }
 
+const updateStatusStudent = async (courseID, id) => {
+    var data = { course_id: courseID }
+    return await axios.post(get_mongo_api(`students/update/courseHours/${id}`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const updateStatusTeacher = async (id, courseID) => {
+    var data = { course_id: courseID, teachingHours: "1" }
+    return await axios.post(get_mongo_api(`teachers/update/courseHours/${id}`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const update_status = async (func1, func2, func3) => {
+    return axios.all([func1, func2, func3]).then(axios.spread((...responses) => {
+        const responseOne = responses[0]
+        const responseTwo = responses[1]
+        const responseThree = responses[2]
+        if (responseOne.success && responseTwo.success && responseThree.success) {
+            return responseThree;
+        }
+        else if (responseOne.success || responseTwo.success || responseThree.success) {
+            console.log('responseOne', responseOne.message);
+            console.log('responseTwo', responseTwo.message);
+            console.log('responseTwo', responseThree.message);
+            return false;
+        }
+        else {
+            console.log('responseOne && responseTwo && responseThree = false');
+            return false;
+        }
+    })).catch(errors => {
+        console.log('errors in update_status', errors);
+    })
+}
+
 const onClickStatus = (status, lesson) => {
-    var data = {
-        teacher_id: lesson.teacher.teacher_id,
+    let teacherID = lesson.teacher.teacher_id;
+    let studentID = lesson.student.student_id;
+    let courseID = lesson.course.course_id
+    let data = {
+        teacher_id: teacherID,
         student_id: lesson.student.student_id,
         date: lesson.date,
         status: status
@@ -86,15 +126,22 @@ const onClickStatus = (status, lesson) => {
     switch (status) {
         case "report":
             data.status = "done";
-            updateStatus(data).then((response) => {
-                alert(response.data.message);
-                window.location.reload(true)
+            update_status(updateStatusTeacher(teacherID, courseID), updateStatusStudent(courseID, studentID), updateStatusLesson(data)).then((returnValue) => {
+                if (returnValue) {
+                    if (returnValue.success) {
+                        alert(returnValue.message);
+                        window.location.reload(true)
+                    }
+                }
+                else {
+                    console.log('problem in update_status', returnValue);
+                }
             })
             break;
         case "cancel":
             data.status = "canceled";
-            updateStatus(data).then((response) => {
-                alert(response.data.message);
+            updateStatusLesson(data).then((response) => {
+                alert(response.message);
                 window.location.reload(true)
             })
             break;
