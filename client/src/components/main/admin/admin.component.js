@@ -22,8 +22,6 @@ import GroupsTableAdmin from './tables/groups_table.component'
 import Reports from './navbar_items/reports.component'
 import { Typography } from '@material-ui/core';
 
-import '../../../styles/grids.scss'
-
 
 
 const GetAllStatisticsFromDB = () => {
