@@ -2,16 +2,9 @@ const router = require('express').Router();
 let Constants = require('../models/constants.model');
 
 // when initializing - checks if there is constants - if no - init them
-Constants.find({unique : "constants"}, (err,constants) => {
+Constants.find({}, (err,constants) => {
     if (constants && Array.isArray(constants) && constants.length === 0) {
-        const newConstant = new Constants({
-            unique : "constants",
-            lesson_price : 50,
-            student_fee : 30,
-            admin_mail : "studymng@gmail.com",
-            annual_budget : 50000
-        
-        })
+        const newConstant = new Constants()
         newConstant.save()
     }
 })
@@ -149,8 +142,6 @@ router.route('/exportToExcel/:year/:month').post((req, res) => {
     ]
 
     students.forEach (student => {
-        console.log(student)
-        console.log("--------------------------------------")
         student_data = {
             id: student.id,
             name: student.name,

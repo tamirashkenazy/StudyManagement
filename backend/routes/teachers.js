@@ -682,25 +682,42 @@ router.route('/delete/request/:id').post((req, res) => {
  *      "hours_available" : [hours_available]
  */
 router.route('/delete/hoursAvailable/:id').post((req, res) => {
+    let hours_available = req.body.hours_available
+    let validate = hours_available.length
+    function wait(validate) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(validate);
+          }, 2000);
+        });
+    }
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
         } else if (!teacher || teacher.length===0) {
             return res.send({success : false, message: "!המורה אינו קיים במערכת"})
         } else {
-            let dates_to_remove = req.body.hours_available.map(date => new Date(date))
+            validate = teacher.hours_available.length
+            let dates_to_remove = hours_available.map(date => new Date(date))
             teacher.hours_available = teacher.hours_available.filter(function(date){
                 let match = dates_to_remove.find(d => d.getTime() === date.getTime())
                 let hasMatch = !!match; // convert to boolean
-                console.log(hasMatch)
+                validate--;
+                console.log(validate)
                 return !hasMatch
             })
-            teacher.save((err, teacher)=> {
-                if (err) {
-                    return res.send({success:false, message:"Error: Couldn't Save " + err})
+            send_response = async function(){
+                while(validate != 0){
+                    await wait(validate)
                 }
-            })
-            return res.send({success:true, message: "!השעות המסומנות הוסרו בהצלחה"})
+                teacher.save((err, teacher)=> {
+                    if (err) {
+                        return res.send({success:false, message:"Error: Couldn't Save " + err})
+                    }
+                })
+                return res.send({success:true, message: "!השעות המסומנות הוסרו בהצלחה"})
+            }
+            send_response()
         }
     })
 })
