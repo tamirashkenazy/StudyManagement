@@ -45,7 +45,6 @@ const studentsRouter = require('./routes/students');
 const groupsRouter = require('./routes/groups');
 const constantsRouter = require('./routes/constants');
 
-
 app.use('/users', usersRouter);
 app.use('/sign_in', signinRouter);
 app.use('/lessons', lessonsRouter);
