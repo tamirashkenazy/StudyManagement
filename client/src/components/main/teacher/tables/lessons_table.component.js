@@ -152,8 +152,8 @@ const make_rows_of_lessons = (lessons, args) => {
     }
 }
 
-export default function LessonsTable({ setCardOpen, setUser, setTeacher, lessons }) {
-    const args = { setCardOpen, setUser, setTeacher };
+export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons }) {
+    const args = { setCardOpen, setUser, setStudent };
     const table_rows = make_rows_of_lessons(lessons, args);
     if (table_rows) {
         return (

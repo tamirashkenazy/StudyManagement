@@ -73,7 +73,7 @@ export default function Teacher(props) {
                         <TeachersStatusRequestsTable teaching_requests={teacher.teaching_requests} />
                     </Grid>
                     <Grid item md={6} xs={4} style={{ marginLeft : "1rem"}}>
-                        <LessonsTable id={user._id} setCardOpen={setCardOpen} setUser={setUserStudent} setTeacher={setStudent} lessons={ loading? null : lessons}/>
+                        <LessonsTable id={user._id} setCardOpen={setCardOpen} setUser={setUserStudent} setStudent={setStudent} lessons={ loading? null : lessons}/>
                     </Grid>
                 </Grid>
                 <br/><br/>
