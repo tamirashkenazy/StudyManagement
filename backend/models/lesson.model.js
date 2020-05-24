@@ -6,7 +6,7 @@ const status = 'waiting done canceled'.split(' ')
 
 const Schema = mongoose.Schema;
 const LessonSchema = new Schema({
-    date : { type: Date, required : true, min: Date.now },
+    date : { type: Date, required : true },
     teacher : { teacher_id : {type : String,  required : true, match: onlyNumbers, minlength: 9, maxlength: 9 },
                 teacher_name :  {type : String,  required : true,  match: onlyEnglishAndHebrew }},
     student :{ student_id : {type : String,  required : true, match: onlyNumbers, minlength: 9, maxlength: 9 }, 

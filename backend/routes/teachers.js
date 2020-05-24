@@ -703,7 +703,6 @@ router.route('/delete/hoursAvailable/:id').post((req, res) => {
                 let match = dates_to_remove.find(d => d.getTime() === date.getTime())
                 let hasMatch = !!match; // convert to boolean
                 validate--;
-                console.log(validate)
                 return !hasMatch
             })
             send_response = async function(){
@@ -713,9 +712,10 @@ router.route('/delete/hoursAvailable/:id').post((req, res) => {
                 teacher.save((err, teacher)=> {
                     if (err) {
                         return res.send({success:false, message:"Error: Couldn't Save " + err})
+                    }else{
+                    return res.send({success:true, message: "!השעות המסומנות הוסרו בהצלחה"})
                     }
                 })
-                return res.send({success:true, message: "!השעות המסומנות הוסרו בהצלחה"})
             }
             send_response()
         }
