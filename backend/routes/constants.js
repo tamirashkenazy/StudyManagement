@@ -142,8 +142,6 @@ router.route('/exportToExcel/:year/:month').post((req, res) => {
     ]
 
     students.forEach (student => {
-        console.log(student)
-        console.log("--------------------------------------")
         student_data = {
             id: student.id,
             name: student.name,

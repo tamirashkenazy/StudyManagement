@@ -172,7 +172,6 @@ router.route('/availableHours').post((req,res) => {
                     return res.send({success : false, message:"Error: " + err})
                 } else if (lessons && lessons.length >= 0) {
                     let book_lessons = lessons.length
-                    console.log(book_lessons)
                     current_course = student.courses.filter(course => course.course_id === course_id)
                     if (current_course.length != 1){
                         return res.send({success : false, message: "הקורס אינו קיים ברשימת הקורסים של הסטודנט"})
@@ -482,7 +481,6 @@ router.route('/update/courseHours/:id').post((req,res) => {
  */
 router.route('/update/newLessons/:id').post((req,res) => {
     let course_id = req.body.course_id
-    console.log("-----------------------------")
     Student.findById((req.params.id)).then((student) => {
         if (!student || student.length === 0) {
             return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})

@@ -310,7 +310,7 @@ router.route('/findOne').post((req,res) => {
  *      "date"    : <date>
  *      "teacher" : <teacher_id>, <teacher_name> 
  *      "student" : <student_id>, <student_name>
- *      "status" : <status>
+ *      "status"  : <status>
  */
 router.route('/add').post((req, res) => {
     // change to req.body
