@@ -583,7 +583,6 @@ router.route('/updateGroup/listOfStudents').post((req,res) => {
             await wait(validate)
         }
         // compare arrays of error_ids and id_list - if equals - ok, else return the id list of 
-        console.log(error_ids)
         if (error_ids.length > 0){ // WARNING: not all the students updated
             res.send({success : false, message : error_ids})
         }else{
