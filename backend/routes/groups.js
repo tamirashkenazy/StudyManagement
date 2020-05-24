@@ -1,6 +1,20 @@
 const router = require('express').Router();
 let Groups = require('../models/group.model');
 
+// when initializing - checks if there is default group - if no - init one
+Groups.find({}, (err,groups) => {
+    if (groups && Array.isArray(groups) && groups.length === 0) {
+        const defaul_group = new Groups(
+            {
+                name : "כללי",
+                approved_hours : "4"
+            }
+        )
+        defaul_group.save()
+    }
+})
+
+
 /**
  * get list of all the groups.
  */
