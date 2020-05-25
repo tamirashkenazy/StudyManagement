@@ -49,20 +49,23 @@ router.route('/:constant').get((req,res) => {
  * update constant.
  * request parameters:
  *     /update
- * request body:
- *      "name" : <variable_name>
- *      "value" : <variable_value>
+ * request body: 
+ *      "constants_to_update" : { [constant_name] : constant_value}
+ *      where:
+ *          "constant_name" : <variable_name>
+ *          "constant_value" : <variable_value>
  */
 router.route('/update').post((req,res) => {
     Constants.find({ unique : "constants" }, (err,constants) => {
         if (!constants || constants.length === 0) {
             return res.send({success : false, message:"!האובייקט אינו קיים"})
         }
-        constants = constants[0]
-        name = req.body.name;
-        new_value = req.body.value
-        constants[name] = new_value
-        constants.save((err, doc)=> {
+        let constant = constants[0]
+        let {constants_to_update} = req.body
+        Object.entries(constants_to_update).forEach(([constant_name, constant_value])=>{
+            constant[constant_name] = constant_value
+        })
+        constant.save((err, doc)=> {
             if(err) {
                 console.log('Error: ' + err);
                 return res.send({success : false, message : err.errmsg});
