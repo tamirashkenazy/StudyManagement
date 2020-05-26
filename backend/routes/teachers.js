@@ -528,7 +528,7 @@ router.route('/:id').delete((req,res) => {
  *      "hours_available" : [hours_available]
  *      "grades_file" : <grades_file>
  */
-router.route('/update/:id').post((req,res) => {
+router.route('/updateTeachers/:id').post((req,res) => {
     Teacher.findById((req.params.id)).then((teacher) => {
         if (!teacher || teacher.length===0) {
             return res.send({success : false,message : "!המורה אינו קיים במערכת"})
@@ -548,6 +548,86 @@ router.route('/update/:id').post((req,res) => {
         })
     }); 
 });
+
+
+/**
+ * update request status by list of id and course_id.
+ * request parameters:
+ *     /update/requestStatusesList/
+ * request body:
+ *     ["id_to_courses" : ["student_id", {key: "course_id", value: "status"}]]
+ *      
+ */
+router.route('/update/requestStatusesList').post((req,res) => {
+    let students = req.body.id_to_courses
+    let success = true
+    function wait(validate) {
+        return new Promise(resolve => {
+          setTimeout(() => {
+            resolve(validate);
+          }, 1000);
+        });
+    }
+    let end_function = students.length
+    students.forEach(function(student){
+        let student_id = student[0]
+        let courses_list = student[1]
+        console.log("student id: " + student_id);
+        Teacher.findById((student_id)).then((teacher) => {
+            let validate = Object.keys(courses_list).length;
+            console.log(validate)
+            Object.keys(courses_list).forEach(function (course_id) {
+                let status = courses_list[course_id]
+                if (status === null) {
+                    validate --;
+                    return
+                }
+                let current_request = teacher.teaching_requests.filter(request => request.course_id === course_id)
+                if (!current_request || current_request.length === 0) {
+                    success = false
+                } else{
+                    current_request = current_request[0]
+                    current_request.status = status
+                    if (status === 'approved'){
+                        let new_course = {"course_id" : current_request.course_id,
+                                    "course_name" : current_request.course_name,
+                                    "hours_already_done" : '0'}
+                        teacher.teaching_courses.push(new_course)
+                    }
+                    validate --;
+                }
+            });
+            save_student = async function(){
+                while(validate != 0){
+                    console.log("validate: " + validate)
+                    await wait(validate)
+                }
+                teacher.save((err, teacher)=> {
+                    if (err) {
+                        success = false
+                    }else{
+                        end_function--;
+                    }
+                })
+            }
+            save_student()
+        });
+    });
+    send_response = async function(){
+        while(end_function != 0 && success != false){
+            console.log("end_function: " + end_function)
+            await wait(end_function)
+        }
+        if (success === true){
+            return res.send({success : true, message : "!הבקשות עודכנו בהצלחה"});
+        }else{
+            return res.send({success : true, message : "העדכון נכשל, אנא נסה שנית"});
+        }
+    }
+    send_response()
+});
+
+
 
 
 /**
