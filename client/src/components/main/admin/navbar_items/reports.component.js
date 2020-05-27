@@ -10,14 +10,12 @@ const httpPostRequestToXslxFile = (arr_of_teachers, arr_of_students, year, month
     let post_msg = {studentsReport : arr_of_students, teachersReport : arr_of_teachers}
     console.log(post_msg);
     let url = get_mongo_api(`constants/exportToExcel/${year}/${month}`)
-    axios.post(url, post_msg).then(res=>{
-        // window.open(url)
-
-        // if (res.data.success) {
-        //     alert(res.data.message) // excel was ok
-        // } else {
-        //     alert(res.data.message) // couldnt export to excel
-        // }
+    axios.post(url, post_msg).then(res=>{    
+        if (res.data.success) {
+            window.open(get_mongo_api(`constants/getExcel/${year}/${month}`));
+        } else {
+            alert(res.data.message) 
+        }
     })
 }
 

@@ -1,5 +1,6 @@
 const router = require('express').Router();
 let Constants = require('../models/constants.model');
+const fileDownload = require('js-file-download');
 
 // when initializing - checks if there is constants - if no - init them
 Constants.find({}, (err,constants) => {
@@ -117,7 +118,7 @@ router.route('/exportToExcel/:year/:month').post((req, res) => {
     let students = req.body.studentsReport
     let teacher_data
     let student_data
-    const file_name = `${year}-${month}-reports.xlsx`
+    let file_name = `${year}-${month}-reports.xlsx`
     let options = {
         filename: file_name,
         useStyles: true,
@@ -165,10 +166,24 @@ router.route('/exportToExcel/:year/:month').post((req, res) => {
     });
 
     workbook.commit().then(function() {
-        var url = process.cwd()
-        url = path.join(url, file_name)
-        return res.sendFile(url)
+        var full_path = process.cwd()
+        url = path.join(full_path, file_name)
+        return res.send({success : true, message : "הקובץ מוכן"});
     });
 })
+
+/**
+ * get list of all the constants values.
+ */
+router.route('/getExcel/:year/:month').get((req, res) => {
+    let year = req.params.year
+    let month = req.params.month
+    let file_name = `${year}-${month}-reports.xlsx`
+    let full_path = process.cwd()
+    url = path.join(full_path, file_name)
+    res.download(url);
+});
+
+
 
 module.exports = router;
