@@ -88,7 +88,9 @@ router.route('/add').post((req, res) => {
                 lesson_price : req.body.lesson_price,
                 admin_mail : req.body.admin_mail,
                 annual_budget : req.body.annual_budget,
-                student_fee : req.body.student_fee
+                student_fee : req.body.student_fee,
+                max_teaching_hours_per_week : max_teaching_hours_per_week,
+                min_hours_before_cancel : min_hours_before_cancel
             })
             newConstant.save((err, constants)=> {
                 if (err) {

@@ -61,12 +61,12 @@ router.route('/mailToAdmin').post((req, res) => {
     let user = req.body.user
     let message = req.body.message
     Constants.find({}).then((constant) => {
-        let admin_mail = constant[0].admin_mail
+        let admin_mail_for_qa = constant[0].admin_mail_for_qa
         let QA_mail = constant[0].QA_mail
         let mailDetails = {
             from: QA_mail,
-            to: admin_mail,
-            subject: `New question from ${user.first_name} ${user.last_name}`,
+            to: admin_mail_for_qa,
+            subject: `שאלה מאת ${user.first_name} ${user.last_name}`,
             html: `<!DOCTYPE html>
             <html>
                     <body direction="rtl">
@@ -79,7 +79,7 @@ router.route('/mailToAdmin').post((req, res) => {
                         <hr></hr>
                         <h2>תוכן ההודעה:</h2>
                         <div>${message}</div>
-                        <a href="mailto:${user.email}?subject=תשובה"><h2><b>להשבה לשולח לחץ כאן</b><h2/></a>
+                        <a href="mailto:${user.email}?subject= לכבוד ${user.first_name} ${user.last_name}  &cc=${admin_mail_for_qa}"><h2><b>להשבה לשולח לחץ כאן</b><h2/></a>
                     </body>
             </html>
             `

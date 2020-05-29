@@ -6,7 +6,8 @@ import axios from 'axios'
 import GenericTable from '../../utils/generic_table.component';
 import {Button} from 'react-bootstrap'
 
-const constnats_to_hebrew = {lesson_price : "עלות שיעור למחלקה", student_fee : "עלות שיעור לתלמיד", annual_budget: "תקציב שנתי", admin_mail : "מייל לשאלות ותשובות", }
+const constnats_to_hebrew = {lesson_price : "עלות שיעור למחלקה", student_fee : "עלות שיעור לתלמיד", annual_budget: "תקציב שנתי", admin_mail_for_qa : "מייל לשאלות ותשובות",
+                            max_teaching_hours_per_week : "מקסימום שעות הוראה שבועיות למורה", min_hours_before_cancel : "כמו שעות מינימלית לביטול שיעור טרם תחילתו",admin_mail : "מייל מנהל מערכת"  }
 function sort_constants(constants, inputs, handleInputChange) {
     let arr_of_constants = []
     if (constants) {
