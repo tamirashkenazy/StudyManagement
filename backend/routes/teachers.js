@@ -559,8 +559,9 @@ router.route('/updateTeachers/:id').post((req,res) => {
  *      
  */
 router.route('/update/requestStatusesList').post((req,res) => {
-    let students = req.body.id_to_courses
+    let teachers = req.body.id_to_courses
     let success = true
+    let validate = 1
     function wait(validate) {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -568,14 +569,12 @@ router.route('/update/requestStatusesList').post((req,res) => {
           }, 1000);
         });
     }
-    let end_function = students.length
-    students.forEach(function(student){
-        let student_id = student[0]
-        let courses_list = student[1]
-        console.log("student id: " + student_id);
-        Teacher.findById((student_id)).then((teacher) => {
+    let end_function = teachers.length
+    teachers.forEach(function(teacher){
+        let teacher_id = teacher[0]
+        let courses_list = teacher[1]
+        Teacher.findById((teacher_id)).then((teacher) => {
             let validate = Object.keys(courses_list).length;
-            console.log(validate)
             Object.entries(courses_list).forEach(([course_id, status]) => {
                 if (status === null) {
                     validate --;
@@ -596,9 +595,8 @@ router.route('/update/requestStatusesList').post((req,res) => {
                     validate --;
                 }
             });
-            save_student = async function(){
+            save_teacher = async function(){
                 while(validate != 0){
-                    console.log("validate: " + validate)
                     await wait(validate)
                 }
                 teacher.save((err, teacher)=> {
@@ -609,12 +607,11 @@ router.route('/update/requestStatusesList').post((req,res) => {
                     }
                 })
             }
-            save_student()
+            save_teacher()
         });
     });
     send_response = async function(){
         while(end_function != 0 && success != false){
-            console.log("end_function: " + end_function)
             await wait(end_function)
         }
         if (success === true){
