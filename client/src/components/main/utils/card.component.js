@@ -27,6 +27,7 @@ const useStyles = makeStyles({
     fontSize: "1.4rem"
   },
   meta: {
+    direction : "ltr",
     display: "grid"
   }
 });
