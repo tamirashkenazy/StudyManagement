@@ -3,6 +3,7 @@ import GenericTable from '../../utils/generic_table.component'
 import Button from '@material-ui/core/Button';
 import axios from 'axios'
 import get_mongo_api from '../../../mongo/paths.component'
+import {useAsyncHook} from '../../../mongo/paths.component'
 
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
@@ -72,7 +73,7 @@ const onClickUser = (selectedStudentID, setCardOpen, setUser, setStudent) => {
 
 const updateStatus = async (data) => {
     return await axios.post(get_mongo_api(`lessons/updateStatus`), data).then((response => {
-        return response;
+        return response.data;
     }))
 }
 
@@ -87,7 +88,7 @@ const onClickStatus = (status, lesson) => {
         case "cancel":
             data.status = "canceled";
             updateStatus(data).then((response) => {
-                alert(response.data.message);
+                alert(response.message);
                 window.location.reload(true)
             })
             break;
@@ -104,15 +105,15 @@ const onClickStatus = (status, lesson) => {
 
 };
 
-const check_status = (status, lessonDate) => {
+const check_status = (status, lessonDate,hoursBeforeCancel) => {
     if (status === "waiting") {
         var today = Date.now();
-        var tomorrow = new Date();
-        tomorrow.setDate(new Date().getDate() + 1);
-        if (tomorrow < lessonDate) { //lesson in the future
+        var validDateToCancel = new Date();
+        validDateToCancel.setHours(validDateToCancel.getHours()+ hoursBeforeCancel);
+        if (validDateToCancel < lessonDate) { //lesson in the future - can cancel
             return "cancel";
         } else if (today > lessonDate) { //lesson in the past
-            return "report";
+            return "done";
         } else { // too late to cancel
             return "happening";
         }
@@ -120,7 +121,7 @@ const check_status = (status, lessonDate) => {
 }
 
 const make_rows_of_lessons = (lessons, args) => {
-    const { setCardOpen, setUser, setStudent } = args;
+    const { setCardOpen, setUser, setStudent, hoursBeforeCancel} = args;
     if (lessons && Array.isArray(lessons) && lessons.length > 0) {
         let options = lessons.map(lesson => {
             let day = lesson.date.slice(8, 10);
@@ -129,8 +130,8 @@ const make_rows_of_lessons = (lessons, args) => {
             let shortMonth = month.startsWith(0) ? month.slice(1, 2) : month;
             let shortDay = day.startsWith(0) ? day.slice(1, 2) : day;
             var lessonDate = new Date(lesson.date);
-            var status = check_status(lesson.status, lessonDate);
-            let done = lesson === "done" || lesson === "canceled" || status === "happening" ? true : false;
+            var status = check_status(lesson.status, lessonDate,hoursBeforeCancel);
+            let done = status === "done" || status === "canceled" || status === "happening" ? true : false;
             if (lesson.status === "canceled") {
                 return null;
             } else {
@@ -153,9 +154,11 @@ const make_rows_of_lessons = (lessons, args) => {
 }
 
 export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons }) {
-    const args = { setCardOpen, setUser, setStudent };
+    const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
+    const args = { setCardOpen, setUser, setStudent,hoursBeforeCancel };
     const table_rows = make_rows_of_lessons(lessons, args);
-    if (table_rows) {
+
+    if (table_rows && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )
