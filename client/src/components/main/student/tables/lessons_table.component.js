@@ -3,6 +3,7 @@ import GenericTable from '../../utils/generic_table.component'
 import Button from '@material-ui/core/Button';
 import axios from 'axios'
 import get_mongo_api from '../../../mongo/paths.component'
+import { useAsyncHook } from '../../../mongo/paths.component'
 
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
@@ -40,7 +41,7 @@ const update_teacher_and_user = async (func1, func2) => {
         const responseOne = responses[0]
         const responseTwo = responses[1]
         if (responseOne && responseTwo) {
-            return true;
+            return [responseOne, responseTwo];
         }
         else if (responseOne || responseTwo) {
             console.log('responseOne', responseOne);
@@ -84,8 +85,8 @@ const updateStatusStudent = async (courseID, id) => {
 }
 
 const updateStatusTeacher = async (id, courseID) => {
-    var data = { course_id: courseID, teachingHours: "1" }
-    return await axios.post(get_mongo_api(`teachers/update/courseHours/${id}`), data).then((response => {
+    var data = { course_id: courseID, teachingHours: 1 }
+    return await axios.post(get_mongo_api(`teachers/update/teachingHours/${id}`), data).then((response => {
         return response.data;
     }))
 }
@@ -135,6 +136,8 @@ const onClickStatus = (status, lesson) => {
                 }
                 else {
                     console.log('problem in update_status', returnValue);
+                    alert('אירעה שגיאה במהלך שינוי הסטטוס');
+                    window.location.reload(true);
                 }
             })
             break;
@@ -158,14 +161,14 @@ const onClickStatus = (status, lesson) => {
 
 };
 
-const check_status = (status, lessonDate) => {
+const check_status = (status, lessonDate, hoursBeforeCancel) => {
     if (status === "waiting") {
         var today = Date.now();
-        var tomorrow = new Date();
-        tomorrow.setDate(new Date().getDate() + 1);
-        if (tomorrow < lessonDate) { //lesson in the future
+        var validDateToCancel = new Date();
+        validDateToCancel.setHours(validDateToCancel.getHours() + hoursBeforeCancel);
+        if (validDateToCancel < lessonDate) { //lesson in the future - can cancel
             return "cancel";
-        } else if (today > lessonDate) { //lesson in the past
+        } else if (today > lessonDate) { //lesson in the past -can report
             return "report";
         } else { // too late to cancel
             return "happening";
@@ -176,7 +179,7 @@ const check_status = (status, lessonDate) => {
 }
 
 const make_rows_of_lesson_table = (lessons, args) => {
-    const { setCardOpen, setUser, setTeacher } = args;
+    const { setCardOpen, setUser, setTeacher, hoursBeforeCancel } = args;
     if (lessons && Array.isArray(lessons) && lessons.length > 0) {
         let options = lessons.map(lesson => {
             let day = lesson.date.slice(8, 10);
@@ -185,9 +188,9 @@ const make_rows_of_lesson_table = (lessons, args) => {
             let shortMonth = month.startsWith(0) ? month.slice(1, 2) : month;
             let shortDay = day.startsWith(0) ? day.slice(1, 2) : day;
             var lessonDate = new Date(lesson.date);
-            var status = check_status(lesson.status, lessonDate);
+            var status = check_status(lesson.status, lessonDate, hoursBeforeCancel);
             let done = status === "done" || status === "canceled" || status === "happening" ? true : false;
-            if (lesson.status === "canceled") {
+            if (status === "canceled") {
                 return null;
             } else {
                 return (
@@ -209,10 +212,11 @@ const make_rows_of_lesson_table = (lessons, args) => {
 }
 
 export default function LessonsTable({ setCardOpen, setUser, setTeacher, lessons }) {
-    const args = { setCardOpen, setUser, setTeacher };
+    const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
+    const args = { setCardOpen, setUser, setTeacher,hoursBeforeCancel };
     const table_rows = make_rows_of_lesson_table(lessons, args);
 
-    if (table_rows) {
+    if (table_rows  && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )

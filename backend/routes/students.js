@@ -19,7 +19,7 @@ router.route('/').get((req, res) => {
  * request parameters:
  *      /byID/<student_id>
  */
-router.route('/byID/:id').get((req,res) => {
+router.route('/:id/byID').get((req,res) => {
     Student.findById((req.params.id), (err,student) => {
         if(err) {
             return res.send({success : false, message:"Error: " + err})
@@ -211,11 +211,11 @@ router.route('/group').post((req, res) => {
 /**
  * get list of all the requests with the same status.
  * request parameters:
- *      /status/<status>
+ *     /<status>/status
  * request body:
  *      none
  */
-router.route('/status/:status').get((req, res) => {
+router.route('/:status/status').get((req, res) => {
     Student.find()
     .then(students => {
         requests = []
@@ -229,11 +229,11 @@ router.route('/status/:status').get((req, res) => {
 /**
  * get list of all the requests with the same course_id.
  * request parameters:
- *      /courseID/<courseID>
+ *      /<courseID>/courseID
  * request body:
  *      none
  */
-router.route('/courseID/:courseID').get((req, res) => {
+router.route('/:courseID/courseID').get((req, res) => {
     Student.find()
     .then(students => {
         requests = []

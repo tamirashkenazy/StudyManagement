@@ -25,7 +25,7 @@ const getUser = async (_id) => {
 }
 
 const getStudent = async (_id) => {
-    return await axios.get(get_mongo_api(`students/byID/${_id}`)).then((response => {
+    return await axios.get(get_mongo_api(`students/${_id}/byID`)).then((response => {
         if (response.data.success) {
             return response.data.message;
         }
