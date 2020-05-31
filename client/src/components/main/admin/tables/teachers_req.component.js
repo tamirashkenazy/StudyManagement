@@ -31,7 +31,7 @@ function RequestRow (request, teacher_id, selectedValues, handleInputChange, gra
             "גיליון" : grades_file.name ? <IconButton onClick={()=>open_grades_file(teacher_id)} color="primary" style={{padding : "0"}}><DescriptionOutlinedIcon /></IconButton> : <Typography variant="body2">לא קיים גיליון ציונים</Typography>,
             "אישור קורס" : <GreenRadio name={`${teacher_id},${course_id}`} value="approved" checked={selectedValues[teacher_id][course_id]==="approved" } onChange={handleInputChange}></GreenRadio>,
             "דחיית בקשה" :   <RedRadio name={`${teacher_id},${course_id}`} value="declined" checked={selectedValues[teacher_id][course_id]==="declined"} onChange={handleInputChange}></RedRadio>,
-            "הסרת בחירה" : <GreyRadio  name={`${teacher_id},${course_id}`} value={null} checked={selectedValues[teacher_id][course_id]===null} onChange={handleInputChange}></GreyRadio>,
+            "הסרת בחירה" : <GreyRadio  name={`${teacher_id},${course_id}`} value={""} checked={selectedValues[teacher_id][course_id]===""} onChange={handleInputChange}></GreyRadio>,
         }
     )
 }

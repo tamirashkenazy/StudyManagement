@@ -37,7 +37,6 @@ export const GreenRadio = withStyles({
 
 
 export const httpRequestToApproveDeclineRequests = (selectedValues, api) => {
-    console.log(selectedValues);
     let arr = Object.entries(selectedValues).filter(([id, course_to_status_obj])=>{
         if (course_to_status_obj && Object.keys(course_to_status_obj).length > 0) {
             return true
@@ -88,10 +87,9 @@ export const useChoosingForm = (httpRequestFunc, arr_of_persons, update_api) => 
 
         let {name, value} = event.target
         let [id, course_id] = name.split(',')
-        if (value === "") {
-            value = null
-        }
-        console.log(name, value, id, course_id);
+        // if (value === "") {
+        //     value = null
+        // }
         setSelectedValues(selectedValues => {
             return({...selectedValues, [id] : {...selectedValues[id], [course_id] : value}})
         });
