@@ -556,14 +556,8 @@ router.route('/update/requestStatusesList').post((req,res) => {
         let student_id = student[0]
         let courses_list = student[1]
         Student.findById((student_id)).then((student) => {
-<<<<<<< HEAD
             let validate = Object.keys(courses_list).length;
             Object.entries(courses_list).forEach(([course_id, status]) => {
-=======
-            validate = Object.keys(courses_list).length;
-            Object.keys(courses_list).forEach(function (course_id) {
-                let status = courses_list[course_id]
->>>>>>> no message
                 if (status === null) {
                     validate --;
                     return
