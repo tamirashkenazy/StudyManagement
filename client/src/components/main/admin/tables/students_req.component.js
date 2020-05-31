@@ -18,7 +18,7 @@ function RequestRow (request, student_id, selectedValues, handleInputChange, set
             "שעות מבוקשות" : request.number_of_hours,
             "אישור קורס" : <GreenRadio name={`${student_id},${course_id}`} value="approved" checked={selectedValues[student_id][course_id]==="approved" } onChange={handleInputChange}></GreenRadio>,
             "דחיית בקשה" :   <RedRadio name={`${student_id},${course_id}`} value="declined" checked={selectedValues[student_id][course_id]==="declined"} onChange={handleInputChange}></RedRadio>,
-            "הסרת בחירה" : <GreyRadio  name={`${student_id},${course_id}`} value={null} checked={selectedValues[student_id][course_id]===null} onChange={handleInputChange}></GreyRadio>,
+            "הסרת בחירה" : <GreyRadio  name={`${student_id},${course_id}`} value={""} checked={selectedValues[student_id][course_id]===""} onChange={handleInputChange}></GreyRadio>,
         }
     )
 }
