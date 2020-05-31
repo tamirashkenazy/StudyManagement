@@ -83,10 +83,10 @@ export default function Admin(props) {
             
             <Grid container justify="space-around" direction="row-reverse">  
                 <Grid item md={5} xs={4}>
-                    <TeachersRequestTable teachers={teachers} />
+                    <TeachersRequestTable users={users} students={students} teachers={teachers} />
                 </Grid>
                 <Grid item md={5} xs={4} style={{ marginLeft: "1rem" }}>
-                    <StudentsRequestTable students={students}/>
+                    <StudentsRequestTable users={users} students={students} teachers={teachers}/>
                 </Grid>
             </Grid>
             <br/><br/>
