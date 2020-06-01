@@ -1,0 +1,17 @@
+.carousel {
+    .carousel-control-prev,.carousel-control-next{
+        // width: 5%;
+        width: 3%;
+        background-color: #002b50;
+        // .carousel-control-prev-icon, .carousel-control-next-icon {
+        // // background-color: #6c757d;
+        //     color : "black"
+        // }
+    }   
+    .carousel-indicators {
+        margin-bottom: 0;
+        li {
+            background-color: #6c757d;
+        }
+    }
+}

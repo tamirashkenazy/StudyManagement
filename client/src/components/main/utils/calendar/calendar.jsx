@@ -21,6 +21,7 @@ import TableCell from '@material-ui/core/TableCell';
 
 var DATES_COUNTER = 0;
 export function Calendar(props) {
+    let disabled = ((DATES_COUNTER <= 0) || (DATES_COUNTER > props.maxNumber)) ? true : false;
     // Alldate keeps each week with unique key (year + week number) with weekID() function.
     // Inside that it keeps checkbox value for get next 4 weeks and all the selected dates.
     const [allDate, setAllDate] = useState({
@@ -385,7 +386,7 @@ export function Calendar(props) {
                     control={<Checkbox date={weekID()} checked={allDate[weekID()].checkbox} onChange={onChangeHandlerCheckBox} name="checkbox" />}
                     label="בחר 4 שבועות קדימה"
                 />
-                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={DATES_COUNTER <= 0} >עדכן</button>
+                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={disabled} >עדכן</button>
             </div>
         </div>
     )

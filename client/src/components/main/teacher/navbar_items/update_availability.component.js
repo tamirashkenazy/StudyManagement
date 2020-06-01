@@ -57,7 +57,7 @@ const set_lessons = (lessons, array) => {
 }
 
 export default function UpdateAvailability({ id, lessons }) {
-    const [hours_available, loading] = useAsyncHook(`teachers/${id}/hoursAvailable`, make_available_hours_list, lessons);
+    const [hours_available, loading] = useAsyncHook(`teachers/hoursAvailable/byID/${id}`, make_available_hours_list, lessons);
     const [isTeacher] = useState(true);
 
     const sendHours = (selectedHours, id) => {
@@ -66,6 +66,8 @@ export default function UpdateAvailability({ id, lessons }) {
                 if (!response.data.success) {
                     console.log(response.data.message)
                     console.log(selectedHours)
+                    alert(response.data.message);
+                    window.location.reload(true);
                 } else {
                     alert(response.data.message)
                     window.location.reload(true)
@@ -80,6 +82,7 @@ export default function UpdateAvailability({ id, lessons }) {
             <Calendar
                 isTeacher={isTeacher}
                 datesDict={hours_available}
+                maxNumber={1000}
                 confirmHandler={(selectedHours) => sendHours(selectedHours, id)} />
         </div>
     )

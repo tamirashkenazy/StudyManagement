@@ -60,7 +60,7 @@ export default function UserCard({ user, teacher, student }) { //user, teacher, 
     curr_user.teacher_courses = get_teacher_courses(teacher)
   }
   if (user.isStudent && student) {
-    curr_user.roles = "תלמיד"
+    curr_user.roles = (user.gender !== "male") ? "תלמידה" : "תלמיד";
     curr_user.student_courses = get_student_courses(student)
     curr_user.group_name = student.group.name ? student.group.name : "לא משתייך לקבוצה"
   }
@@ -68,6 +68,8 @@ export default function UserCard({ user, teacher, student }) { //user, teacher, 
     curr_user.roles = "מורה, תלמיד"
   }
   const imageSrc = (user.gender === "male") ? 'https://react.semantic-ui.com/images/avatar/large/matthew.png' : 'https://react.semantic-ui.com/images/avatar/large/molly.png';
+  const study = (user.gender !== "male") ? 'לומדת' : 'לומד';
+  const teaching = (user.gender !== "male") ? 'מלמדת' : 'מלמד';
 
   return (
     <Card className={classes.card}>
@@ -84,7 +86,7 @@ export default function UserCard({ user, teacher, student }) { //user, teacher, 
             <Table size="small" >
               <TableBody>
                 {(user.isStudent && student) && <TableRow>
-                  <TableCell className={classes.tableCell}>לומד</TableCell>
+                  <TableCell className={classes.tableCell}> {study}</TableCell>
                   <TableCell className={classes.tableCell}>{curr_user.student_courses} </TableCell>
                 </TableRow>}
                 {(user.isStudent && student) && <TableRow>
@@ -92,7 +94,7 @@ export default function UserCard({ user, teacher, student }) { //user, teacher, 
                   <TableCell className={classes.tableCell}>{curr_user.group_name} </TableCell>
                 </TableRow>}
                 {(user.isTeacher && teacher) && <TableRow>
-                  <TableCell className={classes.tableCell}>מלמד</TableCell>
+                  <TableCell className={classes.tableCell}>{teaching}</TableCell>
                   <TableCell className={classes.tableCell}>{curr_user.teacher_courses} </TableCell>
                 </TableRow>}
               </TableBody>
