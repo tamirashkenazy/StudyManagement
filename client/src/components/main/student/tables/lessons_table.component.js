@@ -4,6 +4,9 @@ import Button from '@material-ui/core/Button';
 import axios from 'axios'
 import get_mongo_api from '../../../mongo/paths.component'
 import { useAsyncHook } from '../../../mongo/paths.component'
+import Tooltip from 'react-bootstrap/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
+import '../../../../styles/tooltip.scss';
 
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
@@ -12,6 +15,13 @@ const status_to_hebrew = {
     "waiting": { text: "ממתין", color: "default" },
     "canceled": { text: "בוטל", color: "secondary" },
     "happening": { text: "מתקיים", color: "primary" }
+}
+function renderTooltip(tooltipText) {
+    return (
+        <Tooltip id="button-tooltip" className="my-tooltip" style={{ backgroundColor: "#fff" }}>
+           ניתן לבטל שיעור עד  {tooltipText} שעות לפני שהתחיל
+        </Tooltip>
+    );
 }
 
 const getUser = async (_id) => {
@@ -199,7 +209,10 @@ const make_rows_of_lesson_table = (lessons, args) => {
                         "תאריך": shortMonth + " / " + shortDay,
                         "שעה": hour,
                         "מורה": <Button onClick={() => onClickUser(lesson.teacher.teacher_id, setCardOpen, setUser, setTeacher)}>{lesson.teacher.teacher_name}</Button>,
-                        "סטטוס": <Button disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
+                        "סטטוס": <OverlayTrigger 
+                            overlay={renderTooltip(hoursBeforeCancel)}>
+                            <Button className="status" disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
+                        </OverlayTrigger>
                     }
                 )
             }
@@ -213,10 +226,10 @@ const make_rows_of_lesson_table = (lessons, args) => {
 
 export default function LessonsTable({ setCardOpen, setUser, setTeacher, lessons }) {
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
-    const args = { setCardOpen, setUser, setTeacher,hoursBeforeCancel };
+    const args = { setCardOpen, setUser, setTeacher, hoursBeforeCancel };
     const table_rows = make_rows_of_lesson_table(lessons, args);
 
-    if (table_rows  && !isLoading_hoursBeforeCancel) {
+    if (table_rows && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )

@@ -1,0 +1,13 @@
+
+.my-tooltip > .tooltip-inner {
+background-color: red;
+opacity: 0.6;
+border: 5px solid red;
+padding:0;
+}
+
+
+.bs-tooltip-auto[x-placement^=top] .arrow::before, .bs-tooltip-top .arrow::before {
+    border-top-color: red !important;
+    opacity: 0.6;
+}
