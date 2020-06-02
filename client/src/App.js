@@ -10,12 +10,20 @@ import Teacher from './components/main/teacher/teacher.component';
 import Admin from './components/main/admin/admin.component';
 import Spinner from 'react-bootstrap/Spinner'
 import Jumbotron from 'react-bootstrap/Jumbotron'
-
+import { useAuth0 } from "./components/main/utils/authentication";
 function App() {
   // getting all data
   const [teachers, isLoading_teachers] = useAsyncHook(`teachers`)
   const [students, isLoading_students] = useAsyncHook(`students`)
   const [users, isLoading_users] = useAsyncHook('users')
+  const { loading } = useAuth0();
+
+  if (loading) {
+    return (<Jumbotron style={{textAlign : "center" , direction : "rtl"}}>
+              <h1>loading...</h1>
+              <Spinner animation="border" role="status"/>
+          </Jumbotron>)
+  }
   return (
     (!isLoading_teachers && !isLoading_students && !isLoading_users) ? 
     // all urls for each one of the cases, passing props with the page
