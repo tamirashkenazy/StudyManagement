@@ -50,7 +50,7 @@ const get_student_courses = (student) => {
   }
 }
 
-export default function UserCard({ user, teacher, student }) { //user, teacher, student
+export default function UserCard({ user, teacher, student, opened_from_student=false}) { //user, teacher, student
   let curr_user = { id: user._id, roles: "אין תפקיד" }
   const full_name = `${user.first_name} ${user.last_name}`
   const classes = useStyles();
@@ -77,7 +77,7 @@ export default function UserCard({ user, teacher, student }) { //user, teacher, 
       <Card.Content>
         <Card.Header className={classes.header}>{full_name}</Card.Header>
         <Card.Meta className={classes.meta}>
-          <span> {user._id} </span>
+          {!opened_from_student && <span> {user._id} </span>}
           <span> {user.tel_number} </span>
           <span> {user.email} </span>
         </Card.Meta>
