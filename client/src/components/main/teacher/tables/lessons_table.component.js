@@ -3,7 +3,10 @@ import GenericTable from '../../utils/generic_table.component'
 import Button from '@material-ui/core/Button';
 import axios from 'axios'
 import get_mongo_api from '../../../mongo/paths.component'
-import {useAsyncHook} from '../../../mongo/paths.component'
+import { useAsyncHook } from '../../../mongo/paths.component'
+import '../../../../styles/tooltip.scss';
+import Tooltip from 'react-bootstrap/Tooltip'
+import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
@@ -11,6 +14,14 @@ const status_to_hebrew = {
     "waiting": { text: "ממתין", color: "default" },
     "canceled": { text: "בוטל", color: "secondary" },
     "happening": { text: "מתקיים", color: "primary" }
+}
+
+function renderTooltip(tooltipText) {
+    return (
+        <Tooltip id="button-tooltip" className="my-tooltip" style={{ backgroundColor: "#fff" }}>
+            ניתן לבטל שיעור עד  {tooltipText} שעות לפני שהתחיל
+        </Tooltip>
+    );
 }
 
 const getUser = async (_id) => {
@@ -105,11 +116,11 @@ const onClickStatus = (status, lesson) => {
 
 };
 
-const check_status = (status, lessonDate,hoursBeforeCancel) => {
+const check_status = (status, lessonDate, hoursBeforeCancel) => {
     if (status === "waiting") {
         var today = Date.now();
         var validDateToCancel = new Date();
-        validDateToCancel.setHours(validDateToCancel.getHours()+ hoursBeforeCancel);
+        validDateToCancel.setHours(validDateToCancel.getHours() + hoursBeforeCancel);
         if (validDateToCancel < lessonDate) { //lesson in the future - can cancel
             return "cancel";
         } else if (today > lessonDate) { //lesson in the past
@@ -121,7 +132,7 @@ const check_status = (status, lessonDate,hoursBeforeCancel) => {
 }
 
 const make_rows_of_lessons = (lessons, args) => {
-    const { setCardOpen, setUser, setStudent, hoursBeforeCancel} = args;
+    const { setCardOpen, setUser, setStudent, hoursBeforeCancel } = args;
     if (lessons && Array.isArray(lessons) && lessons.length > 0) {
         let options = lessons.map(lesson => {
             let day = lesson.date.slice(8, 10);
@@ -130,7 +141,7 @@ const make_rows_of_lessons = (lessons, args) => {
             let shortMonth = month.startsWith(0) ? month.slice(1, 2) : month;
             let shortDay = day.startsWith(0) ? day.slice(1, 2) : day;
             var lessonDate = new Date(lesson.date);
-            var status = check_status(lesson.status, lessonDate,hoursBeforeCancel);
+            var status = check_status(lesson.status, lessonDate, hoursBeforeCancel);
             let done = status === "done" || status === "canceled" || status === "happening" ? true : false;
             if (lesson.status === "canceled") {
                 return null;
@@ -141,7 +152,10 @@ const make_rows_of_lessons = (lessons, args) => {
                         "תאריך": shortMonth + " / " + shortDay,
                         "שעה": hour,
                         "תלמיד": <Button onClick={() => onClickUser(lesson.student.student_id, setCardOpen, setUser, setStudent)}>{lesson.student.student_name}</Button>,
-                        "סטטוס": <Button disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
+                        "סטטוס": <OverlayTrigger
+                            overlay={renderTooltip(hoursBeforeCancel)}>
+                            <Button className="status" disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
+                        </OverlayTrigger>
                     }
                 )
             }
@@ -155,7 +169,7 @@ const make_rows_of_lessons = (lessons, args) => {
 
 export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons }) {
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
-    const args = { setCardOpen, setUser, setStudent,hoursBeforeCancel };
+    const args = { setCardOpen, setUser, setStudent, hoursBeforeCancel };
     const table_rows = make_rows_of_lessons(lessons, args);
 
     if (table_rows && !isLoading_hoursBeforeCancel) {
