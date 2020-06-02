@@ -81,7 +81,7 @@ export default function Student(props) {
                 {Dialog_generator(openedPopups[1], () => setOpenedPopups(closeAllPopups(total_popups)), "קביעת שעות חונכות", "assignment_turned_in", { _id: user._id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student,lessons: loading ? null : lessons }, (args) => BookHours(args))}
                 {Dialog_generator(openedPopups[2], () => { setSelectedCourse(null); setOpenedPopups(closeAllPopups(total_popups)) }, null, null, { _id: user._id, courseID: selectedCourseID, setCardOpen, setUser: setUserTeacher, setTeacher }, (args) => History(args))},
                 {Dialog_generator(openedPopups[3], () => setOpenedPopups(closeAllPopups(total_popups)), "הודעות", "mail_outline", { user: user, close_popup: () => setOpenedPopups(closeAllPopups(total_popups)) }, (args) => SendMessage(args))}
-                {Dialog_generator(isCardOpen, () => setCardOpen(false), null, null, null, () => <UserCard user={userTeacher} teacher={teacher}></UserCard>, "card")}
+                {Dialog_generator(isCardOpen, () => setCardOpen(false), null, null, null, () => <UserCard user={userTeacher} teacher={teacher} opened_from_student={true} ></UserCard>, "card")}
 
                 <br></br>
                 <Typography variant="h3" align="center" >ברוך הבא למסך הסטודנט</Typography>
