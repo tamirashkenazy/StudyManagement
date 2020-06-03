@@ -89,7 +89,6 @@ export default function GenericTable(props) { //props : {table_data : {data: som
         })
     }
     return (
-        data && data.length > 0 ?
         <TableContainer className={classes.table} component={Paper} >
             <Table size="small" stickyHeader>
                 <TableHead >
@@ -103,6 +102,5 @@ export default function GenericTable(props) { //props : {table_data : {data: som
                 </TableBody>
             </Table>
         </TableContainer>
-        : <div className="noData"> <span> לא קיים מידע בנוגע ל{title} </span>  </div>
     )
 }

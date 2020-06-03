@@ -70,7 +70,7 @@ const set_lessons = (lessons, array) => {
         var today = Date.now();
         var date = lesson.date.slice(0, -1)
         var newDate = new Date(date);
-        if (today < newDate) {
+        if (today < newDate && lesson.status !== "canceled") {
             return (
                 {
                     date: [newDate],
@@ -159,14 +159,14 @@ const delete_hours_from_teacher = async (lessonHours) => {
         }
     });
 
-    let response = await axios.post(get_mongo_api(`teachers/delete/hoursAvailable/`), data);
+    let response = await axios.post(get_mongo_api(`teachers/update/addlessons`), data);
     let delete_hours_response = await response.data;
     return delete_hours_response;
 }
 
-const add_lesson_to_student = async (id, courseID) => {
-    var data = { course_id: courseID }
-    let response = await axios.post(get_mongo_api(`students/update/newLessons/${id}`), data);
+const add_lesson_to_student = async (studentID, courseID, lessonsNumber) => {
+    var data = { course_id: courseID, number_of_hours: lessonsNumber }
+    let response = await axios.post(get_mongo_api(`students/update/newLessons/${studentID}`), data);
     let add_lesson_to_student_response = await response.data;
     return add_lesson_to_student_response;
 }
@@ -230,14 +230,14 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                     if (allowedNumber >= selectedDatesNumber) {
                         delete_hours_from_teacher(dateSelected).then((delete_hours_response) => {
                             if (delete_hours_response.success) {
-                                Object.entries(dateSelected).forEach(oneDateSelected => {
-                                    add_lesson_to_student(_id, selectedCourseID).then((add_lesson_to_student_response) => {
-                                        if (add_lesson_to_student_response.success) {
+                                add_lesson_to_student(_id, selectedCourseID, selectedDatesNumber).then((add_lesson_to_student_response) => {
+                                    if (add_lesson_to_student_response.success) {
+                                        Object.entries(dateSelected).forEach(oneDateSelected => {
                                             add_lesson(oneDateSelected, selectedCourseID, student).then((add_lesson_response) => {
                                                 if (add_lesson_response.success) {
                                                     trueReturnValueCounter++;
                                                     if (trueReturnValueCounter === selectedDatesNumber) {
-                                                        trueReturnValueCounter === 1 ? alert('השיעור נוסף בהצלחה') : alert(trueReturnValueCounter + 'השיעורים נוספו בהצלחה ');
+                                                        trueReturnValueCounter === 1 ? alert('השיעור נוסף בהצלחה') : alert(trueReturnValueCounter + ' השיעורים נוספו בהצלחה ');
                                                         window.location.reload(true);
                                                     }
                                                     else { }
@@ -247,12 +247,12 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                                                     // window.location.reload(true);
                                                 }
                                             })
-                                        } else {
-                                            console.log('problem in add_lesson_to_student', add_lesson_to_student_response.message);
-                                            alert(add_lesson_to_student_response.message);
-                                            window.location.reload(true);
-                                        }
-                                    })
+                                        })
+                                    } else {
+                                        console.log('problem in add_lesson_to_student', add_lesson_to_student_response.message);
+                                        alert(add_lesson_to_student_response.message);
+                                        window.location.reload(true);
+                                    }
                                 })
                             } else {
                                 console.log('problem in delete_hours_from_teacher', delete_hours_response.message);

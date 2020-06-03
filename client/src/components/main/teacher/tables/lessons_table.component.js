@@ -11,6 +11,7 @@ import OverlayTrigger from 'react-bootstrap/OverlayTrigger'
 const status_to_hebrew = {
     "cancel": { text: "בטל", color: "secondary" },
     "done": { text: "בוצע", color: "default" },
+    "report": { text: "דווח", color: "primary" },
     "waiting": { text: "ממתין", color: "default" },
     "canceled": { text: "בוטל", color: "secondary" },
     "happening": { text: "מתקיים", color: "primary" }
@@ -67,6 +68,28 @@ const update_student_and_user = async (func1, func2) => {
     })
 }
 
+const update_status = async (func1, func2, func3) => {
+    return axios.all([func1, func2, func3]).then(axios.spread((...responses) => {
+        const responseOne = responses[0]
+        const responseTwo = responses[1]
+        const responseThree = responses[2]
+        if (responseOne.success && responseTwo.success && responseThree.success) {
+            return responseThree;
+        }
+        else if (responseOne.success || responseTwo.success || responseThree.success) {
+            console.log('responseOne', responseOne.message);
+            console.log('responseTwo', responseTwo.message);
+            console.log('responseTwo', responseThree.message);
+            return false;
+        }
+        else {
+            console.log('responseOne && responseTwo && responseThree = false');
+            return false;
+        }
+    })).catch(errors => {
+        console.log('errors in update_status', errors);
+    })
+}
 
 const onClickUser = (selectedStudentID, setCardOpen, setUser, setStudent) => {
     update_student_and_user(getStudent(selectedStudentID), getUser(selectedStudentID)).then((returnValue) => {
@@ -82,13 +105,38 @@ const onClickUser = (selectedStudentID, setCardOpen, setUser, setStudent) => {
     })
 }
 
-const updateStatus = async (data) => {
+const updateStatusLesson = async (data) => {
     return await axios.post(get_mongo_api(`lessons/updateStatus`), data).then((response => {
         return response.data;
     }))
 }
 
+
+const cancelStudent = async (courseID, id) => {
+    var data = { course_id: courseID }
+    return await axios.post(get_mongo_api(`students/update/lessonCancelled/${id}`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const cancelTeacher = async (teacherID, dateSelected) => {
+    var data = { teacher_id: teacherID, date: dateSelected }
+    return await axios.post(get_mongo_api(`teachers/update/lessonCancelled`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const sendNotification = async (lesson) => {
+    var data = { lesson: lesson, canceled: lesson.teacher.teacher_name }
+    return await axios.post(get_mongo_api(`users/sendNotification/lessonCanceled`), data).then((response => {
+        return response.data;
+    }))
+}
+
 const onClickStatus = (status, lesson) => {
+    let teacherID = lesson.teacher.teacher_id;
+    let studentID = lesson.student.student_id;
+    let courseID = lesson.course.course_id
     var data = {
         teacher_id: lesson.teacher.teacher_id,
         student_id: lesson.student.student_id,
@@ -98,9 +146,26 @@ const onClickStatus = (status, lesson) => {
     switch (status) {
         case "cancel":
             data.status = "canceled";
-            updateStatus(data).then((response) => {
-                alert(response.message);
-                window.location.reload(true)
+            updateStatusLesson(data).then((returnValue) => {
+                if (returnValue.success) {
+                    update_status(cancelStudent(courseID, studentID), cancelTeacher(teacherID, lesson.date), sendNotification(lesson)).then((returnValue) => {
+                        if (returnValue) {
+                            if (returnValue.success) {
+                                alert(returnValue.message);
+                                window.location.reload(true)
+                            }
+                        }
+                        else {
+                            console.log('problem in update_status', returnValue);
+                            alert('אירעה שגיאה במהלך ביטול השיעור');
+                            window.location.reload(true);
+                        }
+                    })
+                } else {
+                    alert(returnValue.message);
+                    window.location.reload(true);
+                    console.log('problem in update_status', returnValue.message);
+                }
             })
             break;
         case "done":
@@ -128,6 +193,8 @@ const check_status = (status, lessonDate, hoursBeforeCancel) => {
         } else { // too late to cancel
             return "happening";
         }
+    } else {
+        return status;
     }
 }
 
@@ -152,10 +219,10 @@ const make_rows_of_lessons = (lessons, args) => {
                         "תאריך": shortMonth + " / " + shortDay,
                         "שעה": hour,
                         "תלמיד": <Button onClick={() => onClickUser(lesson.student.student_id, setCardOpen, setUser, setStudent)}>{lesson.student.student_name}</Button>,
-                        "סטטוס": <OverlayTrigger
+                        "סטטוס": status === "cancel" ? <OverlayTrigger
                             overlay={renderTooltip(hoursBeforeCancel)}>
                             <Button className="status" disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
-                        </OverlayTrigger>
+                        </OverlayTrigger> : <Button className="status" disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
                     }
                 )
             }
@@ -171,8 +238,8 @@ export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
     const args = { setCardOpen, setUser, setStudent, hoursBeforeCancel };
     const table_rows = make_rows_of_lessons(lessons, args);
-
-    if (table_rows && !isLoading_hoursBeforeCancel) {
+    console.log(table_rows)
+    if ((table_rows &&  table_rows.length > 0) && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )

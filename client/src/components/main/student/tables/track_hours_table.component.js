@@ -15,6 +15,7 @@ const make_rows_of_hours_table = (student, setOpenedPopups, setSelectedCourse, g
                 {
                     "שם הקורס": course_obj.course_name,
                     "שעות שאושרו": course_obj.approved_hours,
+                    "שעות שנותרו לשיבוץ": course_obj.hours_able_to_book,
                     "שעות שבוצעו": course_obj.hours_already_done,
                     "היסטוריה": <IconButton disabled={historyDisabled} className="history" onClick={() => { setSelectedCourse(course_obj.course_id); setOpenedPopups(getOpenedPopup(2, 4)) }}><UpdateIcon className="UpdateIcon" /></IconButton>,
                     "קביעת שיעור": <IconButton disabled={scheduleDisabled} className="schedule" onClick={() => { setSelectedCourse(course_obj.course_id); setOpenedPopups(getOpenedPopup(1, 4)) }}><EventIcon className="EventIcon" /> </IconButton>
