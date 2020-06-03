@@ -19,7 +19,7 @@ const status_to_hebrew = {
 function renderTooltip(tooltipText) {
     return (
         <Tooltip id="button-tooltip" className="my-tooltip" style={{ backgroundColor: "#fff" }}>
-           ניתן לבטל שיעור עד  {tooltipText} שעות לפני שהתחיל
+            ניתן לבטל שיעור עד  {tooltipText} שעות לפני שהתחיל
         </Tooltip>
     );
 }
@@ -87,6 +87,21 @@ const updateStatusLesson = async (data) => {
     }))
 }
 
+
+const cancelStudent = async (courseID, id) => {
+    var data = { course_id: courseID }
+    return await axios.post(get_mongo_api(`students/update/lessonCancelled/${id}`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const cancelTeacher = async (teacherID, dateSelected) => {
+    var data = { teacher_id: teacherID, date: dateSelected }
+    return await axios.post(get_mongo_api(`teachers/update/lessonCancelled`), data).then((response => {
+        return response.data;
+    }))
+}
+
 const updateStatusStudent = async (courseID, id) => {
     var data = { course_id: courseID }
     return await axios.post(get_mongo_api(`students/update/courseHours/${id}`), data).then((response => {
@@ -97,6 +112,13 @@ const updateStatusStudent = async (courseID, id) => {
 const updateStatusTeacher = async (id, courseID) => {
     var data = { course_id: courseID, teachingHours: 1 }
     return await axios.post(get_mongo_api(`teachers/update/teachingHours/${id}`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const sendNotification = async (lesson) => {
+    var data = { lesson: lesson, canceled: lesson.student.student_name }
+    return await axios.post(get_mongo_api(`users/sendNotification/lessonCanceled`), data).then((response => {
         return response.data;
     }))
 }
@@ -137,25 +159,50 @@ const onClickStatus = (status, lesson) => {
     switch (status) {
         case "report":
             data.status = "done";
-            update_status(updateStatusTeacher(teacherID, courseID), updateStatusStudent(courseID, studentID), updateStatusLesson(data)).then((returnValue) => {
-                if (returnValue) {
-                    if (returnValue.success) {
-                        alert(returnValue.message);
-                        window.location.reload(true)
-                    }
-                }
-                else {
-                    console.log('problem in update_status', returnValue);
-                    alert('אירעה שגיאה במהלך שינוי הסטטוס');
+            updateStatusLesson(data).then((returnValue) => {
+                if (returnValue.success) {
+                    update_status(updateStatusTeacher(teacherID, courseID), updateStatusStudent(courseID, studentID), sendNotification(lesson)).then((response) => {
+                        if (response) {
+                            if (response.success) {
+                                alert(returnValue.message);
+                                window.location.reload(true)
+                            }
+                        }
+                        else {
+                            console.log('problem in update_status', returnValue);
+                            alert('אירעה שגיאה במהלך ביטול השיעור');
+                            window.location.reload(true);
+                        }
+                    })
+                } else {
+                    alert(returnValue.message);
                     window.location.reload(true);
+                    console.log('problem in update_status', returnValue.message);
                 }
             })
             break;
         case "cancel":
             data.status = "canceled";
-            updateStatusLesson(data).then((response) => {
-                alert(response.message);
-                window.location.reload(true)
+            updateStatusLesson(data).then((returnValue) => {
+                if (returnValue.success) {
+                    update_status(cancelStudent(courseID, studentID), cancelTeacher(teacherID, lesson.date), sendNotification(lesson)).then((returnValue) => {
+                        if (returnValue) {
+                            if (returnValue.success) {
+                                alert(returnValue.message);
+                                window.location.reload(true)
+                            }
+                        }
+                        else {
+                            console.log('problem in update_status', returnValue);
+                            alert('אירעה שגיאה במהלך ביטול השיעור');
+                            window.location.reload(true);
+                        }
+                    })
+                } else {
+                    alert(returnValue.message);
+                    window.location.reload(true);
+                    console.log('problem in update_status', returnValue.message);
+                }
             })
             break;
         case "done":
@@ -209,10 +256,10 @@ const make_rows_of_lesson_table = (lessons, args) => {
                         "תאריך": shortMonth + " / " + shortDay,
                         "שעה": hour,
                         "מורה": <Button onClick={() => onClickUser(lesson.teacher.teacher_id, setCardOpen, setUser, setTeacher)}>{lesson.teacher.teacher_name}</Button>,
-                        "סטטוס": <OverlayTrigger 
+                        "סטטוס": status === "cancel" ? <OverlayTrigger
                             overlay={renderTooltip(hoursBeforeCancel)}>
                             <Button className="status" disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
-                        </OverlayTrigger>
+                        </OverlayTrigger> : <Button className="status" disabled={done} color={status_to_hebrew[status].color} onClick={(e) => { if (window.confirm('האם לעדכן את הסטטוס?')) onClickStatus(status, lesson) }}>{status_to_hebrew[status].text} </Button>
                     }
                 )
             }
@@ -228,8 +275,7 @@ export default function LessonsTable({ setCardOpen, setUser, setTeacher, lessons
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
     const args = { setCardOpen, setUser, setTeacher, hoursBeforeCancel };
     const table_rows = make_rows_of_lesson_table(lessons, args);
-
-    if (table_rows && !isLoading_hoursBeforeCancel) {
+    if ((table_rows &&  table_rows.length > 0)  && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )

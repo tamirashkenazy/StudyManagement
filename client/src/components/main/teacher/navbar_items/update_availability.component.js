@@ -37,7 +37,7 @@ const set_lessons = (lessons, array) => {
         var today = Date.now();
         var date = lesson.date.slice(0, -1)
         var newDate = new Date(date);
-        if (today < newDate) {
+        if (today < newDate && lesson.status !== "canceled" ) {
             return (
                 {
                     date: [newDate],

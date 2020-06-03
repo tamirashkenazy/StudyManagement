@@ -13,6 +13,8 @@ const TeacherSchema = new Schema({
                         course_name : { type : String, required : true, minlength: 2 },
                         hours_already_done : {type : String,  required : true, match: onlyNumbers, default: '0'}}],
     hours_available : {type: [Date], default:[]},
+    hours_per_week : [{week : {type : String, required : true},
+                        booked_hours : {type : Number, required : true, default : 0}}],
     // list of course number
     teaching_requests : [{course_id : {type : String,  required : true, match: onlyNumbers },
                         course_name : {type : String,  required : true},

@@ -160,17 +160,16 @@ router.route('/update/:id').post((req,res) => {
         if (!user.checkPassword(req.body.password)){
             return res.send({success : false,message : "שגיאה: הסיסמא שהוזנה קצרה מדי"})
         }
-        user._id = req.body._id.trim();
         user.password = user.generateHash(req.body.password)
-        user.email = req.body.email.trim();
-        user.first_name = req.body.first_name.trim();
-        user.last_name = req.body.last_name.trim();
+        user.email = req.body.email
+        user.first_name = req.body.first_name
+        user.last_name = req.body.last_name
         user.tel_number = req.body.tel_number;
         user.gender = req.body.gender;
         user.isTeacher = req.body.isTeacher;
         user.isStudent = req.body.isStudent;
         user.isAdmin = req.body.isAdmin;
-        user.study_year = req.body.study_year.trim();
+        user.study_year = req.body.study_year
         user.save((err, doc)=> {
             if(err) {
                 console.log('Error: ' + err);
@@ -180,5 +179,54 @@ router.route('/update/:id').post((req,res) => {
         })
     }); 
 });
+
+
+router.route('/sendNotification/lessonCanceled').post((req, res) => {
+    let data = req.body.lesson
+    let who_canceled = req.body.canceled
+    Constants.find({}).then((constant) => {
+        let QA_mail = constant[0].QA_mail
+        console.log(data)
+        User.find({ $or: [{ _id: data.teacher.teacher_id }, { _id: data.student.student_id }] }).then((users) => {
+            
+            if (!users || users.length != 2){
+                return res.send({ success: false, message: 'התרחשה שגיאה בשליחת המייל'});
+            }
+            let date = new Date(data.date)
+            console.log(date)
+
+            let date_format = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+            console.log(date_format)
+            console.log(`${users[0].email}, ${users[1].email}`)
+            let mailDetails = {
+                from: QA_mail,
+                to: `${users[0].email}, ${users[1].email}`,
+                subject: `${who_canceled} ביטל את השיעור שנקבע לכם`,
+                html: `<!DOCTYPE html>
+                <html>
+                        <body direction="rtl">
+                            <div><h3> השיעור שנקבע לך לתאריך: ${date_format} בשעה: ${date.getUTCHours()}:00 
+                            <br>
+                              בקורס: ${data.course.course_name} 
+                            <br>
+                              התבטל על ידי ${who_canceled}
+                            <br>
+                             נא לא להשיב למייל זה  </h3>
+                            </div>
+                        </body>
+                </html>
+                `
+            };
+            transporter.sendMail(mailDetails, function(error, info){
+                if (error) {
+                    return res.send({success : false, message: error})
+                } else {
+                    return res.send({success : true, message: "ההודעה נשלחה בהצלחה"})
+                }
+            })
+        })
+    })
+})
+
 
 module.exports = router;

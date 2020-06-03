@@ -390,7 +390,7 @@ router.route('/add').post((req, res) => {
  * request body:
  *     None
  */
-router.route('/:id').delete((req,res) => {
+router.route('deleteStudent/:id').delete((req,res) => {
     Student.deleteOne({_id: req.params.id})
     .then(student => {
         if (student.n === 1){
@@ -454,11 +454,8 @@ router.route('/update/courseHours/:id').post((req,res) => {
             return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
         }else{
             let course_to_update = student.courses.findIndex(course => course.course_id === course_id)
-            let approved_hours = Number(student.courses[course_to_update].approved_hours)
             let hours_already_done = Number(student.courses[course_to_update].hours_already_done)
-            approved_hours--;
             hours_already_done++;
-            student.courses[course_to_update].approved_hours = approved_hours.toString()
             student.courses[course_to_update].hours_already_done = hours_already_done.toString()
             student.save((err, doc)=> {
                 if(err) {
@@ -473,13 +470,13 @@ router.route('/update/courseHours/:id').post((req,res) => {
  
 
 /**
- * added new lesson to student.
+ * student lesson cancel.
  * request parameters:
- *     /update/courseHours/<student_id>
+ *     /update/lessonCancelled/<student_id>
  * request body:
  *       "course_id" : <course_id>
  */
-router.route('/update/newLessons/:id').post((req,res) => {
+router.route('/update/lessonCancelled/:id').post((req,res) => {
     let course_id = req.body.course_id
     Student.findById((req.params.id)).then((student) => {
         if (!student || student.length === 0) {
@@ -487,7 +484,41 @@ router.route('/update/newLessons/:id').post((req,res) => {
         }else{
             let course_to_update = student.courses.findIndex(course => course.course_id === course_id)
             let hours_able_to_book = Number(student.courses[course_to_update].hours_able_to_book)
-            hours_able_to_book--;
+            hours_able_to_book++;
+            student.courses[course_to_update].hours_able_to_book = hours_able_to_book.toString()
+            student.save((err, doc)=> {
+                if(err) {
+                   console.log('Error: ' + err);
+                   return res.send({success : false, message : err.errmsg});
+                }
+                return res.send({success : true, message : "השעות עודכנו בהצלחה"});
+            })
+        }
+    }); 
+});
+
+
+/**
+ * added new lesson to student.
+ * request parameters:
+ *     /update/newLessons/
+ * request body:
+ *    "course_id" : <course_id>
+ *    "number_of_hours" : <number_of_hours>
+ *
+ */
+router.route('/update/newLessons/:id').post((req,res) => {
+    let course_id = req.body.course_id
+    let number_of_hours = req.body.number_of_hours
+    Student.findById((req.params.id)).then((student) => {
+        if (!student || student.length === 0) {
+            return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
+        }else{
+            let course_to_update = student.courses.findIndex(course => course.course_id === course_id)
+            let hours_able_to_book = Number(student.courses[course_to_update].hours_able_to_book)
+            console.log("befor: " + hours_able_to_book)
+            hours_able_to_book = hours_able_to_book - number_of_hours;
+            console.log("after: " + hours_able_to_book)
             student.courses[course_to_update].hours_able_to_book = hours_able_to_book.toString()
             student.save((err, doc)=> {
                 if(err) {

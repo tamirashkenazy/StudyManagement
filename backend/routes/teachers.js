@@ -1,6 +1,7 @@
 const router = require('express').Router();
 let Teacher = require('../models/teacher.model');
 let Course = require('../models/course.model');
+let Constants = require('../models/constants.model');
 const mongodb = require('mongodb')
 const fs = require('fs')
 const binary = mongodb.Binary
@@ -80,14 +81,27 @@ router.route('/:id/name').get((req,res) => {
 router.route('/hoursAvailable/allTeachers/:course_id').get((req,res) => {
     Teacher.find()
     .then(teachers => {
-        var hours = []
-        teachers.forEach(teacher =>{
-            let course  = (teacher.teaching_courses.filter(course => course.course_id === req.params.course_id)) 
-            if (course && course.length>0){
-                hours.push({"teacher_id": teacher._id,"teacher_name" : teacher.name, "hours_available" : teacher.hours_available})
-            }
-        });
-        res.send({success : true, message: hours})
+        Constants.find({}, (err,constant) => {
+            let max_hours = constant[0].max_teaching_hours_per_week
+            var hours = []
+            teachers.forEach(teacher =>{
+                let course  = (teacher.teaching_courses.filter(course => course.course_id === req.params.course_id)) 
+                if (course && course.length>0){
+                    let dates = teacher.hours_available.filter(date => {
+                        date = `${date.getFullYear()}-${date.getWeek()}`
+                        let index = teacher.hours_per_week.findIndex(weeks => weeks.week === date)
+                        if (index != -1 &&  teacher.hours_per_week[index].booked_hours >= max_hours){
+                            
+                            return false
+                        }else{
+                            return true
+                        }
+                    })
+                    hours.push({"teacher_id": teacher._id,"teacher_name" : teacher.name, "hours_available" : dates})
+                }
+            });
+            res.send({success : true, message: hours})
+        })
     })
     .catch(err => res.status(400).json("Error: " + err));
 })
@@ -445,7 +459,6 @@ router.route('/add/hoursAvailable/:id').post((req, res) => {
  *      file : <binary_file>
  *      name : <file_name>
  */
-// app.post('/add/file/:id', async (req, res) => {
 router.post('/add/file/:id', async (req, res) => {
     Teacher.findById((req.params.id), (err,teacher) => {
         if(err) {
@@ -477,10 +490,11 @@ router.post('/add/file/:id', async (req, res) => {
  */
 router.route('/add').post((req, res) => {
     const { _id, name } = req.body
-    teaching_requests = []
-    hours_available = []
-    teaching_courses = []
-    grades_file = null
+    let teaching_requests = []
+    let hours_available = []
+    let teaching_courses = []
+    let hours_per_week = []
+    let grades_file = null
     const newTeacher = new Teacher({
         _id : _id,
         name : name,
@@ -526,6 +540,7 @@ router.route('/:id').delete((req,res) => {
  *      "teaching_courses" : [teaching_courses]
  *      "teaching_requests" : [teaching_requests]
  *      "hours_available" : [hours_available]
+ *      "hours_per_week" : [hours_per_week]
  *      "grades_file" : <grades_file>
  */
 router.route('/updateTeachers/:id').post((req,res) => {
@@ -537,6 +552,7 @@ router.route('/updateTeachers/:id').post((req,res) => {
         teacher.teaching_courses = req.body.teaching_courses;
         teacher.hours_available = req.body.hours_available;
         teacher.teaching_requests = req.body.teaching_requests;
+        teacher.hours_per_week = req.body.hours_per_week;
         teacher.grades_file = req.body.grades_file.trim();
         teacher.save((err, doc)=> {
             if(err) {
@@ -683,7 +699,7 @@ router.route('/update/teachingHours/:id').post((req,res) => {
             return res.send({success : false, message:"!הקורס אינו קיים במערכת" })
         } else{
             course = course[0]
-            updated_hours = Number(new_hours.teachingHours) + Number(course.hours_already_done)
+            updated_hours = new_hours.teachingHours + Number(course.hours_already_done)
             course.hours_already_done = updated_hours.toString()
             teacher.save((err, doc)=> {
                 if(err) {
@@ -751,16 +767,53 @@ router.route('/delete/request/:id').post((req, res) => {
 
 
 /**
+ * teacher lesson cancel.
+ * request parameters:
+ *     /update/lessonCancelled
+ * request body:
+ *       "teacher_id" : <teacher_id>
+ *       "date" : <date>
+ */
+router.route('/update/lessonCancelled').post((req,res) => {
+    let date = req.body.date
+    let teacher_id = req.body.teacher_id
+    date = new Date(date)
+    Teacher.findById((teacher_id)).then((teacher) => {
+        if (!teacher || teacher.length === 0) {
+            return res.send({success : false, message : "!המורה אינו קיים במערכת"})
+        }else{
+            let year = date.getFullYear();
+            let month = date.getWeek()
+            let current_week = `${year}-${month}`
+            let index = teacher.hours_per_week.findIndex(weeks => weeks.week === current_week)
+            teacher.hours_per_week[index].booked_hours--
+            teacher.save((err, doc)=> {
+                if(err) {
+                   console.log('Error: ' + err);
+                   return res.send({success : false, message : err.errmsg});
+                }
+                return res.send({success : true, message : "השעות עודכנו בהצלחה"});
+            })
+        }
+    }); 
+});
+
+
+/**
  * delete dates by teacher id.
  * request parameters:
- *     /delete/hoursAvailable/<teacher_id>
+ *     /delete/hoursAvailable/
  * request body:
+ *      [
+ *       teacher_id : <teacher_id>
  *      "hours_available" : [hours_available]
+ *      ]
  */
-router.route('/delete/hoursAvailable').post((req, res) => {
+router.route('/update/addlessons').post((req, res) => {
     let teachers = req.body
     let success = true
-    let validate = 1
+    let remove_hours = 1
+    let add_weekly_hour = 1
     function wait() {
         return new Promise(resolve => {
           setTimeout(() => {
@@ -772,18 +825,31 @@ router.route('/delete/hoursAvailable').post((req, res) => {
     teachers.forEach(function(teacher){
         let teacher_id = teacher.teacher_id
         let dates = teacher.hours_available
+        let dates_to_remove = dates.map(date => new Date(date))
         Teacher.findById((teacher_id)).then((current_teacher) => {
-            validate =  current_teacher.hours_available.length
-            let dates_to_remove = dates.map(date => new Date(date))
+            remove_hours =  current_teacher.hours_available.length
             current_teacher.hours_available = current_teacher.hours_available.filter(function(date){
                 let match = dates_to_remove.find(d => d.getTime() === date.getTime())
                 let hasMatch = !!match; // convert to boolean
-                validate--;
+                remove_hours--;
                 return !hasMatch
             })
-            save_teacher = async function(){
-                while(validate != 0){
+            add_weekly_hour = dates_to_remove.length
+            dates_to_remove.forEach(date => {
+                let current_week = `${ date.getFullYear()}-${date.getWeek()}`
 
+                let index = current_teacher.hours_per_week.findIndex(weeks => weeks.week === current_week)
+                if (index === -1){
+                    new_week = {week : current_week, booked_hours : 1}
+                    console.log("new_week: " + new_week)
+                    current_teacher.hours_per_week.push(new_week)
+                }else{
+                    current_teacher.hours_per_week[index].booked_hours++
+                }
+                add_weekly_hour--
+            });
+            save_teacher = async function(){
+                while(remove_hours != 0 || add_weekly_hour != 0){
                     await wait()
                 }
                 current_teacher.save((err, teacher)=> {
@@ -862,5 +928,40 @@ router.route('/delete/hoursAvailable').post((req, res) => {
 //    })
 //})
 
+
+/**
+ * Returns the week number for this date.  dowOffset is the day of week the week
+ * "starts" on for your locale - it can be from 0 to 6. If dowOffset is 1 (Monday),
+ * the week returned is the ISO 8601 week number.
+ * @param int dowOffset
+ * @return int
+ */
+Date.prototype.getWeek = function (dowOffset) {
+    /*getWeek() was developed by Nick Baicoianu at MeanFreePath: http://www.meanfreepath.com */
+    
+        dowOffset = typeof(dowOffset) == 'int' ? dowOffset : 0; //default dowOffset to zero
+        var newYear = new Date(this.getFullYear(),0,1);
+        var day = newYear.getDay() - dowOffset; //the day of week the year begins on
+        day = (day >= 0 ? day : day + 7);
+        var daynum = Math.floor((this.getTime() - newYear.getTime() - 
+        (this.getTimezoneOffset()-newYear.getTimezoneOffset())*60000)/86400000) + 1;
+        var weeknum;
+        //if the year starts before the middle of a week
+        if(day < 4) {
+            weeknum = Math.floor((daynum+day-1)/7) + 1;
+            if(weeknum > 52) {
+                nYear = new Date(this.getFullYear() + 1,0,1);
+                nday = nYear.getDay() - dowOffset;
+                nday = nday >= 0 ? nday : nday + 7;
+                /*if the next year starts before the middle of
+                  the week, it is week #1 of that year*/
+                weeknum = nday < 4 ? 1 : 53;
+            }
+        }
+        else {
+            weeknum = Math.floor((daynum+day-1)/7);
+        }
+        return weeknum;
+    };
 
 module.exports = router;
