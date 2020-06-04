@@ -19,6 +19,7 @@ import { connect } from 'react-redux'
 import { check_errors, validateForm, allFieldsExist } from '../../signup/validationFields';
 import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
+import { formatMs } from '@material-ui/core';
 
 function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_operations_by_role, props }) {
   const [open, setOpen] = useState(false);
@@ -122,7 +123,7 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
     </StyledMenuItem>
   )
 
-  const httpPostRequestToUpdateUser = (formValues) => {
+  const httpPostRequestToUpdateUser = (formValues, was_teacher, was_student) => {
     let user = {
       _id: formValues._id, password: formValues.password
     }
@@ -143,14 +144,21 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
             alert(":בעיה בעדכון" ,response.data.message)
           }
         })
-        if (formValues.isTeacher) {
+        if (!was_teacher && formValues.isTeacher) {
           // if the teacher exists in teachers collection - there will be a failure, so nothing will be changed
           axios.post(get_mongo_api(`teachers/add`), { _id: formValues._id }).then(res => {
             if (!res.data.success) {
               alert(res.data.message)
             }
           })
-        } else {
+        } else if (was_teacher && formValues.isTeacher){
+          let name = `${formValues.first_name} ${formValues.last_name}`
+          axios.post(get_mongo_api(`teachers/update/name`), {_id : formValues._id , name }).then(res => {
+            if (!res.data.success) {
+              alert(res.data.message)
+            }
+          })
+        } else if (was_teacher && !formValues.isTeacher){
           // if the teacher doesn't exist there will be a fuilure - again, nothing will be changed
           axios.delete(get_mongo_api(`teachers/${formValues._id}`)).then(res => {
             if (!res.data.success) {
@@ -158,14 +166,21 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
             }
           })
         }
-        if (formValues.isStudent) {
+        if (!was_student && formValues.isStudent) {
           // same as the teacher
           axios.post(get_mongo_api(`students/add`), { _id: formValues._id }).then(res => {
             if (!res.data.success) {
               alert(res.data.message)
             }
           })
-        } else {
+        } else if (was_student && formValues.isStudent) {
+          let name = `${formValues.first_name} ${formValues.last_name}`
+          axios.post(get_mongo_api(`students/update/name`), {_id : formValues._id , name } ).then(res => {
+            if (!res.data.success) {
+              alert(res.data.message)
+            }
+          })
+        } else if (was_student && !formValues.isStudent){
           axios.delete(get_mongo_api(`students/${formValues._id}`)).then(res => {
             if (!res.data.success) {
               alert(res.data.message)
@@ -186,7 +201,7 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
       if (!validForm) {
         alert(local_errors);
       } else {
-        httpPostRequestToUpdateUser(formValues)
+        httpPostRequestToUpdateUser(formValues, userDetails.isTeacher, userDetails.isStudent)
       }
     }
   }
