@@ -153,7 +153,7 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
           })
         } else if (was_teacher && formValues.isTeacher){
           let name = `${formValues.first_name} ${formValues.last_name}`
-          axios.post(get_mongo_api(`teachers/update/name`), {_id : formValues._id , name }).then(res => {
+          axios.post(get_mongo_api(`teachers/update/name`), {_id : formValues._id , name : name }).then(res => {
             if (!res.data.success) {
               alert(res.data.message)
             }
@@ -175,7 +175,7 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
           })
         } else if (was_student && formValues.isStudent) {
           let name = `${formValues.first_name} ${formValues.last_name}`
-          axios.post(get_mongo_api(`students/update/name`), {_id : formValues._id , name } ).then(res => {
+          axios.post(get_mongo_api(`students/update/name`), {_id : formValues._id , name : name } ).then(res => {
             if (!res.data.success) {
               alert(res.data.message)
             }

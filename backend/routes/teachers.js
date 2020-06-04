@@ -678,6 +678,32 @@ router.route('/update/requestStatus/:id').post((req,res) => {
 
 
 /**
+ * update teacher name.
+ * request parameters:
+ *     /update/teachingHours/<teacher_id>
+ * request body:
+ *      "_id" : <teacher_id>
+ *      "name" : <teacher name>
+ */
+router.route('/update/name').post((req,res) => {
+    let teacher_id = req.body._id
+    let new_name = req.body.name
+    Teacher.findById((teacher_id)).then((teacher) => {
+        if (!teacher || teacher.length === 0) {
+            return res.send({success : false, message : "!המורה אינו קיים במערכת"})
+        }
+        teacher.name = new_name
+        teacher.save((err, doc)=> {
+            if(err) {
+                return res.send({success : false, message : err.errmsg});
+            }
+            return res.send({success : true, message : "!שם המורה עודכן בהצלחה"});
+        })
+    }); 
+});
+
+
+/**
  * update number of hours by id and course_id.
  * request parameters:
  *     /update/teachingHours/<teacher_id>
