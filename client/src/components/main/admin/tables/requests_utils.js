@@ -42,7 +42,6 @@ export const httpRequestToApproveDeclineRequests = (selectedValues, api) => {
             return true
         }
     })
-    console.log(arr);
     let post_msg = {id_to_courses : arr}
     axios.post(get_mongo_api(api),post_msg).then(response=>{ 
         if (response.data.success) {
@@ -84,17 +83,11 @@ export const useChoosingForm = (httpRequestFunc, arr_of_persons, update_api) => 
     }
     const handleInputChange = (event) => {
         event.persist();
-
         let {name, value} = event.target
         let [id, course_id] = name.split(',')
-        // if (value === "") {
-        //     value = null
-        // }
         setSelectedValues(selectedValues => {
             return({...selectedValues, [id] : {...selectedValues[id], [course_id] : value}})
         });
-        console.log(selectedValues);
-
     }
     return {selectedValues, handleInputChange, handleSubmit};
 }

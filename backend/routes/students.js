@@ -430,7 +430,6 @@ router.route('/update').post((req,res) => {
             student.courses = req.body.courses;
             student.save((err, doc)=> {
                 if(err) {
-                    console.log('Error: ' + err);
                     return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "!הסטודנט עודכן בהצלחה"});
@@ -459,7 +458,6 @@ router.route('/update/courseHours/:id').post((req,res) => {
             student.courses[course_to_update].hours_already_done = hours_already_done.toString()
             student.save((err, doc)=> {
                 if(err) {
-                   console.log('Error: ' + err);
                    return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "השעות עודכנו בהצלחה"});
@@ -488,7 +486,6 @@ router.route('/update/lessonCancelled/:id').post((req,res) => {
             student.courses[course_to_update].hours_able_to_book = hours_able_to_book.toString()
             student.save((err, doc)=> {
                 if(err) {
-                   console.log('Error: ' + err);
                    return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "השעות עודכנו בהצלחה"});
@@ -516,13 +513,10 @@ router.route('/update/newLessons/:id').post((req,res) => {
         }else{
             let course_to_update = student.courses.findIndex(course => course.course_id === course_id)
             let hours_able_to_book = Number(student.courses[course_to_update].hours_able_to_book)
-            console.log("befor: " + hours_able_to_book)
             hours_able_to_book = hours_able_to_book - number_of_hours;
-            console.log("after: " + hours_able_to_book)
             student.courses[course_to_update].hours_able_to_book = hours_able_to_book.toString()
             student.save((err, doc)=> {
                 if(err) {
-                   console.log('Error: ' + err);
                    return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "השעות עודכנו בהצלחה"});
@@ -553,7 +547,6 @@ router.route('/update/group/:id').post((req,res) => {
             student.group = new_group;
             student.save((err, doc)=> {
                 if(err) {
-                   console.log('Error: ' + err);
                    return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "!הקבוצה של הסטודנט עודכנה בהצלחה"});
@@ -743,7 +736,6 @@ router.route('/update/requestStatus/:id').post((req,res) => {
             student.requests[status_to_update].status = new_request.status
             student.save((err, doc)=> {
                 if(err) {
-                    console.log('Error: ' + err);
                     return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "!סטטוס הבקשה עודכן בהצלחה"});

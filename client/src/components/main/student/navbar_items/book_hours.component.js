@@ -9,7 +9,7 @@ var HOURS_AVAILABLE_GLOBAL = {};
 
 const get_hours_available_to_book = async (data) => {
     let response = await axios.post(get_mongo_api(`students/availableHours/`), data);
-    let get_hours_available_to_book_response = await response.data;
+    let get_hours_available_to_book_response = response.data;
     return get_hours_available_to_book_response;
 }
 
@@ -112,7 +112,7 @@ const arrange_hours_array = (hours, setNoAvailableDates) => {
 async function get_available_hours_list(selectedCourse) {
     if (selectedCourse) {
         let response = await axios.get(get_mongo_api(`teachers/hoursAvailable/allTeachers/${selectedCourse}`));
-        let get_available_hours_list = await response.data.message;
+        let get_available_hours_list = response.data.message;
         return get_available_hours_list;
     }
 }
@@ -122,8 +122,6 @@ const set_available_hours = (selectedCourse, setHoursOptions, setNoAvailableDate
         if (dates) {
             HOURS_AVAILABLE_GLOBAL = { ...make_available_hours_list(dates, setNoAvailableDates, studentID, lessons) };
             setHoursOptions(HOURS_AVAILABLE_GLOBAL);
-        } else {
-            console.log(dates);
         }
     })
 }
@@ -160,14 +158,14 @@ const delete_hours_from_teacher = async (lessonHours) => {
     });
 
     let response = await axios.post(get_mongo_api(`teachers/update/addlessons`), data);
-    let delete_hours_response = await response.data;
+    let delete_hours_response = response.data;
     return delete_hours_response;
 }
 
 const add_lesson_to_student = async (studentID, courseID, lessonsNumber) => {
     var data = { course_id: courseID, number_of_hours: lessonsNumber }
     let response = await axios.post(get_mongo_api(`students/update/newLessons/${studentID}`), data);
-    let add_lesson_to_student_response = await response.data;
+    let add_lesson_to_student_response = response.data;
     return add_lesson_to_student_response;
 }
 
@@ -185,7 +183,7 @@ const add_lesson = async (eachDateSelected, selectedCourseID, student) => {
         status: "waiting"
     }
     let response = await axios.post(get_mongo_api(`lessons/add/`), data);
-    let add_lesson_response = await response.data;
+    let add_lesson_response = response.data;
     return add_lesson_response;
 }
 
@@ -242,21 +240,21 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                                                     }
                                                     else { }
                                                 } else {
-                                                    console.log('problem in add_lesson', add_lesson_response.message);
-                                                    alert(add_lesson_response.message);
-                                                    // window.location.reload(true);
+                                                    var teacherSelected = Object.values(oneDateSelected)[1];
+                                                    var onlyDateSelected = Object.values(oneDateSelected)[0];
+                                                    var date = new Date(onlyDateSelected);
+                                                    alert(" לא נקבע לך שיעור עם "+teacherSelected +" ב"+ date + " \n כי "+ add_lesson_response.message);
+                                                    window.location.reload(true);
                                                 }
                                             })
                                         })
                                     } else {
-                                        console.log('problem in add_lesson_to_student', add_lesson_to_student_response.message);
-                                        alert(add_lesson_to_student_response.message);
+                                        alert(add_lesson_to_student_response.message + "ולכן לא נקבע אף שיעור");
                                         window.location.reload(true);
                                     }
                                 })
                             } else {
-                                console.log('problem in delete_hours_from_teacher', delete_hours_response.message);
-                                alert(delete_hours_response.message);
+                                alert(delete_hours_response.message + "ולכן לא נקבע אף שיעור");
                                 window.location.reload(true);
                             }
                         });
@@ -264,8 +262,7 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                         alert('אין באפשרותך לבחור יותר ממספר שעות החונכות שנותרו לך לקבוע');
                     }
                 } else {
-                    console.log('problem in get_hours_available_to_book', get_hours_available_to_book_response.message);
-                    alert(get_hours_available_to_book_response.message);
+                    alert(get_hours_available_to_book_response.message + "ולכן לא נקבע אף שיעור");
                     window.location.reload(true);
                 }
             })
@@ -281,9 +278,6 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                 if (get_hours_available_to_book_response.success) {
                     setMaxNumber(get_hours_available_to_book_response.message);
                 }
-                else {
-                    console.log('problem in get_hours_available_to_book', get_hours_available_to_book_response.message);
-                }
             })
         }
         else {
@@ -293,16 +287,18 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
 
     return (
         (!loading2 && courses_options && courses_options.length > 0) ?
-            <div className="studentCalendar">
+            <div className="studentCalendar" style={{margin : "2rem 1rem 3rem 1rem"}} >
                 <Dropdown direction="right" placeholder='בחר קורס' defaultValue={selectedCourseID} scrolling search selection options={courses_options} onChange={(e, { value }) => { setSelectedCourse(value) }} />
                 {(selectedCourseID && selectedCourseID !== null) ?
-                    (hours_options && !no_available_dates) ?
-                        <Calendar
-                            isTeacher={isTeacher}
-                            datesDict={hours_options}
-                            maxNumber={maxNumber}
-                            confirmHandler={(dateSelected) => sendHours(dateSelected)} />
-                        : <div> <label>  לא קיימות שעות חונכות פנויות עבור קורס זה </label> </div>
+                    hours_options ?
+                        !no_available_dates ?
+                            <Calendar
+                                isTeacher={isTeacher}
+                                datesDict={hours_options}
+                                maxNumber={maxNumber}
+                                confirmHandler={(dateSelected) => sendHours(dateSelected)} />
+                            : <div> <label>  לא קיימות שעות חונכות פנויות עבור קורס זה </label> </div>
+                        : <div> <label>  טוען מידע  </label> </div>
                     : <div> <label>  יש לבחור קורס  </label> </div>}
             </div>
             : 'אין אפשרות לקבוע שעת חונכות כי לא נותרו לך שעות חונכות במערכת'

@@ -53,17 +53,11 @@ const update_teacher_and_user = async (func1, func2) => {
         if (responseOne && responseTwo) {
             return [responseOne, responseTwo];
         }
-        else if (responseOne || responseTwo) {
-            console.log('responseOne', responseOne);
-            console.log('responseTwo', responseTwo);
-            return false;
-        }
         else {
-            console.log('responseOne && responseTwo = false');
             return false;
         }
-    })).catch(errors => {
-        console.log('errors in update_teacher_and_student', errors);
+    })).catch(() => {
+        return false;
     })
 }
 
@@ -75,9 +69,7 @@ const onClickUser = (selectedTeacherID, setCardOpen, setUser, setTeacher) => {
             setUser(user);
             setTeacher(teacher);
             setCardOpen(true);
-        } else {
-            console.log('problem in update_teacher_and_user', returnValue);
-        }
+        } 
     })
 }
 
@@ -131,18 +123,11 @@ const update_status = async (func1, func2, func3) => {
         if (responseOne.success && responseTwo.success && responseThree.success) {
             return responseThree;
         }
-        else if (responseOne.success || responseTwo.success || responseThree.success) {
-            console.log('responseOne', responseOne.message);
-            console.log('responseTwo', responseTwo.message);
-            console.log('responseTwo', responseThree.message);
-            return false;
-        }
         else {
-            console.log('responseOne && responseTwo && responseThree = false');
             return false;
         }
-    })).catch(errors => {
-        console.log('errors in update_status', errors);
+    })).catch(() => {
+        return false;
     })
 }
 
@@ -169,7 +154,6 @@ const onClickStatus = (status, lesson) => {
                             }
                         }
                         else {
-                            console.log('problem in update_status', returnValue);
                             alert('אירעה שגיאה במהלך ביטול השיעור');
                             window.location.reload(true);
                         }
@@ -177,7 +161,6 @@ const onClickStatus = (status, lesson) => {
                 } else {
                     alert(returnValue.message);
                     window.location.reload(true);
-                    console.log('problem in update_status', returnValue.message);
                 }
             })
             break;
@@ -193,15 +176,13 @@ const onClickStatus = (status, lesson) => {
                             }
                         }
                         else {
-                            console.log('problem in update_status', returnValue);
                             alert('אירעה שגיאה במהלך ביטול השיעור');
                             window.location.reload(true);
                         }
                     })
                 } else {
-                    alert(returnValue.message);
+                    alert(returnValue.message + "ולכן לא בוטל השיעור");
                     window.location.reload(true);
-                    console.log('problem in update_status', returnValue.message);
                 }
             })
             break;
@@ -275,7 +256,7 @@ export default function LessonsTable({ setCardOpen, setUser, setTeacher, lessons
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
     const args = { setCardOpen, setUser, setTeacher, hoursBeforeCancel };
     const table_rows = make_rows_of_lesson_table(lessons, args);
-    if ((table_rows &&  table_rows.length > 0)  && !isLoading_hoursBeforeCancel) {
+    if ((table_rows && table_rows.length > 0) && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )

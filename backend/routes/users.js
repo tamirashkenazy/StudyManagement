@@ -172,7 +172,6 @@ router.route('/update/:id').post((req,res) => {
         user.study_year = req.body.study_year
         user.save((err, doc)=> {
             if(err) {
-                console.log('Error: ' + err);
                 return res.send({success : false, message : err.errmsg});
             }
             return res.send({success : true, message : "המשתמש עודכן בהצלחה"});
@@ -186,18 +185,12 @@ router.route('/sendNotification/lessonCanceled').post((req, res) => {
     let who_canceled = req.body.canceled
     Constants.find({}).then((constant) => {
         let QA_mail = constant[0].QA_mail
-        console.log(data)
         User.find({ $or: [{ _id: data.teacher.teacher_id }, { _id: data.student.student_id }] }).then((users) => {
-            
             if (!users || users.length != 2){
                 return res.send({ success: false, message: 'התרחשה שגיאה בשליחת המייל'});
             }
             let date = new Date(data.date)
-            console.log(date)
-
             let date_format = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
-            console.log(date_format)
-            console.log(`${users[0].email}, ${users[1].email}`)
             let mailDetails = {
                 from: QA_mail,
                 to: `${users[0].email}, ${users[1].email}`,

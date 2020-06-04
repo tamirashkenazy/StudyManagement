@@ -26,7 +26,6 @@ const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
                 }
             )
         })
-        // console.log(options);
         return options
     } else {
         return ([{
@@ -38,7 +37,6 @@ const make_rows_of_courses_requests = (arr_of_student_courses_requests) => {
 export default function CoursesTable({id}) {
     const [table_rows, loading] = useAsyncHook(`students/${id}/requests`, make_rows_of_courses_requests);
 
-    // const classes = useStyles();
     return (
         !loading && table_rows && 
         <GenericTable table_data={{data:table_rows, title:"קורסים"}}/>
