@@ -370,7 +370,7 @@ router.route('/add').post((req, res) => {
         }else{
             new_group = { name: group.name, approved_hours : group.approved_hours}
         }
-        student_obj = { _id : _id, name : name, requests : requests, courses : courses, group : new_group}
+        student_obj = { _id, name, requests, courses, group : new_group}
         const newStudent = new Student(student_obj)
         newStudent.save((err, student)=> {
             if (err) {
