@@ -59,7 +59,7 @@ const post_request_add_to_group = (ids, groupNameChosen) => {
 })
 }
 
-export default function AddStudentsToGroup({users, students, groupNameChosen}) { 
+export default function AddStudentsToGroup({students, groupNameChosen}) { 
     const [ids, setId] = useState(new Set())
     const students_in_group = make_arr_students_in_group(students.filter(student=>student.group.name === groupNameChosen), setId, true)
     const students_not_in_group = make_arr_students_in_group(students.filter(student=>student.group.name !== groupNameChosen), setId, false, ids)
