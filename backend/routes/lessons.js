@@ -366,7 +366,6 @@ router.route('/updateStatus').post((req, res) => {
                 lesson.status = status
                 lesson.save((err, doc) => {
                     if (err) {
-                        console.log('Error: ' + err);
                         return res.send({
                             success: false, message: err.message
                         });
@@ -405,7 +404,6 @@ router.route('/update').post((req, res) => {
                 lesson.status = req.body.status
                 lesson.save((err, doc) => {
                     if (err) {
-                        console.log('Error: ' + err);
                         return res.send({
                             success: false, message: err.message
                         });

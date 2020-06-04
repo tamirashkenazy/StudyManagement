@@ -21,7 +21,6 @@ import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
 
 function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_operations_by_role, props }) {
-  // console.log("userDetails: " , userDetails);
   const [open, setOpen] = useState(false);
   const [helpIsOpen, setOpenHelp] = useState(false);
 
@@ -178,7 +177,6 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
   }
   const [errors, setErrors] = useState({ _id: null })
   const submitForm = (formValues) => {
-    // console.log('submitting form: ', formValues);
     if (!allFieldsExist(formValues)) {
       alert("אנא מלא את כל השדות")
     } else {

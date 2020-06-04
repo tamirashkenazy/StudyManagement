@@ -176,7 +176,6 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
                 }
             }
             else {
-                console.log("no available dates");
                 $(item).removeClass("pickable");
                 $(item).addClass("disabled");
             }

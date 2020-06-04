@@ -25,7 +25,7 @@ export function SendMessage({user, close_popup}) {
     const message_box = () => {
         return (
             <Form>
-                <Form.TextArea label="הודעה חדשה" placeholder="הודעה" autoFocus value={msg} onChange={(e,{value})=>{console.log(value);setMsg(value)}}></Form.TextArea>
+                <Form.TextArea label="הודעה חדשה" placeholder="הודעה" autoFocus value={msg} onChange={(e,{value})=>{setMsg(value)}}></Form.TextArea>
                 <Form.Button onClick={()=>httpPostRequestSendMessage(user, msg, close_popup)}>שליחה</Form.Button>
             </Form>
         )

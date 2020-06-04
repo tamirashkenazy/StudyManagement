@@ -43,7 +43,6 @@ export default function RequestHours({id, number_of_approved_hours}){
                 alert(response.data.message)
                 window.location.reload(true)
             } else {
-                // alert("הקורס לא התווסף בהצלחה")
                 alert(response.data.message)
             }
         })

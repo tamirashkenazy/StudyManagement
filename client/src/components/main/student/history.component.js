@@ -33,31 +33,22 @@ const update_teacher_and_user = async (func1, func2) => {
         if (responseOne && responseTwo) {
             return [responseOne, responseTwo];
         }
-        else if (responseOne || responseTwo) {
-            console.log('responseOne', responseOne);
-            console.log('responseTwo', responseTwo);
-            return false;
-        }
         else {
-            console.log('responseOne && responseTwo = false');
             return false;
         }
-    })).catch(errors => {
-        console.log('errors in update_teacher_and_student', errors);
+    })).catch(() => {
+        return false;
     })
 }
 
 const onClickUser = (selectedTeacherID, setCardOpen, setUser, setTeacher) => {
     update_teacher_and_user(getTeacher(selectedTeacherID), getUser(selectedTeacherID)).then((returnValue) => {
         if (returnValue) {
-            console.log("onClickUserPopup");
             let user1 = returnValue[1];
             let teacher1 = returnValue[0];
             setUser(user1);
             setTeacher(teacher1);
             setCardOpen(true);
-        } else {
-            console.log('problem in update_teacher_and_user', returnValue);
         }
     })
 }

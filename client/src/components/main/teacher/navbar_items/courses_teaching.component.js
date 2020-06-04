@@ -39,22 +39,6 @@ const sendCourses = (id, selectedCourses) => {
             window.location.reload(true)
         }
     })
-    // Object.entries(selectedCourses).forEach(([key, value]) =>  {
-    //     if (value === true) {
-    //         let course_id = key.split('-')[0]
-    //         let course_name = key.split('-')[1]
-    //         axios.post(get_mongo_api(`teachers/add/requestsList/${id}`), { course_id: course_id, course_name: course_name }).then(response => {
-    //             if (!response.data.success) {
-    //                 alert(response.data.message)
-    //             } else {
-    //                 // console.log('course name: ', course_name);
-    //                 // courses_msg_arr.push(course_name)
-    //                 alert(response.data.message)
-    //                 window.location.reload(true)
-    //             }
-    //         })
-    //     }
-    // })
 }
 export default function CoursesToTeach(props) {
     // const {_id, teacher} = props

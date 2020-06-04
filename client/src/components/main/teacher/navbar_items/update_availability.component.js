@@ -64,13 +64,11 @@ export default function UpdateAvailability({ id, lessons }) {
         if (selectedHours.length > 0) {
             axios.post(get_mongo_api(`teachers/add/hoursAvailable/${id}`), { dates: selectedHours }).then(response => {
                 if (!response.data.success) {
-                    console.log(response.data.message)
-                    console.log(selectedHours)
+                    alert(response.data.message);
+                } else {
                     alert(response.data.message);
                     window.location.reload(true);
-                } else {
-                    alert(response.data.message)
-                    window.location.reload(true)
+
                 }
             })
         }

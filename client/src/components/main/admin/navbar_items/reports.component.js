@@ -8,7 +8,6 @@ import get_mongo_api from '../../../mongo/paths.component'
 
 const httpPostRequestToXslxFile = (arr_of_teachers, arr_of_students, year, month) => {
     let post_msg = {studentsReport : arr_of_students, teachersReport : arr_of_teachers}
-    console.log(post_msg);
     let url = get_mongo_api(`constants/exportToExcel/${year}/${month}`)
     axios.post(url, post_msg).then(res=>{    
         if (res.data.success) {

@@ -183,7 +183,6 @@ router.route('/:id/grades').get((req,res) => {
             url = path.join(url, teacher.grades_file.name)
             fs.appendFile(teacher.grades_file.name, Buffer.from(buffer), (err) => {
                 if (err) {
-                  console.log(err);
                 } else {
                     return res.sendFile(url)
                 }
@@ -556,7 +555,6 @@ router.route('/updateTeachers/:id').post((req,res) => {
         teacher.grades_file = req.body.grades_file.trim();
         teacher.save((err, doc)=> {
             if(err) {
-                console.log('Error: ' + err);
                 return res.send({success : false, message : err.errmsg});
             }
             return res.send({
@@ -670,7 +668,6 @@ router.route('/update/requestStatus/:id').post((req,res) => {
             }
             teacher.save((err, doc)=> {
                 if(err) {
-                    console.log('Error: ' + err);
                     return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "!סטטוס הבקשה עודכן בהצלחה"});
@@ -703,7 +700,6 @@ router.route('/update/teachingHours/:id').post((req,res) => {
             course.hours_already_done = updated_hours.toString()
             teacher.save((err, doc)=> {
                 if(err) {
-                    console.log('Error: ' + err);
                     return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "!השעות עודכנו בהצלחה"});
@@ -789,7 +785,6 @@ router.route('/update/lessonCancelled').post((req,res) => {
             teacher.hours_per_week[index].booked_hours--
             teacher.save((err, doc)=> {
                 if(err) {
-                   console.log('Error: ' + err);
                    return res.send({success : false, message : err.errmsg});
                 }
                 return res.send({success : true, message : "השעות עודכנו בהצלחה"});
@@ -841,7 +836,6 @@ router.route('/update/addlessons').post((req, res) => {
                 let index = current_teacher.hours_per_week.findIndex(weeks => weeks.week === current_week)
                 if (index === -1){
                     new_week = {week : current_week, booked_hours : 1}
-                    console.log("new_week: " + new_week)
                     current_teacher.hours_per_week.push(new_week)
                 }else{
                     current_teacher.hours_per_week[index].booked_hours++
@@ -865,7 +859,6 @@ router.route('/update/addlessons').post((req, res) => {
     });
     send_response = async function(){
         while(end_function != 0 && success != false){
-            console.log("end_function: " + end_function)
             await wait(end_function)
         }
         if (success === true){

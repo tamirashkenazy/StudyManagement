@@ -68,7 +68,6 @@ router.route('/update').post((req,res) => {
         })
         constant.save((err, doc)=> {
             if(err) {
-                console.log('Error: ' + err);
                 return res.send({success : false, message : err.errmsg});
             }
             return res.send({success : true, message : "!המשתנה עודכן בהצלחה"});

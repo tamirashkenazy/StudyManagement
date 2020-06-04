@@ -19,7 +19,6 @@ router.route('/').post((req, res) => {
     User.find({_id : _id}, (err, users)=> {
         //the users is a list of what found
         if (err) {
-            console.log('error: ' + err);
             return res.send({
                 success : false,
                 message : "Error: server err"
