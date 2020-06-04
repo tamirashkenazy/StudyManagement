@@ -105,7 +105,7 @@ export function Calendar(props) {
         const { target } = e;
         if (target.classList.contains("pickable") && !target.classList.contains("disabled")) {
             $(target).toggleClass("active");
-            DATES_COUNTER = target.classList.contains("active") ? DATES_COUNTER+1 : DATES_COUNTER-1;
+            DATES_COUNTER = target.classList.contains("active") ? DATES_COUNTER + 1 : DATES_COUNTER - 1;
         }
 
         // Setting state on every click from user 
@@ -235,42 +235,13 @@ export function Calendar(props) {
         }
     };
 
-    //     if (dateItem === prop.dates[Object.keys(prop.dates)[Object.keys(prop.dates).length - 1]]
-    //         && item === dateArr[dateArr.length - 1]) {
-
-    //         setPickedDates(prev => {
-    //             const newPickedDates = new Set([...prev, next4Week, pickedDate]);
-    //             return newPickedDates;
-    //         });
-    //     } else {
-    //         setPickedDates(prev => {
-    //             return new Set([...prev, next4Week, pickedDate]);
-    //         });
-    //     }
-    // }
-    //         daysWithNoCheckboxTrue.push(itemYear + "-" + itemMonth + "-" + itemDay + "T" + itemHour);
-
-    //         if (dateItem === prop.dates[Object.keys(prop.dates)[Object.keys(prop.dates).length - 1]]) {
-    //             setPickedDates(prev => {
-    //                 const newPickedDates = new Set([...prev, ...daysWithNoCheckboxTrue]);
-    //                 props.confirmHandler(Array.from(newPickedDates))
-    //                 return newPickedDates
-    //             });
-    //         } else {
-    //             setPickedDates(prev => {
-    //                 return new Set([...prev, ...daysWithNoCheckboxTrue]);
-    //             });
-    //         }
-    //     }
-    // }
-    //     }
-
     const onClickHandlerSubmit = () => {
         getPickedDays();
     }
 
     const days = ['שבת', 'שישי', 'חמישי', 'רביעי', 'שלישי', 'שני', 'ראשון', ' ']
     const cells = ['', '', '', '', '', '', '']
+    const hours = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00', '21:00', '22:00'];
     return (
         <div className="calendar-component">
             <div className="container">
@@ -289,96 +260,17 @@ export function Calendar(props) {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            <TableRow className='0-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">08:00</TableCell>
-                            </TableRow>
-                            <TableRow className='1-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">09:00</TableCell>
-                            </TableRow>
-                            <TableRow className='2-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">10:00</TableCell>
-                            </TableRow>
-                            <TableRow className='3-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">11:00</TableCell>
-                            </TableRow>
-                            <TableRow className='4-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">12:00</TableCell>
-                            </TableRow>
-                            <TableRow className='5-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">13:00</TableCell>
-                            </TableRow>
-                            <TableRow className='6-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">14:00</TableCell>
-                            </TableRow>
-                            <TableRow className='7-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">15:00</TableCell>
-                            </TableRow>
-                            <TableRow className='8-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">16:00</TableCell>
-                            </TableRow>
-                            <TableRow className='9-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">17:00</TableCell>
-                            </TableRow>
-                            <TableRow className='10-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">18:00</TableCell>
-                            </TableRow>
-                            <TableRow className='11-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">19:00</TableCell>
-                            </TableRow>
-                            <TableRow className='12-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">20:00</TableCell>
-                            </TableRow>
-                            <TableRow className='13-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">21:00</TableCell>
-                            </TableRow>
-                            <TableRow className='14-row'>
-                                {cells.map((value, index) => {
-                                    return <TableCell className="pickable" key={index}>{value}</TableCell>
-                                })}
-                                <TableCell className="time">22:00</TableCell>
-                            </TableRow>
+                            {
+                                hours.map((el,index) => {
+                                    var name = index + "-row";
+                                    return <TableRow className={name} key={index} >
+                                        {cells.map((value, index) => {
+                                            return <TableCell className="pickable" key={index}>{value}</TableCell>
+                                        })}
+                                        <TableCell className="time">{el}</TableCell>
+                                    </TableRow>
+                                })
+                            }
                         </TableBody>
                     </Table>
                 </TableContainer>

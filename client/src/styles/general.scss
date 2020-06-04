@@ -63,3 +63,7 @@ button:focus{
 .MuiButtonBase-root:focus{
   background-color: #9eb4bd !important;
 }
+
+.ui.input>input{
+  text-align: right !important;
+}

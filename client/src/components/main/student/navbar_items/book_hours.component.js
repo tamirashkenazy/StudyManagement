@@ -21,19 +21,62 @@ const hasNull = (target) => {
     return false;
 }
 
-const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID, lessons) => {
+const make_available_hours_list_per_teacher = (teacher_name,teacher_id, arr_of_hours, lessons) => {
+    if (arr_of_hours && arr_of_hours !== undefined && arr_of_hours.length > 0) {
+        let datesDict = arr_of_hours.map(date_obj => {
+            var date = date_obj.slice(0, -1)
+            var newDate = new Date(date);
+            return (
+                {
+                    date: [newDate],
+                    text:teacher_name ,
+                    id: teacher_id
+                }
+            )
+        })
+        var dates = {};
+        var all_hours = [];
+        if (lessons && lessons !== undefined && lessons.length > 0) {
+            all_hours = set_lessons(lessons, datesDict);
+        }
+        else {
+            all_hours = datesDict;
+        }
+        var filtered_hours = all_hours.filter(function (el) {
+            return el != null;
+        });
+        for (var x = 0; x < filtered_hours.length; x++) {
+            var teacher_name = filtered_hours[x].text;
+            var teacher_id = filtered_hours[x].id;
+            var teacher = { teacher_id: teacher_id, teacher_name: teacher_name }
+            dates[filtered_hours[x].date] = teacher;
+        };
+    }
+    return dates;
+}
+
+const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID, lessons, setTeachers) => {
     var dates = {};
+    var teachers = [];
+    var allTeachers = {key: 0, value: "", text: "כולם"}
+    teachers.push(allTeachers);
     if (arr_of_dates && arr_of_dates !== undefined && arr_of_dates.length > 0) {
         let hours = [];
         arr_of_dates.forEach(dates_per_teacher => {
             if (dates_per_teacher.teacher_id !== studentID) {
                 var teacher_name = dates_per_teacher.teacher_name;
                 var teacher_id = dates_per_teacher.teacher_id;
+                var teacher_value= teacher_id+" "+teacher_name
+                var teacher = { key: teacher_id, value:teacher_value , text: teacher_name };
                 let hours_per_teacher = dates_per_teacher.hours_available.map(hour_available => {
                     var today = Date.now();
                     var date = hour_available.slice(0, -1)
                     var newDate = new Date(date);
                     if (today < newDate) {
+                        const result = teachers.find(({ key }) => key === teacher_id);
+                        if (!result) {
+                            teachers.push(teacher);
+                        }
                         return (
                             {
                                 date: [newDate],
@@ -62,6 +105,7 @@ const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID,
         }
         dates = arrange_hours_array(all_hours, setNoAvailableDates);
     }
+    setTeachers(teachers);
     return dates;
 }
 
@@ -117,10 +161,31 @@ async function get_available_hours_list(selectedCourse) {
     }
 }
 
-const set_available_hours = (selectedCourse, setHoursOptions, setNoAvailableDates, studentID, lessons) => {
+async function get_available_hours_list_per_teacher(teacherID) {
+    if (teacherID) {
+        let response = await axios.get(get_mongo_api(`teachers/hoursAvailable/byID/${teacherID}`));
+        let get_available_hours_list_per_teacher = response.data.message;
+        return get_available_hours_list_per_teacher;
+    }
+}
+
+const set_available_hours = (selectedCourse, setHoursOptions, setNoAvailableDates, studentID, lessons, setTeachers) => {
     get_available_hours_list(selectedCourse).then((dates) => {
         if (dates) {
-            HOURS_AVAILABLE_GLOBAL = { ...make_available_hours_list(dates, setNoAvailableDates, studentID, lessons) };
+            HOURS_AVAILABLE_GLOBAL = make_available_hours_list(dates, setNoAvailableDates, studentID, lessons, setTeachers);
+            setHoursOptions(HOURS_AVAILABLE_GLOBAL);
+        }
+    })
+}
+
+const set_available_hours_per_teacher = (teacher, setHoursOptions,lessons) => {
+    HOURS_AVAILABLE_GLOBAL={};
+    var teacherSep = teacher.split(' ');
+    var teacher_id = teacherSep[0];
+    var teacher_name = String(teacherSep[1] +" "+ teacherSep[2]);
+    get_available_hours_list_per_teacher(teacher_id).then((dates) => {
+        if (dates) {
+            HOURS_AVAILABLE_GLOBAL = make_available_hours_list_per_teacher(teacher_name,teacher_id,dates, lessons);
             setHoursOptions(HOURS_AVAILABLE_GLOBAL);
         }
     })
@@ -187,6 +252,8 @@ const add_lesson = async (eachDateSelected, selectedCourseID, student) => {
     return add_lesson_response;
 }
 
+//dropdown selection
+
 const make_courses_option = (arr_of_courses) => {
     if (arr_of_courses && Array.isArray(arr_of_courses) && arr_of_courses.length > 0) {
         let options = arr_of_courses.map(course_obj => {
@@ -216,6 +283,8 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
     const [isTeacher] = useState(false);
     const [no_available_dates, setNoAvailableDates] = useState(true);
     const [maxNumber, setMaxNumber] = useState(0);
+    const [teacherFilter, setTeacherFilter] = useState("");
+    const [teachers, setTeachers] = useState([]);
 
     const sendHours = (dateSelected) => {
         if (dateSelected !== undefined && dateSelected && selectedCourseID) {
@@ -243,7 +312,7 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                                                     var teacherSelected = Object.values(oneDateSelected)[1];
                                                     var onlyDateSelected = Object.values(oneDateSelected)[0];
                                                     var date = new Date(onlyDateSelected);
-                                                    alert(" לא נקבע לך שיעור עם "+teacherSelected +" ב"+ date + " \n כי "+ add_lesson_response.message);
+                                                    alert(" לא נקבע לך שיעור עם " + teacherSelected + " ב" + date + " \n כי " + add_lesson_response.message);
                                                     window.location.reload(true);
                                                 }
                                             })
@@ -272,7 +341,12 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
     useEffect(() => {
         if (selectedCourseID && selectedCourseID !== null) {
             setSelectedCourse(selectedCourseID);
-            set_available_hours(selectedCourseID, setHoursOptions, setNoAvailableDates, _id, lessons);
+            if (teacherFilter === "" || teacherFilter === null) {
+                set_available_hours(selectedCourseID, setHoursOptions, setNoAvailableDates, _id, lessons, setTeachers);
+            }
+            else {
+                set_available_hours_per_teacher(teacherFilter, setHoursOptions, lessons);
+            }
             var data = { course_id: selectedCourseID, student_id: _id };
             get_hours_available_to_book(data).then((get_hours_available_to_book_response) => {
                 if (get_hours_available_to_book_response.success) {
@@ -283,24 +357,32 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
         else {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedCourseID, _id, lessons]);
+    }, [selectedCourseID, _id, lessons,teacherFilter]);
 
     return (
         (!loading2 && courses_options && courses_options.length > 0) ?
-            <div className="studentCalendar" style={{margin : "2rem 1rem 3rem 1rem"}} >
+            <div className="studentCalendar"  >
                 <Dropdown direction="right" placeholder='בחר קורס' defaultValue={selectedCourseID} scrolling search selection options={courses_options} onChange={(e, { value }) => { setSelectedCourse(value) }} />
                 {(selectedCourseID && selectedCourseID !== null) ?
                     hours_options ?
                         !no_available_dates ?
-                            <Calendar
-                                isTeacher={isTeacher}
-                                datesDict={hours_options}
-                                maxNumber={maxNumber}
-                                confirmHandler={(dateSelected) => sendHours(dateSelected)} />
+                            <>
+                                <Dropdown
+                                    style={{ marginRight: "2rem" }}
+                                    placeholder='סינון לפי מורה'
+                                    scrolling search selection
+                                    options={teachers}
+                                    onChange={(e, { value }) => { setTeacherFilter(value) }}
+                                />
+                                <Calendar
+                                    isTeacher={isTeacher}
+                                    datesDict={hours_options}
+                                    maxNumber={maxNumber}
+                                    confirmHandler={(dateSelected) => sendHours(dateSelected)} /> </>
                             : <div> <label>  לא קיימות שעות חונכות פנויות עבור קורס זה </label> </div>
                         : <div> <label>  טוען מידע  </label> </div>
                     : <div> <label>  יש לבחור קורס  </label> </div>}
             </div>
-            : 'אין אפשרות לקבוע שעת חונכות כי לא נותרו לך שעות חונכות במערכת'
+            : <div> <label>  אין אפשרות לקבוע שעת חונכות כי לא נותרו לך שעות חונכות במערכת  </label> </div>
     )
 }

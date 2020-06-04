@@ -20,7 +20,7 @@ export function Dialog_generator(open, onClose, title, icon, args, Component, st
 
     return (
         <Dialog open={open} onClose={onClose} fullWidth={card? false: true } maxWidth={maxWidth}>
-            {display_header ? <DialogTitle style={rtl_style_title} > <Typography display="inline" component={'span'} variant={'h4'} >{title} </Typography><MaterialIcon icon={icon} color='#37474f' /> 
+            {display_header ? <DialogTitle style={rtl_style_title} ><MaterialIcon icon={icon} color='#37474f' /> <Typography display="inline" component={'span'} variant={'h4'} >{title} </Typography> 
             <hr color="black"/>
             </DialogTitle>: null}
             <DialogContent style={rtl_style_content}>
