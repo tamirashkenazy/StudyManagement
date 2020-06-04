@@ -8,8 +8,6 @@ import { SignupFormRedux } from './signupFormRedux'
 import { reduxForm, getFormValues } from 'redux-form'
 import { connect } from 'react-redux'
 import { httpPostRequestToAddUser, httpPostRequestToAddStudent, httpPostRequestToAddTeacher } from './signupPostRequests'
-
-
 import { check_errors, validateForm, allFieldsExist } from './validationFields';
 import { Typography } from '@material-ui/core';
 
@@ -41,11 +39,12 @@ const SignupConatainer = ({ handleSubmit, formValues }) => {
     return (
         <div id="land-page" className="bg" style={{ direction: "rtl" }}>
             <Container id="signup-box" className="right-align">
-                <Typography style={{ margin: "1rem 1.5rem 0rem 0rem" }} variant="h4" color="primary" display="inline">טופס הרשמה</Typography>
                 <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
                     <Icon size='big' name='arrow right' style={{ margin: "2%" }}></Icon>
                 </Link>
-                <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} formSubmitButtonName="הירשם" />
+                <Typography variant="h4" color="primary" display="inline" >טופס הרשמה</Typography>
+                
+                <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} formSubmitButtonName="הרשמה" />
             </Container>
         </div>
     )

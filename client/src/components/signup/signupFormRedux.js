@@ -102,12 +102,12 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
     }
     const password_field = () => {
         return (
-            <Field name="password" label="סיסמה" placeholder='סיסמה' type="password" error={errors.password_error} pointer={<Label size="tiny" pointing>חייבת להכיל לפחות 4 תווים</Label>} component={textField} direction="ltr"/>
+            <Field name="password" label="סיסמה" placeholder='סיסמה' type="password" error={errors.password_error} pointer={<Label size="tiny" pointing>חייבת להכיל לפחות 8 תווים</Label>} component={textField} direction="ltr"/>
         )
     }
     const email_field = () => {
         return (
-            <Field  name='email' label="email" placeholder='email' type="email" error={errors.email_error} component={textField} direction="ltr"/>
+            <Field  name='email' label="email" placeholder='email' type="email" error={errors.email_error} pointer={<Label size="tiny" pointing>לקבלת הודעות</Label>} component={textField} direction="ltr"/>
         )
     }
     const first_name_field = () => {
@@ -128,13 +128,13 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
 
     const genders_field = () => {
         return (
-            <Field name="gender" label="מגדר" component={RadioGenerator} options={{male: 'זכר',   female: 'נקבה' }} />
+            <Field name="gender" label="מגדר"  component={RadioGenerator} options={{male: 'זכר',   female: 'נקבה' }} />
         )
     }
 
     const study_year_field = () => {
         return (
-            <Field
+            <Field 
                 name="study_year"
                 label="שנת לימודים"
                 component={Select}
@@ -145,7 +145,7 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
 
     const roles_field = () => {
         return (
-            <Form.Field > 
+            <Form.Field style={{textAlign : "center"}}> 
                 <Field name="isStudent" label="תלמיד" component={CheckboxGenerator}/>
                 <Field name="isTeacher" label="מורה"  component={CheckboxGenerator}/>
                 {/* {formValues && ('isTeacher' in formValues) && (formValues.isTeacher) && bank_details_field()} */} 
