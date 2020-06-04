@@ -84,14 +84,8 @@ function FormLogin ()  {
                         onChange={handleInputChange}
                     />
                 </Form.Field>
-                
-                {/* <Form.Field
-                        control={Checkbox}
-                        label='שכחתי סיסמה'
-                    /> */}
-
                 <Form.Field>
-                    <Button onClick={handleSubmit} primary>התחבר</Button>
+                    <Button onClick={handleSubmit} primary>התחברות</Button>
                 </Form.Field>
             </Form>
         </div>

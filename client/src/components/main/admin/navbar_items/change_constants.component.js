@@ -47,7 +47,7 @@ export default function ChangeConstants({constants}){
         const [inputs, setInputs] = useState(constants)
         useEffect(()=>{
             setInputs(constants)   
-        }, [constants])
+        },[])
         // const [wasAdded, setWasAdded] = useState(false)
         async function handleSubmit (event) {
             if (event) {
