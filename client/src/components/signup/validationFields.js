@@ -60,7 +60,7 @@ export function check_errors(formValues) {
                 !validEmailRegex.test(value) ? temp_errors.email_error = error_default_messages.email_error : temp_errors.email_error = null;
                 break;
             case 'password':
-                    (value.length < 8) ? temp_errors.password_error = error_default_messages.password_error : temp_errors.password_error = null
+                    (value.length < 4) ? temp_errors.password_error = error_default_messages.password_error : temp_errors.password_error = null
                     break;
             case 'first_name':
                 (value.length < 2 || !onlyEnglishAndHebrew.test(value)) ? temp_errors.first_name_error = error_default_messages.first_name_error :temp_errors.first_name_error = null

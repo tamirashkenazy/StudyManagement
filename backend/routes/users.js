@@ -172,9 +172,10 @@ router.route('/update/:id').post((req,res) => {
         user.study_year = req.body.study_year
         user.save((err, doc)=> {
             if(err) {
-                return res.send({success : false, message : err.errmsg});
+                return res.send({success : false, message : "אירעה שגיאה בשמירת הנתונים"});
+            }else{
+                return res.send({success : true, message : "המשתמש עודכן בהצלחה"});
             }
-            return res.send({success : true, message : "המשתמש עודכן בהצלחה"});
         })
     }); 
 });
