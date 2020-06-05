@@ -438,6 +438,31 @@ router.route('/update').post((req,res) => {
     }); 
 });
 
+/**
+ * update student name.
+ * request parameters:
+ *     /update/name
+ * request body:
+ *      "_id" : <student_id>
+ *      "name" : <student name>
+ */
+router.route('/update/name').post((req,res) => {
+    let student_id = req.body._id
+    let new_name = req.body.name
+    Student.findById((student_id)).then((student) => {
+        if (!student || student.length === 0) {
+            return res.send({success : false, message : "!הסטודנט אינו קיים במערכת"})
+        }
+        student.name = new_name
+        student.save((err, doc)=> {
+            if(err) {
+                return res.send({success : false, message : err.errmsg});
+            }
+            return res.send({success : true, message : "!שם הסטודנט עודכן בהצלחה"});
+        })
+    }); 
+});
+
 
 /**
  * student lesson done.
