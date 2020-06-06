@@ -5,7 +5,7 @@ import UpdateIcon from '@material-ui/icons/Update';
 import IconButton from '@material-ui/core/IconButton';
 
 const make_rows_of_hours_table = (student, setOpenedPopups, setSelectedCourse, getOpenedPopup) => {
-    if (student.courses && student.courses.length > 0) {
+    if (student.courses && Array.isArray(student.courses) && student.courses.length > 0) {
         let options = student.courses.map(course_obj => {
             var hours_done = parseInt(course_obj.hours_already_done);
             var hours_remain = parseInt(course_obj.hours_able_to_book);

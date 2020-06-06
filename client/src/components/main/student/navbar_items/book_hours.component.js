@@ -21,22 +21,29 @@ const hasNull = (target) => {
     return false;
 }
 
-const make_available_hours_list_per_teacher = (teacher_name,teacher_id, arr_of_hours, lessons) => {
-    if (arr_of_hours && arr_of_hours !== undefined && arr_of_hours.length > 0) {
+const make_available_hours_list_per_teacher = (teacher_name, teacher_id, arr_of_hours, lessons) => {
+    if (arr_of_hours && arr_of_hours !== undefined && Array.isArray(arr_of_hours) && arr_of_hours.length > 0) {
         let datesDict = arr_of_hours.map(date_obj => {
             var date = date_obj.slice(0, -1)
             var newDate = new Date(date);
-            return (
-                {
-                    date: [newDate],
-                    text:teacher_name ,
-                    id: teacher_id
-                }
-            )
+            var today = Date.now();
+            if (today < newDate) {
+                return (
+                    {
+                        date: [newDate],
+                        text: teacher_name,
+                        id: teacher_id
+                    }
+                )
+            }
+            else {
+                return null;
+            }
+
         })
         var dates = {};
         var all_hours = [];
-        if (lessons && lessons !== undefined && lessons.length > 0) {
+        if (lessons && lessons !== undefined && Array.isArray(lessons) && lessons.length > 0) {
             all_hours = set_lessons(lessons, datesDict);
         }
         else {
@@ -58,16 +65,16 @@ const make_available_hours_list_per_teacher = (teacher_name,teacher_id, arr_of_h
 const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID, lessons, setTeachers) => {
     var dates = {};
     var teachers = [];
-    var allTeachers = {key: 0, value: "", text: "כולם"}
+    var allTeachers = { key: 0, value: "", text: "כולם" }
     teachers.push(allTeachers);
-    if (arr_of_dates && arr_of_dates !== undefined && arr_of_dates.length > 0) {
+    if (arr_of_dates && arr_of_dates !== undefined && Array.isArray(arr_of_dates) && arr_of_dates.length > 0) {
         let hours = [];
         arr_of_dates.forEach(dates_per_teacher => {
             if (dates_per_teacher.teacher_id !== studentID) {
                 var teacher_name = dates_per_teacher.teacher_name;
                 var teacher_id = dates_per_teacher.teacher_id;
-                var teacher_value= teacher_id+" "+teacher_name
-                var teacher = { key: teacher_id, value:teacher_value , text: teacher_name };
+                var teacher_value = teacher_id + " " + teacher_name
+                var teacher = { key: teacher_id, value: teacher_value, text: teacher_name };
                 let hours_per_teacher = dates_per_teacher.hours_available.map(hour_available => {
                     var today = Date.now();
                     var date = hour_available.slice(0, -1)
@@ -97,7 +104,7 @@ const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID,
         })
         var all_hours = [];
 
-        if (lessons && lessons !== undefined && lessons.length > 0) {
+        if (lessons && lessons !== undefined && Array.isArray(lessons) && lessons.length > 0) {
             all_hours = set_lessons(lessons, hours);
         }
         else {
@@ -138,7 +145,7 @@ const arrange_hours_array = (hours, setNoAvailableDates) => {
     var filtered_hours = hours.filter(function (el) {
         return el != null;
     });
-    if (filtered_hours && filtered_hours.length > 0 && !hasNull(filtered_hours)) {
+    if (filtered_hours && Array.isArray(filtered_hours)  && filtered_hours.length > 0 && !hasNull(filtered_hours)) {
         for (var x = 0; x < filtered_hours.length; x++) {
             var teacher_name = filtered_hours[x].text;
             var teacher_id = filtered_hours[x].id;
@@ -156,16 +163,26 @@ const arrange_hours_array = (hours, setNoAvailableDates) => {
 async function get_available_hours_list(selectedCourse) {
     if (selectedCourse) {
         let response = await axios.get(get_mongo_api(`teachers/hoursAvailable/allTeachers/${selectedCourse}`));
-        let get_available_hours_list = response.data.message;
-        return get_available_hours_list;
+        if (response.data.success) {
+            let get_available_hours_list = response.data.message;
+            return get_available_hours_list;
+        } else {
+            return null
+        }
+
     }
 }
 
 async function get_available_hours_list_per_teacher(teacherID) {
     if (teacherID) {
         let response = await axios.get(get_mongo_api(`teachers/hoursAvailable/byID/${teacherID}`));
-        let get_available_hours_list_per_teacher = response.data.message;
-        return get_available_hours_list_per_teacher;
+        if (response.data.success) {
+            let get_available_hours_list_per_teacher = response.data.message;
+            return get_available_hours_list_per_teacher;
+        } else {
+            return null
+        }
+
     }
 }
 
@@ -178,14 +195,14 @@ const set_available_hours = (selectedCourse, setHoursOptions, setNoAvailableDate
     })
 }
 
-const set_available_hours_per_teacher = (teacher, setHoursOptions,lessons) => {
-    HOURS_AVAILABLE_GLOBAL={};
+const set_available_hours_per_teacher = (teacher, setHoursOptions, lessons) => {
+    HOURS_AVAILABLE_GLOBAL = {};
     var teacherSep = teacher.split(' ');
     var teacher_id = teacherSep[0];
-    var teacher_name = String(teacherSep[1] +" "+ teacherSep[2]);
+    var teacher_name = String(teacherSep[1] + " " + teacherSep[2]);
     get_available_hours_list_per_teacher(teacher_id).then((dates) => {
         if (dates) {
-            HOURS_AVAILABLE_GLOBAL = make_available_hours_list_per_teacher(teacher_name,teacher_id,dates, lessons);
+            HOURS_AVAILABLE_GLOBAL = make_available_hours_list_per_teacher(teacher_name, teacher_id, dates, lessons);
             setHoursOptions(HOURS_AVAILABLE_GLOBAL);
         }
     })
@@ -357,10 +374,10 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
         else {
         }
         // eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [selectedCourseID, _id, lessons,teacherFilter]);
+    }, [selectedCourseID, _id, lessons, teacherFilter]);
 
     return (
-        (!loading2 && courses_options && courses_options.length > 0) ?
+        (!loading2 && courses_options && Array.isArray(courses_options) && courses_options.length > 0) ?
             <div className="studentCalendar"  >
                 <Dropdown direction="right" placeholder='בחר קורס' defaultValue={selectedCourseID} scrolling search selection options={courses_options} onChange={(e, { value }) => { setSelectedCourse(value) }} />
                 {(selectedCourseID && selectedCourseID !== null) ?

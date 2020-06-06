@@ -4,7 +4,7 @@ import { Calendar } from '../../utils/calendar/calendar';
 import get_mongo_api, { useAsyncHook } from '../../../mongo/paths.component'
 
 const make_available_hours_list = (arr_of_hours, lessons) => {
-    if (arr_of_hours && arr_of_hours !== undefined && arr_of_hours.length > 0) {
+    if (arr_of_hours && arr_of_hours !== undefined &&Array.isArray(arr_of_hours) && arr_of_hours.length > 0) {
         let datesDict = arr_of_hours.map(date_obj => {
             var date = date_obj.slice(0, -1)
             return (
@@ -16,7 +16,7 @@ const make_available_hours_list = (arr_of_hours, lessons) => {
         })
         var dates = {};
         var all_hours = [];
-        if (lessons && lessons !== undefined && lessons.length > 0) {
+        if (lessons && lessons !== undefined && Array.isArray(lessons) && lessons.length > 0) {
             all_hours = set_lessons(lessons, datesDict);
         }
         else {
@@ -61,7 +61,7 @@ export default function UpdateAvailability({ id, lessons }) {
     const [isTeacher] = useState(true);
 
     const sendHours = (selectedHours, id) => {
-        if (selectedHours.length > 0) {
+        if (Array.isArray(selectedHours) && selectedHours.length > 0) {
             axios.post(get_mongo_api(`teachers/add/hoursAvailable/${id}`), { dates: selectedHours }).then(response => {
                 if (!response.data.success) {
                     alert(response.data.message);

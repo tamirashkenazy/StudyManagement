@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import { useStylesAppBar } from '../navbar/appBarMenu.styles'
 import AccountMenu from '../navbar/navbar.component'
@@ -18,28 +18,6 @@ import { SendMessage } from '../utils/messages.component';
 import MailOutlineIcon from '@material-ui/icons/MailOutline';
 import UserCard from '../utils/card.component'
 import { useAsyncHook } from '../../mongo/paths.component';
-
-// const make_courses_option = (arr_of_courses) => {
-//     if (arr_of_courses && Array.isArray(arr_of_courses) && arr_of_courses.length > 0) {
-//         let options = arr_of_courses.map(course_obj => {
-//             var number = parseInt(course_obj.hours_able_to_book);
-//             if (number > 0) {
-//                 return (
-//                     {
-//                         key: course_obj.course_id,
-//                         value: course_obj.course_id,
-//                         text: course_obj.course_name
-//                     }
-//                 )
-//             }
-//             else { return null; }
-//         })
-//         var filtered_options = options.filter(function (el) {
-//             return el != null;
-//         });
-//         return filtered_options;
-//     }
-// }
 
 const filter_student_by_id = (students, id) => {
     let student_obj = students.filter(student => student._id === id)
@@ -61,7 +39,6 @@ export default function Student(props) {
     const [isCardOpen, setCardOpen] = useState(false);
     const [userTeacher, setUserTeacher] = useState(null);
     const [teacher, setTeacher] = useState(null);
-    // const fullName = user.first_name + ' '+ user.last_name;
     const navbar_operations_by_role = [
         { key: 'request_tutoring', header: 'בקשת שעות חונכות', on_click: () => setOpenedPopups(getOpenedPopup(0, total_popups)), icon: <ScheduleOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
         { key: 'book_class', header: 'קביעת שעת חונכות', on_click: () => setOpenedPopups(getOpenedPopup(1, total_popups)), icon: <AssignmentTurnedInOutlinedIcon fontSize="large" style={{ color: "white" }} /> },
@@ -70,7 +47,6 @@ export default function Student(props) {
     const classes = useStylesAppBar();
     const student = filter_student_by_id(students, user._id)
     const [lessons, loading] = useAsyncHook(`lessons/byStudentId/${user._id}`);
-    // const [courses_options, loading2] = useAsyncHook(`students/${user._id}/courses`, make_courses_option);
     return (
         student ?
             <div>

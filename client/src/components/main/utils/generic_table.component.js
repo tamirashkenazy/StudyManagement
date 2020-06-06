@@ -50,7 +50,7 @@ export default function GenericTable(props) { //props : {table_data : {data: som
     }
     
     let num_of_cols = 0
-    if (data && data.length > 0) {
+    if (data && Array.isArray(data) &&  data.length > 0) {
         num_of_cols = Object.keys(data[0]).length
     }
     const renderTableHeader = () => {
@@ -71,7 +71,7 @@ export default function GenericTable(props) { //props : {table_data : {data: som
 
     const renderTableData = () => {
         //removed the index if not necessary
-        if (!(data && data.length > 0)) {
+        if (!(data &&  Array.isArray(data) && data.length > 0)) {
             return null
         }
         return data.map((element, index) => {

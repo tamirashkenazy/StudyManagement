@@ -46,7 +46,7 @@ export function Calendar(props) {
         // Checks if the cells are not in past. If it's adds 'disabled' class to cells, so it's not clickable.
         disableDatesBeforeToday(props.isTeacher, props.datesDict);
         //eslint-disable-next-line react-hooks/exhaustive-deps
-    }, [])
+    }, [props.datesDict, props.maxNumber])
 
     // Buttons click handler for changing week forward and backward
     const onClickHandlerWeekChange = value => {
