@@ -106,6 +106,10 @@
         margin-top: 2rem;
         margin-bottom: 1rem;
     }
+    .comment {
+        display: block;
+        text-align: right;
+    }
     .confirm:hover {
         color: white;
     }
@@ -137,4 +141,8 @@
 
     .MuiDialogContent-root {
         overflow-y: visible !important;
+    }
+
+    small, .comment {
+        color: rgb(163, 159, 159)
     }

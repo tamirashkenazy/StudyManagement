@@ -21,7 +21,7 @@ const hasNull = (target) => {
     return false;
 }
 
-const make_available_hours_list_per_teacher = (teacherName, teacherId, arr_of_hours, lessons) => {
+const make_available_hours_list_per_teacher = (teacherName, teacherId, teacherCount, arr_of_hours, lessons) => {
     if (arr_of_hours && arr_of_hours !== undefined && Array.isArray(arr_of_hours) && arr_of_hours.length > 0) {
         let datesDict = arr_of_hours.map(date_obj => {
             var date = date_obj.slice(0, -1)
@@ -32,7 +32,8 @@ const make_available_hours_list_per_teacher = (teacherName, teacherId, arr_of_ho
                     {
                         date: [newDate],
                         text: teacherName,
-                        id: teacherId
+                        id: teacherId,
+                        count: teacherCount
                     }
                 )
             }
@@ -55,7 +56,8 @@ const make_available_hours_list_per_teacher = (teacherName, teacherId, arr_of_ho
         for (var x = 0; x < filtered_hours.length; x++) {
             var teacher_name = filtered_hours[x].text;
             var teacher_id = filtered_hours[x].id;
-            var teacher = { teacher_id: teacher_id, teacher_name: teacher_name }
+            var teacher_count = filtered_hours[x].count;
+            var teacher = { teacher_id: teacher_id, teacher_name: teacher_name, teacher_count: teacher_count }
             dates[filtered_hours[x].date] = teacher;
         };
     }
@@ -65,7 +67,7 @@ const make_available_hours_list_per_teacher = (teacherName, teacherId, arr_of_ho
 const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID, lessons, setTeachers) => {
     var dates = {};
     var teachers = [];
-    var allTeachers = { key: 0, value: "", text: "כולם" }
+    var allTeachers = { key: 0, value: "", text: "כל המורים" }
     teachers.push(allTeachers);
     if (arr_of_dates && arr_of_dates !== undefined && Array.isArray(arr_of_dates) && arr_of_dates.length > 0) {
         let hours = [];
@@ -73,7 +75,8 @@ const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID,
             if (dates_per_teacher.teacher_id !== studentID) {
                 var teacher_name = dates_per_teacher.teacher_name;
                 var teacher_id = dates_per_teacher.teacher_id;
-                var teacher_value = teacher_id + " " + teacher_name
+                var teacher_count = dates_per_teacher.teacher_id.charAt(0); // change to dates_per_teacher.teacher_count accordding to Michael func
+                var teacher_value = teacher_id + " " + teacher_name + " " + teacher_count;
                 var teacher = { key: teacher_id, value: teacher_value, text: teacher_name };
                 let hours_per_teacher = dates_per_teacher.hours_available.map(hour_available => {
                     var today = Date.now();
@@ -88,7 +91,8 @@ const make_available_hours_list = (arr_of_dates, setNoAvailableDates, studentID,
                             {
                                 date: [newDate],
                                 text: teacher_name,
-                                id: teacher_id
+                                id: teacher_id,
+                                count: teacher_count
                             }
                         )
                     }
@@ -145,11 +149,12 @@ const arrange_hours_array = (hours, setNoAvailableDates) => {
     var filtered_hours = hours.filter(function (el) {
         return el != null;
     });
-    if (filtered_hours && Array.isArray(filtered_hours)  && filtered_hours.length > 0 && !hasNull(filtered_hours)) {
+    if (filtered_hours && Array.isArray(filtered_hours) && filtered_hours.length > 0 && !hasNull(filtered_hours)) {
         for (var x = 0; x < filtered_hours.length; x++) {
             var teacher_name = filtered_hours[x].text;
             var teacher_id = filtered_hours[x].id;
-            var teacher = { teacher_id: teacher_id, teacher_name: teacher_name }
+            var teacher_count = filtered_hours[x].count;
+            var teacher = { teacher_id: teacher_id, teacher_name: teacher_name, teacher_count: teacher_count }
             dates[filtered_hours[x].date] = teacher;
         };
         setNoAvailableDates(false)
@@ -200,12 +205,13 @@ const set_available_hours_per_teacher = (teacher, setHoursOptions, lessons) => {
     var teacherSep = teacher.split(' ');
     var teacher_id = teacherSep[0];
     var teacher_name = String(teacherSep[1] + " " + teacherSep[2]);
-    get_available_hours_list_per_teacher(teacher_id).then((dates) => {
-        if (dates) {
-            HOURS_AVAILABLE_GLOBAL = make_available_hours_list_per_teacher(teacher_name, teacher_id, dates, lessons);
-            setHoursOptions(HOURS_AVAILABLE_GLOBAL);
-        }
-    })
+    var teacher_count = teacherSep[3];
+        get_available_hours_list_per_teacher(teacher_id).then((dates) => {
+            if (dates) {
+                HOURS_AVAILABLE_GLOBAL = make_available_hours_list_per_teacher(teacher_name, teacher_id, teacher_count, dates, lessons);
+                setHoursOptions(HOURS_AVAILABLE_GLOBAL);
+            }
+        })
 }
 
 //after click choose lesson functions
@@ -293,8 +299,6 @@ const make_courses_option = (arr_of_courses) => {
     }
 }
 
-
-//still needs to think about 2 teachers at the same time
 export default function BookHours({ _id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student, lessons }) {
     const [courses_options, loading2] = useAsyncHook(`students/${_id}/courses`, make_courses_option);
     const [isTeacher] = useState(false);

@@ -9,7 +9,7 @@ export const getFullWeekDate = (value) => {
     date.setDate(date.getDate() - date.getDay());
 
     // change locale where you want
-    let local = "en-US";
+    let local = "il-HE";
     let options = {
         weekday: "long",
         day: "numeric",
@@ -123,7 +123,6 @@ export const addTimeDataToElement = () => {
 // Then adds disabled class if date is past.
 
 export const disableDatesBeforeToday = (isTeacher, dates) => {
-
     //clears previous elements with 'disabled' class
     for (let item of $(".pickable")) {
         $(item).removeClass("disabled");
@@ -170,7 +169,12 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
                             $(item).html(dates[key].teacher_name)
                         } else {
                             $(item).removeClass("disabled");
-                            $(item).html(dates[key].teacher_name)
+
+                            $(item).html(function () {
+                                const name = dates[key].teacher_name;
+                                const number = dates[key].teacher_count;
+                                return ("<strong>" + name + "</strong>  <small>"+ number + "</small>");
+                            });
                         }
                     }
                 }

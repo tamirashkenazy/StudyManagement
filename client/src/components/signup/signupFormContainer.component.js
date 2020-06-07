@@ -39,10 +39,10 @@ const SignupConatainer = ({ handleSubmit, formValues }) => {
     return (
         <div id="land-page" className="bg" style={{ direction: "rtl" }}>
             <Container id="signup-box" className="right-align">
-                <Link to="/" style={{ textDecoration: 'none', color: 'black' }}>
-                    <Icon size='big' name='arrow right' style={{ margin: "2%" }}></Icon>
+                <Link to="/" style={{ textDecoration: 'none', color: '#3f51b5' }}>
+                    <Icon size='big' name='arrow right' style={{ margin: "0 2% 2% 2%" }}></Icon>
                 </Link>
-                <Typography variant="h4" color="primary" display="inline" >טופס הרשמה</Typography>
+                <Typography variant="h3" color="primary" display="inline" style={{margin:"0 30%"}} >טופס הרשמה</Typography>
                 
                 <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} formSubmitButtonName="הרשמה" />
             </Container>

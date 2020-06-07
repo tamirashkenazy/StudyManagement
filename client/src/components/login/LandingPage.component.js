@@ -35,7 +35,7 @@ function LoginBox() {
                         </Row>
                         <Row style={{marginTop: "1rem", direction : "rtl"}}>
                             <Link to={{ pathname: '/signup'}} style={{color : "#66b2b2"}}>
-                                <Button variant="info" >להרשמה</Button>
+                                <Button variant="info" style={{padding: "0.42rem 2rem", margin:"-4.2rem 10.5rem 2rem 0", fontWeight:"bold"}}  >הרשמה</Button>
                             </Link>
                         </Row>
                     </Container>

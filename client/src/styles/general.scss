@@ -56,9 +56,9 @@ h1,h2,h3,h4,h5,h6,.MuiTableCell-root,.ui.button,.MuiTypography-root,.MuiTypograp
    width: -webkit-fill-available; 
 }
 
-.MuiDialog-paper{
-  overflow-y: initial !important;
-}
+// .MuiDialog-paper:not(.MuiDialogContent-root){
+//   overflow-y: initial !important;
+// }
 
 button:focus{
   outline: none !important;
