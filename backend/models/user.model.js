@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 //https://stackoverflow.com/questions/34546272/cannot-find-module-bcrypt/41878322
 //npm install -g windows-build-tools, npm install -g node-gyp
 //npm install bcrypt
-const bcrypt = require('bcrypt')
+var bcrypt = require('bcrypt')
 const Schema = mongoose.Schema;
 
 const genders = 'male female'.split(' ')
