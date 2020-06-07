@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import AppBar from '@material-ui/core/AppBar';
 import { useStylesAppBar } from '../navbar/appBarMenu.styles'
 import AccountMenu from '../navbar/navbar.component'
@@ -60,7 +60,7 @@ export default function Student(props) {
                 {Dialog_generator(isCardOpen, () => setCardOpen(false), null, null, null, () => <UserCard user={userTeacher} teacher={teacher} opened_from_student={true} ></UserCard>, "card")}
 
                 <br></br>
-                <Typography variant="h3" align="center" >ברוך הבא למסך הסטודנט</Typography>
+                <Typography variant="h3" align="center" >מידע אישי לתלמיד</Typography>
                 <br></br>
                 <Grid container spacing={10} justify="space-around" direction="row-reverse" >
                     <Grid item md={5} xs={4} style={{ marginRight: "1rem" }}>

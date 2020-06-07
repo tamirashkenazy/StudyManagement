@@ -13,11 +13,11 @@ function sort_constants(constants, inputs, handleInputChange) {
     if (constants) {
         Object.entries(constants).forEach(([constant_key, constant_val])=> {
             if (constnats_to_hebrew.hasOwnProperty(constant_key)) {
-                let hebrew_key = constnats_to_hebrew[constant_key]
+                let hebrew_key = constnats_to_hebrew[constant_key];
                 arr_of_constants.push({
                     "שם הקבוע" : hebrew_key,
                     "ערך קיים" : constant_val,
-                    "ערך חדש" : <Form.Input value={inputs[constant_key]} onChange={handleInputChange} name={constant_key}></Form.Input>
+                    "ערך חדש" : <Form.Input value={inputs[constant_key] || ''} onChange={handleInputChange} name={constant_key}></Form.Input>
                 })
             }
             

@@ -43,7 +43,6 @@ export default function CoursesTableAdmin({all_groups, students}) {
     const [groupNameChosen, setGroupNameChosen] = useState(null)
     const [isPopUpOpen, setPopUpOpen] = useState(false)
     let group_to_num_of_students = map_group_to_students(students)
-    console.log('group_to_num_of_students: ', group_to_num_of_students);
     let group_arr = all_groups_array(all_groups, setGroupNameChosen, setPopUpOpen, group_to_num_of_students)
 
     return (
