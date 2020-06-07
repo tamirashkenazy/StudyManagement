@@ -27,14 +27,14 @@ router.route('/').post((req, res) => {
         if (users && users.length != 1) {
             return res.send({
                 success : false,
-                message : "Error: no such user " + _id
+                message : "פרטים שגויים, אנא נסו שוב"
             })
         }
         const user = users[0]
         if (!user.validPassword(password)) {
             return res.send({
                 success : false,
-                message : "Error: bad password",
+                message : "פרטים שגויים, אנא נסו שוב"
             })
         } else {
             return res.send({
