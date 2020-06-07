@@ -8,6 +8,8 @@ import TableCell from '@material-ui/core/TableCell';
 import TableContainer from '@material-ui/core/TableContainer';
 // import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
+import male_image from '../../../images/user_card_images/male.jpeg'
+import female_image from '../../../images/user_card_images/female.jpeg'
 
 const APPROVED = "approved"
 const useStyles = makeStyles({
@@ -67,7 +69,7 @@ export default function UserCard({ user, teacher, student, opened_from_student=f
   if (user.isStudent && user.isTeacher && student && teacher) {
     curr_user.roles = "מורה, תלמיד"
   }
-  const imageSrc = (user.gender === "male") ? 'https://react.semantic-ui.com/images/avatar/large/matthew.png' : 'https://react.semantic-ui.com/images/avatar/large/molly.png';
+  const imageSrc = (user.gender === "male") ? male_image : female_image;
   const study = (user.gender !== "male") ? 'לומדת' : 'לומד';
   const teaching = (user.gender !== "male") ? 'מלמדת' : 'מלמד';
 
