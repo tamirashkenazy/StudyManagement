@@ -222,7 +222,7 @@ export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons
     const args = { setCardOpen, setUser, setStudent, hoursBeforeCancel };
     const table_rows = make_rows_of_lessons(lessons, args);
     
-    if ((table_rows && table_rows.length > 0) && !isLoading_hoursBeforeCancel) {
+    if ((table_rows && Array.isArray(table_rows) && table_rows.length > 0) && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )

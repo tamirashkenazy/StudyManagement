@@ -256,7 +256,7 @@ export default function LessonsTable({ setCardOpen, setUser, setTeacher, lessons
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
     const args = { setCardOpen, setUser, setTeacher, hoursBeforeCancel };
     const table_rows = make_rows_of_lesson_table(lessons, args);
-    if ((table_rows && table_rows.length > 0) && !isLoading_hoursBeforeCancel) {
+    if ((table_rows &&  Array.isArray(table_rows) && table_rows.length > 0) && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )
