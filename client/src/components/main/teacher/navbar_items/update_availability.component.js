@@ -77,6 +77,7 @@ export default function UpdateAvailability({ id, lessons }) {
     return (
         !loading &&
         <div className="teacherCalendar">
+            <div> <label>  נא לבחור שעות פנויות עבורך על מנת שתלמידים יוכלו לקבוע עמך שיעור </label> </div>
             <Calendar
                 isTeacher={isTeacher}
                 datesDict={hours_available}
