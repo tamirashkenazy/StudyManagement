@@ -6,6 +6,7 @@ var bcrypt = require('bcrypt')
 const Schema = mongoose.Schema;
 
 const genders = 'male female'.split(' ')
+password_validate = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z!@#$%^&*]{8,}$/
 onlyNumbers = /^[0-9\b]+$/;
 validEmailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
 onlyEnglishAndHebrew = /^[A-Za-z\u0590-\u05fe]+$/i
@@ -34,7 +35,7 @@ UserSchema.methods.validPassword = function(password) {
 };
 
 UserSchema.methods.checkPassword = function(password) {
-  return password.length >= 4;
+    return password_validate.test(password)
 };
 
 module.exports = mongoose.model('User', UserSchema);

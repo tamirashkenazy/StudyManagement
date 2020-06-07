@@ -102,7 +102,7 @@ export const SignupFormRedux = ({handleSubmit, onSubmit, errors, formValues, idD
     }
     const password_field = () => {
         return (
-            <Field name="password" label="סיסמה" placeholder='סיסמה' type="password" error={errors.password_error} pointer={<Label size="tiny" pointing>חייבת להכיל לפחות 8 תווים</Label>} component={textField} direction="ltr"/>
+            <Field name="password" label="סיסמה" placeholder='סיסמה' type="password" error={errors.password_error} pointer={<Label size="tiny" pointing>חייבת להכיל לפחות 8 תווים, אות קטנה ומספר'</Label>} component={textField} direction="ltr"/>
         )
     }
     const email_field = () => {
