@@ -129,7 +129,7 @@ router.route('/add').post((req, res) => {
     if (newUser.checkPassword(password)){
         newUser.password = newUser.generateHash(password)
     }else{
-        return res.send({success : false, message:"Error: password is too short!"})
+        return res.send({success : false, message:"Error: password is too weak!"})
     }
     newUser.save((err, user)=> {
         if (err) {

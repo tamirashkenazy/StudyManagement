@@ -590,7 +590,7 @@ router.route('/update/requestStatusesList').post((req,res) => {
         Teacher.findById((teacher_id)).then((teacher) => {
             let validate = Object.keys(courses_list).length;
             Object.entries(courses_list).forEach(([course_id, status]) => {
-                if (status === null) {
+                if (status === "") {
                     validate --;
                     return
                 }

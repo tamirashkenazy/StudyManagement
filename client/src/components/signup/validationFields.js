@@ -4,7 +4,7 @@ export const onlyEnglishAndHebrew = RegExp(/^[A-Za-z\u0590-\u05fe]+$/i)
 export const error_default_messages = {
     _id_error: 'ת.ז לא תקנית',
     tel_number_error:  'מספר טלפון מורכב מ10 תווים',
-    password_error: 'הסיסמה צריכה להיות לפחות 8 תווים',
+    password_error: 'הסיסמה צריכה להיות לפחות 8 תווים, אות קטנה ומספר',
     year_error :'בחר שנת לימודים',
     email_error :  'אנא הכנס כתובת אימייל',
     gender_error : 'בחר מין',
