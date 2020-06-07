@@ -66,7 +66,7 @@ export default function Teacher(props) {
                 {Dialog_generator(isCardOpen, () => setCardOpen(false), null, null, null, () => <UserCard user={userStudent} student={student}></UserCard>, "card")}
 
                 <br></br>
-                    <Typography variant="h3" align="center" >ברוך הבא למסך המורה</Typography>
+                    <Typography variant="h3" align="center" >מידע אישי לתלמיד</Typography>
                 <br></br>   
                 <Grid container justify="space-around" direction="row-reverse"  >
                     <Grid item md={4} xs={4}  style={{  marginRight : "1rem"}}>

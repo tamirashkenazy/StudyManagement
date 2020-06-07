@@ -41,6 +41,7 @@ export const httpRequestToApproveDeclineRequests = (selectedValues, api) => {
         if (course_to_status_obj && Object.keys(course_to_status_obj).length > 0) {
             return true
         }
+        return false;
     })
     let post_msg = {id_to_courses : arr}
     axios.post(get_mongo_api(api),post_msg).then(response=>{ 
@@ -69,6 +70,7 @@ export const useChoosingForm = (httpRequestFunc, arr_of_persons, update_api) => 
     const [selectedValues, setSelectedValues] = useState(start_requesters_object)
     useEffect(()=>{
         setSelectedValues(start_requesters_object)   
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [arr_of_persons])
     // const [wasAdded, setWasAdded] = useState(false)
     async function handleSubmit (event) {

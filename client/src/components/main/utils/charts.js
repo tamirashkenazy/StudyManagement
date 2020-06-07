@@ -11,6 +11,7 @@ export const StatisticsPieChart = ({title, data_points, theme, startAngle, label
     if (!startAngle) {
         startAngle = -90
     }
+    const index_label = "{label}: {y}"+label_suffix;
     const options = {
         animationEnabled: true,
         exportEnabled: true,
@@ -20,7 +21,7 @@ export const StatisticsPieChart = ({title, data_points, theme, startAngle, label
         },
         data: [{
             type: "pie",
-            indexLabel: label_suffix ? "{label}: {y}"+`${label_suffix}`: "{label}: {y}",		
+            indexLabel: label_suffix ? `${index_label}`: "{label}: {y}",		
             startAngle: startAngle,
             dataPoints: data_points
         }]

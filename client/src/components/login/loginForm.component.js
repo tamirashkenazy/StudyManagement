@@ -63,7 +63,7 @@ function FormLogin ()  {
             <WelcomeHeader/>
             <Form className="login-form">
                 <Form.Field>
-                    <label>שם משתמש</label>
+                    <label>תעודת זהות</label>
                     <Form.Input
                         style={{direction:"ltr"}}
                         placeholder='ת.ז'

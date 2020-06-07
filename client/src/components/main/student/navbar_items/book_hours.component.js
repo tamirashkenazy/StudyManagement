@@ -21,7 +21,7 @@ const hasNull = (target) => {
     return false;
 }
 
-const make_available_hours_list_per_teacher = (teacher_name, teacher_id, arr_of_hours, lessons) => {
+const make_available_hours_list_per_teacher = (teacherName, teacherId, arr_of_hours, lessons) => {
     if (arr_of_hours && arr_of_hours !== undefined && Array.isArray(arr_of_hours) && arr_of_hours.length > 0) {
         let datesDict = arr_of_hours.map(date_obj => {
             var date = date_obj.slice(0, -1)
@@ -31,8 +31,8 @@ const make_available_hours_list_per_teacher = (teacher_name, teacher_id, arr_of_
                 return (
                     {
                         date: [newDate],
-                        text: teacher_name,
-                        id: teacher_id
+                        text: teacherName,
+                        id: teacherId
                     }
                 )
             }
@@ -400,6 +400,6 @@ export default function BookHours({ _id, selectedCourseID, setSelectedCourse, ho
                         : <div> <label>  טוען מידע  </label> </div>
                     : <div> <label>  יש לבחור קורס  </label> </div>}
             </div>
-            : <div> <label>  אין אפשרות לקבוע שעת חונכות כי לא נותרו לך שעות חונכות במערכת  </label> </div>
+            : <div> <label>  אין אפשרות לקבוע שעת חונכות כי לא אושרו/נותרו לך שעות חונכות במערכת  </label> </div>
     )
 }
