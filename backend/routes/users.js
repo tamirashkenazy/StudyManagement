@@ -14,14 +14,6 @@ const transporter = nodemailer.createTransport({
     }
   });
 
-
-
-
-//https://stackoverflow.com/questions/34546272/cannot-find-module-bcrypt/41878322
-//npm install -g windows-build-tools, npm install -g node-gyp
-//npm install bcrypt
-var bcrypt = require('bcrypt')
-
 router.route('/').get((req, res) => {
     //mongoose method to find all the users
     User.find()
