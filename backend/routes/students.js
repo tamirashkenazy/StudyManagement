@@ -121,7 +121,7 @@ router.route('/:id/hoursToBook').post((req,res) => {
             return res.send({success : false, message:"!הסטודנט אינו קיים במערכת" })
         } else {
             let request_course = student.courses.filter(course => course.course_id === req.body.course_id)
-            return res.send({success : true, message: request_course.hours_able_to_book})
+            return res.send({success : true, message: request_course[0].hours_able_to_book})
         }
     })
 })
@@ -176,8 +176,8 @@ router.route('/availableHours').post((req,res) => {
                     if (current_course.length != 1){
                         return res.send({success : false, message: "הקורס אינו קיים ברשימת הקורסים של הסטודנט"})
                     }
-                    let approved_hours = current_course[0].approved_hours
-                    let available_hours = Number(approved_hours) - book_lessons
+                    //let approved_hours = current_course[0].approved_hours
+                    let available_hours = current_course.hours_able_to_book
                     return res.send({success : true, message: available_hours})
 
                 }else {

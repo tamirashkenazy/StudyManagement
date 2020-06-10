@@ -21,8 +21,9 @@ import TableCell from '@material-ui/core/TableCell';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 var DATES_COUNTER = 0;
+var disabled = true
 export function Calendar(props) {
-    let disabled = ((DATES_COUNTER <= 0) || (DATES_COUNTER > props.maxNumber)) ? true : false;
+    
     let buttonText = props.isTeacher? "עדכן": "קבע";
     // Alldate keeps each week with unique key (year + week number) with weekID() function.
     // Inside that it keeps checkbox value for get next 4 weeks and all the selected dates.
@@ -115,6 +116,7 @@ export function Calendar(props) {
         if (target.classList.contains("pickable") && !target.classList.contains("disabled")) {
             $(target).toggleClass("active");
             DATES_COUNTER = target.classList.contains("active") ? DATES_COUNTER + 1 : DATES_COUNTER - 1;
+            disabled = ((DATES_COUNTER <= 0) || (DATES_COUNTER > props.maxNumber)) ? true : false;
         }
 
         // Setting state on every click from user 

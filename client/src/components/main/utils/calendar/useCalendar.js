@@ -169,12 +169,10 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
                             $(item).html(dates[key].teacher_name)
                         } else {
                             $(item).removeClass("disabled");
-
-                            $(item).html(function () {
-                                const name = dates[key].teacher_name;
-                                const number = dates[key].teacher_count;
-                                return ("<strong>" + name + "</strong>  <small>"+ number + "</small>");
-                            });
+                            const name = dates[key].teacher_name;
+                            const number = dates[key].teacher_count;
+                            let text = name + " (" + number + ")"
+                            $(item).html(text);
                         }
                     }
                 }

@@ -89,7 +89,7 @@ const CheckboxGenerator = props => {
         checked={props.input.value}
       />
       {props.label === "מורה" ?
-        <div className="sans-serif" style={{ display: "inline" }} data-tip={teacherComment}> {props.label}  <InfoOutlinedIcon fontSize="small" color="disabled" /> </div>
+        <div className="sans-serif" style={{ display: "inline", whiteSpace: "pre-wrap" }} data-tip={teacherComment}> {props.label}  <InfoOutlinedIcon fontSize="small" color="disabled" /> </div>
         : <div className="sans-serif" style={{ display: "inline" }} >{props.label}</div>}
     </div>
   );
@@ -124,7 +124,7 @@ export const SignupFormRedux = ({ handleSubmit, onSubmit, errors, formValues, id
   }
   const tel_number_field = () => {
     return (
-      <Field name='tel_number' label="טלפון" placeholder='05xxxxxxxx' type="text" error={errors.tel_number_error} component={textField} direction="ltr" />
+      <Field name='tel_number' label=" טלפון נייד" placeholder='05xxxxxxxx' type="text" error={errors.tel_number_error} component={textField} direction="ltr" />
     )
   }
 

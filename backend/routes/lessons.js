@@ -233,6 +233,7 @@ router.route('/byTeacherId/:teacherId').get((req, res) => {
     })
 })
 
+
 /**
  * get all the lessons with a specific student.
  * request parameters:
@@ -319,6 +320,7 @@ router.route('/add').post((req, res) => {
     // change to req.body
     const { body } = req;
     const { course, date, teacher, student, status } = body
+    let teacher_reported =  false
     if (student.student_id === teacher.teacher_id) {
         return res.send({ success: false, message: "Student cannot be the teacher of himself" })
     }
@@ -334,6 +336,7 @@ router.route('/add').post((req, res) => {
             teacher,
             student,
             status,
+            teacher_reported
         })
         newLesson.save((err, lesson) => {
             if (err) {
@@ -343,6 +346,39 @@ router.route('/add').post((req, res) => {
         })
     });
 })
+
+
+/**
+ * teacher report on lesson
+ * request parameters:
+ *     /teacherReport
+ * request body:
+ *      "teacher_id" : <teacher_id> 
+ *      "student_id" : <student_id>
+ *      "date"       : <date>
+ */
+router.route('/teacherReport').post((req, res) => {
+    const { date, student_id, teacher_id } = req.body
+    Lesson.find({ "date": date, "student.student_id": student_id, "teacher.teacher_id": teacher_id }).
+        then((lesson) => {
+            if (!lesson || lesson.length != 1) {
+                return res.send({ success: false, message: "!השיעור המבוקש אינו קיים" })
+            }
+            if (lesson.length == 1) {
+                lesson = lesson[0]
+                lesson.teacher_reported = true
+                lesson.save((err, doc) => {
+                    if (err) {
+                        return res.send({
+                            success: false, message: err.message
+                        });
+                    }
+                    return res.send({ success: true, message: "השיעור דווח בהצלחה" });
+                })
+            }
+        });
+});
+
 
 /**
  * update lesson status by id and course_id.
@@ -402,6 +438,7 @@ router.route('/update').post((req, res) => {
                 lesson.date = req.body.date
                 lesson.course = req.body.course
                 lesson.status = req.body.status
+                lesson.teacher_reported = req.body.teacher_reported
                 lesson.save((err, doc) => {
                     if (err) {
                         return res.send({
