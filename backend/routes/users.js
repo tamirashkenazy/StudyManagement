@@ -129,7 +129,7 @@ router.route('/add').post((req, res) => {
     if (newUser.checkPassword(password)){
         newUser.password = newUser.generateHash(password)
     }else{
-        return res.send({success : false, message:"Error: password is too weak!"})
+        return res.send({success : false, message:"שגיאה: סיסמה חלשה"})
     }
     newUser.save((err, user)=> {
         if (err) {
@@ -150,7 +150,7 @@ router.route('/update/:id').post((req,res) => {
         if (!user) {
             return res.send({success : false,message : "!המשתמש אינו קיים במערכת"})}
         if (!user.checkPassword(req.body.password)){
-            return res.send({success : false,message : "שגיאה: הסיסמא שהוזנה קצרה מדי"})
+            return res.send({success : false,message : "שגיאה: הסיסמה שהוזנה קצרה מדי"})
         }
         user.password = user.generateHash(req.body.password)
         user.email = req.body.email

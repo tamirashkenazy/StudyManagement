@@ -14,23 +14,26 @@ import { Typography } from '@material-ui/core';
 const SignupConatainer = ({ handleSubmit, formValues }) => {
     const history = useHistory()
     const [errors, setErrors] = useState({})
-    const submitForm = (formValues) => {
+    const submitForm = async (formValues) => {
         if (!allFieldsExist(formValues)) {
             alert("אנא מלא את כל השדות")
         } else {
             let local_errors = check_errors(formValues)
             setErrors(local_errors)
             let validForm = validateForm(local_errors)
-            if (!validForm) {
-            } else {
+            if (validForm) {
                 // TODO - need to check if all of the http request returned OK and if no - delete the new student/teacher/user that was uploaded and send error msg
-                if (formValues.isStudent) {
-                    httpPostRequestToAddStudent(formValues._id, formValues.first_name, formValues.last_name)
+                let is_user_added = await httpPostRequestToAddUser(formValues, history)
+                if (is_user_added) {
+                    if (formValues.isStudent) {
+                        await httpPostRequestToAddStudent(formValues._id, formValues.first_name, formValues.last_name)
+                    }
+                    if (formValues.isTeacher) {
+                        await httpPostRequestToAddTeacher(formValues._id, formValues.first_name, formValues.last_name)
+                    }
+                    history.push('/')
+                    window.location.reload(true) 
                 }
-                if (formValues.isTeacher) {
-                    httpPostRequestToAddTeacher(formValues._id, formValues.first_name, formValues.last_name)
-                }
-                httpPostRequestToAddUser(formValues, history)
             }
         }
 
