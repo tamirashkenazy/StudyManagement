@@ -18,10 +18,13 @@ import TableHead from '@material-ui/core/TableHead';
 import TableRow from '@material-ui/core/TableRow';
 import TableContainer from '@material-ui/core/TableContainer';
 import TableCell from '@material-ui/core/TableCell';
+import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
 var DATES_COUNTER = 0;
+var disabled = true
 export function Calendar(props) {
-    let disabled = ((DATES_COUNTER <= 0) || (DATES_COUNTER > props.maxNumber)) ? true : false;
+    
+    let buttonText = props.isTeacher? "עדכן": "קבע";
     // Alldate keeps each week with unique key (year + week number) with weekID() function.
     // Inside that it keeps checkbox value for get next 4 weeks and all the selected dates.
     const [allDate, setAllDate] = useState({
@@ -38,7 +41,14 @@ export function Calendar(props) {
     useEffect(() => {
         if (!props.isTeacher) {
             $('.checkbox').css('display', 'none');
+        } else {
+            $('.comment').css('display', 'none');
         }
+
+        for (let item of $(".active")) {
+            $(item).removeClass("active");
+        }
+        
         // Fills first row with date, month and week name.
         fillWeekDays();
         // Adds date attribute(month,day and hour) to each pickable cells in the table.
@@ -106,6 +116,7 @@ export function Calendar(props) {
         if (target.classList.contains("pickable") && !target.classList.contains("disabled")) {
             $(target).toggleClass("active");
             DATES_COUNTER = target.classList.contains("active") ? DATES_COUNTER + 1 : DATES_COUNTER - 1;
+            disabled = ((DATES_COUNTER <= 0) || (DATES_COUNTER > props.maxNumber)) ? true : false;
         }
 
         // Setting state on every click from user 
@@ -261,7 +272,7 @@ export function Calendar(props) {
                         </TableHead>
                         <TableBody>
                             {
-                                hours.map((el,index) => {
+                                hours.map((el, index) => {
                                     var name = index + "-row";
                                     return <TableRow className={name} key={index} >
                                         {cells.map((value, index) => {
@@ -278,7 +289,8 @@ export function Calendar(props) {
                     control={<Checkbox date={weekID()} checked={allDate[weekID()].checkbox} onChange={onChangeHandlerCheckBox} name="checkbox" />}
                     label="בחר 4 שבועות קדימה"
                 />
-                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={disabled} >עדכן</button>
+                <label className="comment">  המספר המופיע על יד כל מורה הינו מספר השעות המקסימלי שניתן לקבוע עם מורה זה באותו השבוע <InfoOutlinedIcon fontSize="small" color="disabled" /> </label>
+                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={disabled} >{buttonText}</button>
             </div>
         </div>
     )

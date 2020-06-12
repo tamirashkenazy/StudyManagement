@@ -76,7 +76,7 @@ router.route('/:id/name').get((req,res) => {
 /**
  * get list of available dates by course id
  * request parameters:
- *      /<course_id>/hoursAvailable/allTeachers
+ *      /hoursAvailable/allTeachers/<course_id>
  */
 router.route('/hoursAvailable/allTeachers/:course_id').get((req,res) => {
     Teacher.find()
@@ -91,13 +91,23 @@ router.route('/hoursAvailable/allTeachers/:course_id').get((req,res) => {
                         date = `${date.getFullYear()}-${date.getWeek()}`
                         let index = teacher.hours_per_week.findIndex(weeks => weeks.week === date)
                         if (index != -1 &&  teacher.hours_per_week[index].booked_hours >= max_hours){
-                            
                             return false
                         }else{
                             return true
                         }
                     })
-                    hours.push({"teacher_id": teacher._id,"teacher_name" : teacher.name, "hours_available" : dates})
+                    let date_and_number_of_hours = []
+                    dates.forEach(date => {
+                        week = `${date.getFullYear()}-${date.getWeek()}`
+                        let index = teacher.hours_per_week.findIndex(weeks => weeks.week === week)
+                        if (index === -1){
+                            date_and_number_of_hours.push({date, "left_hours" : max_hours})
+                        }else{
+                            let left_hours =  max_hours - teacher.hours_per_week[index].booked_hours
+                            date_and_number_of_hours.push({date, left_hours})
+                        }
+                    })
+                    hours.push({"teacher_id": teacher._id,"teacher_name" : teacher.name, "hours_available" : date_and_number_of_hours})
                 }
             });
             res.send({success : true, message: hours})

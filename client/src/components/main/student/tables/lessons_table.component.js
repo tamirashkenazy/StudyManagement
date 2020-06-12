@@ -108,9 +108,16 @@ const updateStatusTeacher = async (id, courseID) => {
     }))
 }
 
-const sendNotification = async (lesson) => {
+const sendNotificationCancel = async (lesson) => {
     var data = { lesson: lesson, canceled: lesson.student.student_name }
     return await axios.post(get_mongo_api(`users/sendNotification/lessonCanceled`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const sendNotificationReport = async (lesson) => {
+    var data = { lesson: lesson, canceled: lesson.student.student_name }
+    return await axios.post(get_mongo_api(`users/sendNotification/lessonReported`), data).then((response => {
         return response.data;
     }))
 }
@@ -146,7 +153,7 @@ const onClickStatus = (status, lesson) => {
             data.status = "done";
             updateStatusLesson(data).then((returnValue) => {
                 if (returnValue.success) {
-                    update_status(updateStatusTeacher(teacherID, courseID), updateStatusStudent(courseID, studentID), sendNotification(lesson)).then((response) => {
+                    update_status(updateStatusTeacher(teacherID, courseID), updateStatusStudent(courseID, studentID), sendNotificationReport(lesson)).then((response) => {
                         if (response) {
                             if (response.success) {
                                 alert(returnValue.message);
@@ -154,7 +161,7 @@ const onClickStatus = (status, lesson) => {
                             }
                         }
                         else {
-                            alert('אירעה שגיאה במהלך ביטול השיעור');
+                            alert('אירעה שגיאה במהלך דיווח השיעור');
                             window.location.reload(true);
                         }
                     })
@@ -168,7 +175,7 @@ const onClickStatus = (status, lesson) => {
             data.status = "canceled";
             updateStatusLesson(data).then((returnValue) => {
                 if (returnValue.success) {
-                    update_status(cancelStudent(courseID, studentID), cancelTeacher(teacherID, lesson.date), sendNotification(lesson)).then((returnValue) => {
+                    update_status(cancelStudent(courseID, studentID), cancelTeacher(teacherID, lesson.date), sendNotificationCancel(lesson)).then((returnValue) => {
                         if (returnValue) {
                             if (returnValue.success) {
                                 alert(returnValue.message);

@@ -47,7 +47,7 @@ const getStudent = async (_id) => {
     }))
 }
 
-const update_student_and_user = async (func1, func2) => {
+const two_functions_parallel = async (func1, func2) => {
     return axios.all([func1, func2]).then(axios.spread((...responses) => {
         const responseOne = responses[0]
         const responseTwo = responses[1]
@@ -79,14 +79,14 @@ const update_status = async (func1, func2, func3) => {
 }
 
 const onClickUser = (selectedStudentID, setCardOpen, setUser, setStudent) => {
-    update_student_and_user(getStudent(selectedStudentID), getUser(selectedStudentID)).then((returnValue) => {
+    two_functions_parallel(getStudent(selectedStudentID), getUser(selectedStudentID)).then((returnValue) => {
         if (returnValue) {
             let user = returnValue[1];
             let student = returnValue[0];
             setUser(user);
             setStudent(student);
             setCardOpen(true);
-        } 
+        }
     })
 }
 
@@ -111,9 +111,24 @@ const cancelTeacher = async (teacherID, dateSelected) => {
     }))
 }
 
-const sendNotification = async (lesson) => {
+const sendNotificationCancel = async (lesson) => {
     var data = { lesson: lesson, canceled: lesson.teacher.teacher_name }
     return await axios.post(get_mongo_api(`users/sendNotification/lessonCanceled`), data).then((response => {
+        return response.data;
+    }))
+}
+
+const sendNotificationReport = async (lesson) => {
+    var data = { lesson: lesson, canceled: lesson.teacher.teacher_name }
+    return await axios.post(get_mongo_api(`users/sendNotification/lessonreminder`), data).then((response => {
+        return response.data;
+    }))
+}
+
+
+const lessonTeacherReport = async (lesson) => {
+    var data = { teacher_id: lesson.teacher.teacher_id, student_id: lesson.student.student_id, date: lesson.date }
+    return await axios.post(get_mongo_api(`lessons/teacherReport`), data).then((response => {
         return response.data;
     }))
 }
@@ -129,11 +144,23 @@ const onClickStatus = (status, lesson) => {
         status: status
     }
     switch (status) {
+        case "report":
+            data.status = "done";
+            two_functions_parallel(sendNotificationReport(lesson), lessonTeacherReport(lesson)).then((returnValue) => {
+                if (returnValue) {
+                    alert("השיעור דווח בהצלחה");
+                    window.location.reload(true);
+                } else {
+                    alert('אירעה שגיאה במהלך דיווח השיעור');
+                    window.location.reload(true);
+                }
+            })
+            break;
         case "cancel":
             data.status = "canceled";
             updateStatusLesson(data).then((returnValue) => {
                 if (returnValue.success) {
-                    update_status(cancelStudent(courseID, studentID), cancelTeacher(teacherID, lesson.date), sendNotification(lesson)).then((returnValue) => {
+                    update_status(cancelStudent(courseID, studentID), cancelTeacher(teacherID, lesson.date), sendNotificationCancel(lesson)).then((returnValue) => {
                         if (returnValue) {
                             if (returnValue.success) {
                                 alert(returnValue.message);
@@ -146,7 +173,7 @@ const onClickStatus = (status, lesson) => {
                         }
                     })
                 } else {
-                    alert(returnValue.message +  "ולכן לא בוטל השיעור");
+                    alert(returnValue.message + "ולכן לא בוטל השיעור");
                     window.location.reload(true);
                 }
             })
@@ -164,17 +191,19 @@ const onClickStatus = (status, lesson) => {
 
 };
 
-const check_status = (status, lessonDate, hoursBeforeCancel) => {
+const check_status = (status, lessonDate, hoursBeforeCancel, teacher_reported) => {
     if (status === "waiting") {
         var today = Date.now();
         var validDateToCancel = new Date();
         validDateToCancel.setHours(validDateToCancel.getHours() + hoursBeforeCancel);
         if (validDateToCancel < lessonDate) { //lesson in the future - can cancel
             return "cancel";
-        } else if (today > lessonDate) { //lesson in the past
+        } else if (today > lessonDate && !teacher_reported) { //report lesson
+            return "report";
+        } else if (today > lessonDate && teacher_reported) {
             return "done";
         } else { // too late to cancel
-            return "happening";
+            return "happening"
         }
     } else {
         return status;
@@ -190,8 +219,9 @@ const make_rows_of_lessons = (lessons, args) => {
             let hour = lesson.date.slice(11, 16);
             let shortMonth = month.startsWith(0) ? month.slice(1, 2) : month;
             let shortDay = day.startsWith(0) ? day.slice(1, 2) : day;
+            let teacher_reported = lesson.teacher_reported
             var lessonDate = new Date(lesson.date);
-            var status = check_status(lesson.status, lessonDate, hoursBeforeCancel);
+            var status = check_status(lesson.status, lessonDate, hoursBeforeCancel, teacher_reported);
             let done = status === "done" || status === "canceled" || status === "happening" ? true : false;
             if (lesson.status === "canceled") {
                 return null;
@@ -221,7 +251,7 @@ export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
     const args = { setCardOpen, setUser, setStudent, hoursBeforeCancel };
     const table_rows = make_rows_of_lessons(lessons, args);
-    
+
     if ((table_rows && Array.isArray(table_rows) && table_rows.length > 0) && !isLoading_hoursBeforeCancel) {
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />

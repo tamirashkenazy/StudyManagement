@@ -187,7 +187,7 @@ router.route('/sendNotification/lessonCanceled').post((req, res) => {
             let mailDetails = {
                 from: QA_mail,
                 to: `${users[0].email}, ${users[1].email}`,
-                subject: `${who_canceled} ביטל את השיעור שנקבע לכם`,
+                subject: `השיעור שנקבע לך התבטל על ידי ${who_canceled}`,
                 html: `<!DOCTYPE html>
                 <html>
                         <body direction="rtl">
@@ -196,6 +196,94 @@ router.route('/sendNotification/lessonCanceled').post((req, res) => {
                               בקורס: ${data.course.course_name} 
                             <br>
                               התבטל על ידי ${who_canceled}
+                            <br>
+                             נא לא להשיב למייל זה  </h3>
+                            </div>
+                        </body>
+                </html>
+                `
+            };
+            transporter.sendMail(mailDetails, function(error, info){
+                if (error) {
+                    return res.send({success : false, message: error})
+                } else {
+                    return res.send({success : true, message: "ההודעה נשלחה בהצלחה"})
+                }
+            })
+        })
+    })
+})
+
+
+router.route('/sendNotification/lessonReported').post((req, res) => {
+    let data = req.body.lesson
+    let who_reported = req.body.canceled
+    Constants.find({}).then((constant) => {
+        let QA_mail = constant[0].QA_mail
+        User.find({_id: data.teacher.teacher_id }).then((users) => {
+            if (!users || users.length != 1){
+                return res.send({ success: false, message: 'התרחשה שגיאה בשליחת המייל'});
+            }
+            let date = new Date(data.date)
+            let date_format = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+            let mailDetails = {
+                from: QA_mail,
+                to: `${users[0].email}`,
+                subject: `${who_reported} דיווח על השיעור שביצעתם`,
+                html: `<!DOCTYPE html>
+                <html>
+                        <body direction="rtl">
+                            <div><h3> השיעור שנקבע לך לתאריך: ${date_format} בשעה: ${date.getUTCHours()}:00 
+                            <br>
+                              בקורס: ${data.course.course_name} 
+                            <br>
+                             דווח על ידי ${who_reported}
+                            <br>
+                             נא לא להשיב למייל זה  </h3>
+                            </div>
+                        </body>
+                </html>
+                `
+            };
+            transporter.sendMail(mailDetails, function(error, info){
+                if (error) {
+                    return res.send({success : false, message: error})
+                } else {
+                    return res.send({success : true, message: "ההודעה נשלחה בהצלחה"})
+                }
+            })
+        })
+    })
+})
+
+
+router.route('/sendNotification/lessonreminder').post((req, res) => {
+    let data = req.body.lesson
+    Constants.find({}).then((constant) => {
+        let QA_mail = constant[0].QA_mail
+        User.find({_id: data.student.student_id }).then((users) => {
+            if (!users || users.length != 1){
+                return res.send({ success: false, message: 'התרחשה שגיאה בשליחת המייל'});
+            }
+            let date = new Date(data.date)
+            let date_format = `${date.getDate()}/${date.getMonth() + 1}/${date.getFullYear()}`
+            let mailDetails = {
+                from: QA_mail,
+                to: `${users[0].email}`,
+                subject: `תזכורת - דיווח שיעור כבוצע`,
+                html: `<!DOCTYPE html>
+                <html>
+                        <body direction="rtl">
+                            <div><h3> השיעור שנקבע לך לתאריך: ${date_format} בשעה: ${date.getUTCHours()}:00 
+                            <br>
+                              בקורס: ${data.course.course_name} 
+                            <br>
+                            טרם דווח כבוצע במערכת 
+                            במידה והשיעור בוצע, נא לדווח באתר על כך בהקדם
+                            <br>
+                            במידה והשיעור אינו בוצע, אנא שלח הודעה למנהל המערכת מתיבת ההודעות באתר 
+                            <br>
+                            תודה והמשך יום נעים!
                             <br>
                              נא לא להשיב למייל זה  </h3>
                             </div>

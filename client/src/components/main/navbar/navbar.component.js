@@ -209,7 +209,7 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
       {accountMenuSection()}
       <Dialog open={open} onClose={handleDialogClose} aria-labelledby="form-dialog-title">
         <DialogTitle style={{ direction: "rtl", textAlign: "right" }} id="form-dialog-title"><CreateOutlined> </CreateOutlined>עדכון פרטים</DialogTitle>
-        <DialogContent style={{ direction: "rtl", textAlign: "right" }}>
+        <DialogContent style={{ direction: "rtl", textAlign: "right", width: "60rem" }}>
           <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} idDisabled={true} formSubmitButtonName={props.formSubmitButtonName} submitDisabled={wasUpdated} />
           {wasUpdated && <Button onClick={handleDialogClose} color="primary"> צא </Button>}
         </DialogContent>
