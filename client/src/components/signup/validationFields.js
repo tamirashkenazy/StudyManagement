@@ -13,13 +13,14 @@ export const error_default_messages = {
     role_error : 'בחר האם הינך מורה או תלמיד או שניהם'
 }
 
-export function validateForm(errors)  {
+export function validateForm(errors) {
     let valid = true;
-    Object.values(errors).forEach(error=>
+    Object.values(errors).forEach(error=> {
          // if we have an error string set valid to false, will be true if val is not null
-         error && (valid = false)
-             
-    );
+        if (error) {
+            valid = false
+        }
+    });
     return valid;
 }
 
@@ -60,7 +61,7 @@ export function check_errors(formValues) {
                 !validEmailRegex.test(value) ? temp_errors.email_error = error_default_messages.email_error : temp_errors.email_error = null;
                 break;
             case 'password':
-                    (value.length < 4) ? temp_errors.password_error = error_default_messages.password_error : temp_errors.password_error = null
+                    (value.length < 8) ? temp_errors.password_error = error_default_messages.password_error : temp_errors.password_error = null
                     break;
             case 'first_name':
                 (value.length < 2 || !onlyEnglishAndHebrew.test(value)) ? temp_errors.first_name_error = error_default_messages.first_name_error :temp_errors.first_name_error = null

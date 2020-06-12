@@ -1,7 +1,7 @@
 import axios from 'axios'
 import get_mongo_api from '../mongo/paths.component'
 
-export function httpPostRequestToAddUser(formValues, history) {
+export async function httpPostRequestToAddUser(formValues) {
     const user_to_add = {  
         _id : formValues._id,
         password : formValues.password,
@@ -15,15 +15,17 @@ export function httpPostRequestToAddUser(formValues, history) {
         isAdmin : false,
         study_year: formValues.study_year,
     }
-    axios.post(get_mongo_api('users/add'), user_to_add)
+    let res = await axios.post(get_mongo_api('users/add'), user_to_add)
     .then((response)=> {
         if (response.data.success) {
-            history.push('/')
-            window.location.reload(true)
+            return true
+            
         } else {
             alert(response.data.message)
+            return false
         }
     })
+    return res
 } 
 
 export async function httpPostRequestToAddStudent(id, first_name, last_name) {
@@ -36,6 +38,7 @@ export async function httpPostRequestToAddStudent(id, first_name, last_name) {
     .then((response)=> {
         if (!response.data.success) {
             alert(response.data.message)
+            return false
         }
     })
     return response
