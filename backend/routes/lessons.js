@@ -21,7 +21,7 @@ router.route('/').get((req, res) => {
  *      /byStatus/<status>
  */
 router.route('/byStatus/:status').get((req, res) => {
-    Lesson.find({ "status": req.params.status }, (err, lessons) => {
+    Lesson.find({ "status": req.params.status }).sort([['date', 1]]).exec((err, lessons) => {
         if (err) {
             return res.send({ success: false, message: "Error: " + err })
         } else if (lessons) {
@@ -39,7 +39,7 @@ router.route('/byStatus/:status').get((req, res) => {
  *      /ByStatusAndCourse/<status_id>/<course_id>
  */
 router.route('/doneLessons/:status_id/:course_id').get((req, res) => {
-    Lesson.find({ "status": req.params.status_id }, (err, lessons) => {
+    Lesson.find({ "status": req.params.status_id }).sort([['date', 1]]).exec((err, lessons) => {
         if (err) {
             return res.send({ success: false, message: "Error: " + err })
         } else if (lessons && lessons.length > 0) {
@@ -67,7 +67,7 @@ router.route('/ByStatusCourseAndStudent').post((req, res) => {
     let status = req.body.status
     let course_id = req.body.course_id
     let student_id = req.body.student_id
-    Lesson.find({ $and: [{ "status": status }, { "course.course_id": course_id }, { "student.student_id": student_id }] }, (err, lessons) => {
+    Lesson.find({ $and: [{ "status": status }, { "course.course_id": course_id }, { "student.student_id": student_id }] }).sort([['date', 1]]).exec((err, lessons) => {
         if (err) {
             return res.send({ success: false, message: "Error: " + err })
         } else if (lessons && lessons.length > 0) {
@@ -204,7 +204,7 @@ router.route('/paidMoney').get((req, res) => {
  *     /byCourseId/<course_id>
  */
 router.route('/byCourseId/:courseId').get((req, res) => {
-    Lesson.find({ "course.course_id": req.params.courseId }, (err, lessons) => {
+    Lesson.find({ "course.course_id": req.params.courseId }).sort([['date', 1]]).exec((err, lessons) => {
         if (err) {
             return res.send({ success: false, message: "Error: " + err })
         } else if (lessons) {
@@ -222,10 +222,11 @@ router.route('/byCourseId/:courseId').get((req, res) => {
  *     /byTeacherId/<teacher_id>
  */
 router.route('/byTeacherId/:teacherId').get((req, res) => {
-    Lesson.find({ "teacher.teacher_id": req.params.teacherId }, (err, lessons) => {
+    Lesson.find({ "teacher.teacher_id": req.params.teacherId }).sort([['date', 1]]).exec((err, lessons) => {
         if (err) {
             return res.send({ success: false, message: "Error: " + err })
         } else if (lessons) {
+
             return res.send({ success: true, message: lessons, count: lessons.length })
         } else {
             return res.send({ success: true, message: "השיעורים המבוקשים אינם קיימים במערכת" })
@@ -240,7 +241,7 @@ router.route('/byTeacherId/:teacherId').get((req, res) => {
  *     /byStudentId/<student_id>
  */
 router.route('/byStudentId/:studentId').get((req, res) => {
-    Lesson.find({ "student.student_id": req.params.studentId }, (err, lessons) => {
+    Lesson.find({ "student.student_id": req.params.studentId }).sort([['date', 1]]).exec((err, lessons) => {
         if (err) {
             return res.send({ success: false, message: "Error: " + err })
         } else if (lessons) {
