@@ -58,9 +58,11 @@ router.route('/add').post((req, res) => {
  * request body:
  *     None
  */
+
 router.route('/:_id').delete((req,res) => {
-    Course.deleteOne({_id: req.params._id})
-    .then(course => res.send({success:true, message: "!הקורס נמחק בהצלחה"}))
+    let _id = req.params._id
+    Course.deleteOne({_id})
+    .then(course => res.send({success:true, message: `!הקורס ${_id} נמחק בהצלחה`}))
     .catch(err => res.status(400).send({success:false, message: "Error: " + err}))
 })
 

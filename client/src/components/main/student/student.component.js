@@ -53,7 +53,7 @@ export default function Student(props) {
                 <AppBar position="static" className={classes.AppBar} >
                     <AccountMenu userDetails={user} next_role='teacher' navbar_operations_by_role={navbar_operations_by_role} props={{ formSubmitButtonName: "עדכן פרטים" }} />
                 </AppBar>
-                {Dialog_generator(openedPopups[0], () => setOpenedPopups(closeAllPopups(total_popups)), " בקשת שעות חונכות", "access_time", { id: user._id, number_of_approved_hours: student.group.approved_hours }, (args) => RequestHours(args))}
+                {Dialog_generator(openedPopups[0], () => setOpenedPopups(closeAllPopups(total_popups)), " בקשת שעות חונכות", "access_time", { id: user._id, number_of_approved_hours: student.group.approved_hours }, (args) => RequestHours(args), {height : "40vh"})}
                 {Dialog_generator(openedPopups[1], () => setOpenedPopups(closeAllPopups(total_popups)), "קביעת שעות חונכות", "assignment_turned_in", { _id: user._id, selectedCourseID, setSelectedCourse, hours_options, setHoursOptions, student,lessons: loading ? null : lessons }, (args) => BookHours(args))}
                 {Dialog_generator(openedPopups[2], () => { setSelectedCourse(null); setOpenedPopups(closeAllPopups(total_popups)) }, null, null, { _id: user._id, courseID: selectedCourseID, setCardOpen, setUser: setUserTeacher, setTeacher }, (args) => History(args))},
                 {Dialog_generator(openedPopups[3], () => setOpenedPopups(closeAllPopups(total_popups)), "הודעות", "mail_outline", { user: user, close_popup: () => setOpenedPopups(closeAllPopups(total_popups)) }, (args) => SendMessage(args))}
