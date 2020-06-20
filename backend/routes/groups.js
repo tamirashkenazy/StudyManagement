@@ -74,6 +74,9 @@ router.route('/add').post((req, res) => {
  *      None
  */
 router.route('/:name').delete((req,res) => {
+    if (req.params.name === "כללי") {
+        res.send({success : false, message: "לא ניתן למחוק את הקבוצה: כללי"})
+    }
     Groups.deleteOne({name: req.params.name})
     .then(group => {
         if (group.n === 1){

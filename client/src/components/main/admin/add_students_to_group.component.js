@@ -3,9 +3,10 @@ import axios from 'axios';
 import get_mongo_api from '../../mongo/paths.component';
 import GenericTable from '../utils/generic_table.component';
 import { Button} from 'react-bootstrap'
-
 import IconButton from '@material-ui/core/IconButton';
 import PersonAddIcon from '@material-ui/icons/PersonAdd';
+
+export const tz = "תז"
 const make_button_add_remove = (curr_id, ids, setId) => {
   if (ids.has(curr_id)){
     return <IconButton size="small" style={{color:"#FA8072"}}onClick={()=>setId(prev => {
@@ -24,19 +25,19 @@ const make_button_add_remove = (curr_id, ids, setId) => {
   }
 }
 
-const make_arr_students_in_group = (students, setId, in_group=false, ids=null) => {
+export const make_arr_students_in_group = (students, setId, in_group=false, ids=null) => {
   if (students && Array.isArray(students) && students.length>0){
     if (!in_group) {
       return students.map(student => {
         return {
-          "תז": student._id,            
+          [tz]: student._id,            
           "שם": student.name,
           "הוספה לקבוצה" : make_button_add_remove(student._id, ids, setId)
         }
     })} else {
       return students.map(student => {
         return {
-          "תז": student._id,            
+          [tz]: student._id,            
           "שם": student.name
         }
       })
