@@ -10,7 +10,6 @@ const status_to_hebrew = {
 }
 
 const teacher_status_request_array = (teaching_requests)=>{
-    // const {teaching_requests} = teacher;
     if (teaching_requests && teaching_requests.length>0){    
         let teacher_requests_status = teaching_requests.map(teaching_request => {
             return (
@@ -27,7 +26,9 @@ const teacher_status_request_array = (teaching_requests)=>{
         }])
     }
 }
-
+/**
+ * table of the requests the teacher made in order to teach
+ */
 export default function TeachersStatusRequestsTable({teaching_requests}) {
     let teacher_req_stat = teacher_status_request_array(teaching_requests)
     return (

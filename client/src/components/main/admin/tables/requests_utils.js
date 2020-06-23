@@ -36,6 +36,10 @@ export const GreenRadio = withStyles({
   })((props) => <Radio icon={<Button>הסרת בחירה</Button>} color="default" {...props} />);
 
 
+/**
+ * Function that will be called when admin want to approve or decline students and teacher requests 
+ * for teaching or studying
+ */
 export const httpRequestToApproveDeclineRequests = (selectedValues, api) => {
     let arr = Object.entries(selectedValues).filter(([id, course_to_status_obj])=>{
         if (course_to_status_obj && Object.keys(course_to_status_obj).length > 0) {
@@ -70,9 +74,7 @@ export const useChoosingForm = (httpRequestFunc, arr_of_persons, update_api) => 
     const [selectedValues, setSelectedValues] = useState(start_requesters_object)
     useEffect(()=>{
         setSelectedValues(start_requesters_object)   
-        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [arr_of_persons])
-    // const [wasAdded, setWasAdded] = useState(false)
     async function handleSubmit (event) {
         if (event) {
             event.preventDefault();

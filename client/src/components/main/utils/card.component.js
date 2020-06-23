@@ -52,11 +52,15 @@ const get_student_courses = (student) => {
   }
 }
 
+/**
+ * The user card holds the information about a user:
+ * the name, mail. phone number
+ * courses teaching/studying, etc
+ */
 export default function UserCard({ user, teacher, student, opened_from_student=false}) { //user, teacher, student
   let curr_user = { id: user._id, roles: "אין תפקיד" }
   const full_name = `${user.first_name} ${user.last_name}`
   const classes = useStyles();
-  //cahnge picture to girl
   if (user.isTeacher && teacher) {
     curr_user.roles = "מורה"
     curr_user.teacher_courses = get_teacher_courses(teacher)
@@ -64,7 +68,7 @@ export default function UserCard({ user, teacher, student, opened_from_student=f
   if (user.isStudent && student) {
     curr_user.roles = (user.gender !== "male") ? "תלמידה" : "תלמיד";
     curr_user.student_courses = get_student_courses(student)
-    curr_user.group_name = student.group.name ? student.group.name : "לא משתייך לקבוצה"
+    curr_user.group_name = student.group.name ? student.group.name : "אין שייכות לקבוצה"
   }
   if (user.isStudent && user.isTeacher && student && teacher) {
     curr_user.roles = "מורה, תלמיד"
@@ -76,34 +80,43 @@ export default function UserCard({ user, teacher, student, opened_from_student=f
   return (
     <Card className={classes.card}>
       <Image src={imageSrc} wrapped ui={false} />
+
       <Card.Content>
+
         <Card.Header className={classes.header}>{full_name}</Card.Header>
+
         <Card.Meta className={classes.meta}>
           {!opened_from_student && <span> {user._id} </span>}
           <span> {user.tel_number} </span>
           <span> {user.email} </span>
         </Card.Meta>
+
         <Card.Description>
           <TableContainer>
             <Table size="small" >
               <TableBody>
+
                 {(user.isStudent && student) && <TableRow>
                   <TableCell className={classes.tableCell}> {study}</TableCell>
                   <TableCell className={classes.tableCell}>{curr_user.student_courses} </TableCell>
                 </TableRow>}
+
                 {(user.isStudent && student) && <TableRow>
                   <TableCell className={classes.tableCell}>קבוצת לימוד</TableCell>
                   <TableCell className={classes.tableCell}>{curr_user.group_name} </TableCell>
                 </TableRow>}
+
                 {(user.isTeacher && teacher) && <TableRow>
                   <TableCell className={classes.tableCell}>{teaching}</TableCell>
                   <TableCell className={classes.tableCell}>{curr_user.teacher_courses} </TableCell>
                 </TableRow>}
+
               </TableBody>
             </Table>
           </TableContainer>
         </Card.Description>
       </Card.Content>
+
       <Card.Content extra>
         <Icon name='user' />
         {curr_user.roles}

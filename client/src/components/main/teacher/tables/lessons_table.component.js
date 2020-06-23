@@ -246,7 +246,9 @@ const make_rows_of_lessons = (lessons, args) => {
         return filtered_options;
     }
 }
-
+/**
+ * The table of the lessons of the specific teacher
+ */
 export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons }) {
     const [hoursBeforeCancel, isLoading_hoursBeforeCancel] = useAsyncHook(`constants/min_hours_before_cancel`)
     const args = { setCardOpen, setUser, setStudent, hoursBeforeCancel };
@@ -256,7 +258,6 @@ export default function LessonsTable({ setCardOpen, setUser, setStudent, lessons
         return (
             <GenericTable table_data={{ data: table_rows, title: "שיעורים" }} />
         )
-
     } else {
         return (
             <GenericTable table_data={{ data: [{ "אין מידע בנוגע לשיעורים": "" }], title: "שיעורים" }} />

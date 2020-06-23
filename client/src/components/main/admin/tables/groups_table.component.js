@@ -70,6 +70,9 @@ const all_groups_array  = (all_groups, setGroupNameChosen, setPopUpOpen, group_t
     }
 }
 
+/**
+ * helper function to map all students to their group
+ */
 const map_group_to_students = (students) => {
     let group_to_num_of_students = {}
     if (!students) {
@@ -87,6 +90,9 @@ const map_group_to_students = (students) => {
     return group_to_num_of_students
 }
 
+/**
+ * The table that shows the admin all courses available
+ */
 export default function CoursesTableAdmin({all_groups, students}) {
     const [groupNameChosen, setGroupNameChosen] = useState(null)
     const [isPopUpOpen, setPopUpOpen] = useState(false)
