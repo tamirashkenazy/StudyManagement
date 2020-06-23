@@ -1,6 +1,6 @@
 export const validEmailRegex = RegExp(/^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i);
 export const onlyNumbers = RegExp(/^[0-9\b]+$/);
-export const onlyEnglishAndHebrew = RegExp(/^[A-Za-z\u0590-\u05fe]+$/i)
+export const onlyEnglishAndHebrew = RegExp(/^[A-Za-z\u0590-\u05fe ]+$/i)
 export const error_default_messages = {
     _id_error: 'ת.ז לא תקנית',
     tel_number_error:  'מספר טלפון מורכב מ10 תווים',

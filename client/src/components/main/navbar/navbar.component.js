@@ -146,7 +146,8 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
           // if the teacher exists in teachers collection - there will be a failure, so nothing will be changed
           axios.post(get_mongo_api(`teachers/add`), { _id: formValues._id }).then(res => {
             if (!res.data.success) {
-              alert(res.data.message)
+              console.log('not adding');
+              // alert(res.data.message)
             }
           })
         } else if (was_teacher && formValues.isTeacher){
@@ -168,7 +169,8 @@ function AccountMenu({ handleSubmit, formValues, next_role, userDetails, navbar_
           // same as the teacher
           axios.post(get_mongo_api(`students/add`), { _id: formValues._id }).then(res => {
             if (!res.data.success) {
-              alert(res.data.message)
+              // alert(res.data.message)
+              console.log('not adding');
             }
           })
         } else if (was_student && formValues.isStudent) {

@@ -43,12 +43,17 @@ const get_teacher_courses = (teacher) => {
   }
 }
 
-const get_student_courses = (student) => {
+const get_student_courses = (student, gender) => {
   let approved_courses = student.requests.filter(course => course.status === APPROVED)
   if (Array.isArray(approved_courses) && approved_courses.length > 0) {
     return (approved_courses.map(course => course.course_name)).join(", ")
   } else {
-    return "לא אושרו קורסים עבור התלמיד"
+    if (gender === "female") {
+      return "לא אושרו קורסים עבור התלמידה"
+    } else {
+      return "לא אושרו קורסים עבור התלמיד"
+    }
+    
   }
 }
 
@@ -67,11 +72,15 @@ export default function UserCard({ user, teacher, student, opened_from_student=f
   }
   if (user.isStudent && student) {
     curr_user.roles = (user.gender !== "male") ? "תלמידה" : "תלמיד";
-    curr_user.student_courses = get_student_courses(student)
+    curr_user.student_courses = get_student_courses(student, user.gender)
     curr_user.group_name = student.group.name ? student.group.name : "אין שייכות לקבוצה"
   }
   if (user.isStudent && user.isTeacher && student && teacher) {
-    curr_user.roles = "מורה, תלמיד"
+    if (user.gender === "female"){
+      curr_user.roles = "מורה, תלמידה"
+    } else {
+      curr_user.roles = "מורה, תלמיד"
+    }
   }
   const imageSrc = (user.gender === "male") ? male_image : female_image;
   const study = (user.gender !== "male") ? 'לומדת' : 'לומד';
