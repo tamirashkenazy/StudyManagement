@@ -9,7 +9,7 @@ const genders = 'male female'.split(' ')
 password_validate = /^(?=.*\d)(?=.*[a-z])[0-9a-zA-Z!@#$%^&*]{8,}$/
 onlyNumbers = /^[0-9\b]+$/;
 validEmailRegex = /^(([^<>()[\].,;:\s@"]+(\.[^<>()[\].,;:\s@"]+)*)|(".+"))@(([^<>()[\].,;:\s@"]+\.)+[^<>()[\].,;:\s@"]{2,})$/i
-onlyEnglishAndHebrew = /^[A-Za-z\u0590-\u05fe]+$/i
+onlyEnglishAndHebrew = /^[A-Za-z\u0590-\u05fe ]+$/i
 
 const UserSchema = new Schema({
     _id :  {type : String, default : '', required : true, match: onlyNumbers, minlength: 9, maxlength: 9},
