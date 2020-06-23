@@ -41,7 +41,11 @@ const useStyles = makeStyles({
 
 });
 
-export default function GenericTable(props) { //props : {table_data : {data: some_data-> array of objects , title: string_of_title}}
+/**
+ * props : {table_data : {data: some_data-> array of objects , title: string_of_title}}
+ * will generate a beautiful table, just pass your data and title as described above
+ */
+export default function GenericTable(props) { 
     const classes = useStyles();
     let data, title;
     if (props.table_data) {

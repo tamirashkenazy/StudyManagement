@@ -8,11 +8,11 @@ import Main from './components/main/dashboard_main';
 import Student from './components/main/student/student.component';
 import Teacher from './components/main/teacher/teacher.component';
 import Admin from './components/main/admin/admin.component';
-import Spinner from 'react-bootstrap/Spinner'
-import Jumbotron from 'react-bootstrap/Jumbotron'
+import { SpinnerLoader } from './components/main/utils/spinner';
+
 
 function App() {
-  // getting all data
+  // getting all data locally
   const [teachers, isLoading_teachers] = useAsyncHook(`teachers`)
   const [students, isLoading_students] = useAsyncHook(`students`)
   const [users, isLoading_users] = useAsyncHook('users')
@@ -33,10 +33,7 @@ function App() {
     </Router>
     :
     // when loading, shows spinner
-    <Jumbotron style={{textAlign : "center" , direction : "rtl"}}>
-            <h1>טוען...</h1>
-            <Spinner animation="border" role="status"/>
-      </Jumbotron>
+    <SpinnerLoader header={"טוען..."}></SpinnerLoader>
   );
 }
 export default App;

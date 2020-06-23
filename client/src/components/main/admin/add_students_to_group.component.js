@@ -25,6 +25,9 @@ const make_button_add_remove = (curr_id, ids, setId) => {
   }
 }
 
+/**
+ * Creating array for students in the specific group and not in the specific group
+ */
 export const make_arr_students_in_group = (students, setId, in_group=false, ids=null) => {
   if (students && Array.isArray(students) && students.length>0){
     if (!in_group) {
@@ -49,6 +52,9 @@ export const make_arr_students_in_group = (students, setId, in_group=false, ids=
     }])
 }}
 
+/**
+ * post request to add group to DB
+ */
 const post_request_add_to_group = (ids, groupNameChosen) => {
   let post_body = {students_id : Array.from(ids), group_name : groupNameChosen}
   axios.post(get_mongo_api('students/updateGroup/listOfStudents'), post_body).then((response)=> {
@@ -60,6 +66,9 @@ const post_request_add_to_group = (ids, groupNameChosen) => {
 })
 }
 
+/**
+ * This component is responsible to add students to a group
+ */
 export default function AddStudentsToGroup({students, groupNameChosen}) { 
     const [ids, setId] = useState(new Set())
     const students_in_group = make_arr_students_in_group(students.filter(student=>student.group.name === groupNameChosen), setId, true)

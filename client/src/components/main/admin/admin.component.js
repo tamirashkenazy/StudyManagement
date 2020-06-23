@@ -23,15 +23,20 @@ import CoursesTableAdmin from './tables/courses_table.component'
 import GroupsTableAdmin from './tables/groups_table.component'
 import Reports from './navbar_items/reports.component'
 import { Typography } from '@material-ui/core';
+import {SpinnerLoader} from '../utils/spinner'
 
-
-
+/**
+ * will Output all the following details for the statistics
+ */
 const GetAllStatisticsFromDB = () => {
     const lessons_pie = useAsyncHook(`lessons/numOfLessonsByCourse`, null, null, false)
     const students_pie = useAsyncHook(`students/numOfStudentsByCourse`, null, null, false)
     const teachers_pie = useAsyncHook(`teachers/numOfSTeachersByCourse`, null, null, false)
     return {lessons_pie, students_pie, teachers_pie}
 }
+/**
+ * will Output all the following details by month selected from the dropdown
+ */
 const GetAllReportsDataFromDB = (selectedMonthYear) => {
     const lessons_done = useAsyncHook(`lessons/byStatus/done`, null, null, false)
     const lesson_price_uni = useAsyncHook(`constants/lesson_price`, null, null, false) 
@@ -41,12 +46,19 @@ const GetAllReportsDataFromDB = (selectedMonthYear) => {
     return {lessons_done, lesson_price_uni, lesson_price_student, arr_teachers_from_db, arr_students_from_db}
 }
 
+/**
+ * 
+ * @param {*} props - all the admin data needed, such as teacher, students, users
+ */
 export default function Admin(props) {
     const user = props.history.location.state
     const {teachers, students, users} = props
     const total_popups = 6
-    const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))
+
     const classes = useStylesAppBar();
+
+    // Setting the pop-ups of the admins
+    const [openedPopups, setOpenedPopups] = useState(closeAllPopups(total_popups))    
     const navbar_operations_by_role = [
         { key : 'participants', header : 'משתתפים' , on_click : ()=>setOpenedPopups(getOpenedPopup(0,total_popups)) , icon : <PeopleAltOutlinedIcon fontSize="large" style={{color:"white"}} />},
         { key : 'statistics', header : 'סטטיסטיקות' , on_click : ()=>setOpenedPopups(getOpenedPopup(1,total_popups)) , icon : <PieChartSharpIcon fontSize="large" style={{color:"white"}} />},
@@ -59,7 +71,6 @@ export default function Admin(props) {
     const [sum_lessons, isLoading_sumLessons] = useAsyncHook(`lessons/paidMoney`)
     const [annual_budget, isLoading_budget] = useAsyncHook(`constants/annual_budget`)
     const allConstants = useAsyncHook(`constants`, null, null, null)
-    //assigned a value but never used  no-unused-vars
     const [all_courses, isLoadingCourses] = useAsyncHook(`courses`)
     const [all_groups, isLoadingGroups] = useAsyncHook(`groups`)
     let {lessons_pie, students_pie, teachers_pie} = GetAllStatisticsFromDB()
@@ -71,16 +82,20 @@ export default function Admin(props) {
             <AppBar position="static" className={classes.AppBar} >
                 <AdminMenu userDetails={user} navbar_operations_by_role={navbar_operations_by_role}/>
             </AppBar> 
+            {/* All the Dialogs in the page */}
+
             {Dialog_generator (openedPopups[0],()=>setOpenedPopups(closeAllPopups(total_popups)),"משתתפים", "people_outline" ,{users, teachers, students} ,(args)=>Participants(args))}
             {Dialog_generator(openedPopups[1], ()=>setOpenedPopups(closeAllPopups(total_popups)), "סטטיסטיקות","pie_chart",{}, ()=> Statistics(lessons_pie, students_pie, teachers_pie), {maxWidth : "md", direction:"ltr"})}
             {Dialog_generator (openedPopups[2],()=>setOpenedPopups(closeAllPopups(total_popups)),"דוחות", "assignment" ,{arr_teachers_from_db, arr_students_from_db, lessons_done, lesson_price_uni, lesson_price_student, selectedMonthYear, setMonthYear} ,(args)=>Reports(args))}
             {Dialog_generator(openedPopups[3], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוספת קורס","playlist_add",{}, ()=>AddCourse(), {maxWidth : "md"})}
             {Dialog_generator(openedPopups[4], ()=>setOpenedPopups(closeAllPopups(total_popups)), "הוספת קבוצה", "add_group",{}, ()=>AddGroup(), {maxWidth : "md"})}
             {Dialog_generator(openedPopups[5], ()=>setOpenedPopups(closeAllPopups(total_popups)), "משתני מנהל מערכת", "import_export",{constants : allConstants}, (args)=>ChangeConstants(args), {maxWidth : "md"})}
+
             <br></br>
                 <Typography variant="h3" align="center">ברוכים הבאים למסך המנהל</Typography>
             <br></br>   
-            
+
+            {/* All the tables in the admin main page */}
             <Grid container justify="space-around" direction="row-reverse">  
                 <Grid item md={5} xs={4}>
                     <TeachersRequestTable users={users} students={students} teachers={teachers} />
@@ -89,22 +104,29 @@ export default function Admin(props) {
                     <StudentsRequestTable users={users} students={students} teachers={teachers}/>
                 </Grid>
             </Grid>
+
             <br/><br/>
+
             <Grid container justify="space-around" direction="row-reverse">
-                {!isLoadingCourses && <Grid item md={5} xs={4} style={{marginRight: "1rem" }}>
+                {!isLoadingCourses ? 
+                <Grid item md={5} xs={4} style={{marginRight: "1rem" }}>
                     <CoursesTableAdmin all_courses={all_courses}/>
-                </Grid>}
-                {!isLoadingGroups && <Grid item md={5} xs={4} style={{ marginLeft: "1rem" }}>
+                </Grid> : <SpinnerLoader header={"טבלה בטעינה"}> </SpinnerLoader>}
+                {!isLoadingGroups ? 
+                <Grid item md={5} xs={4} style={{ marginLeft: "1rem" }}>
                     <GroupsTableAdmin all_groups={all_groups} users={users} students={students}/>
-                </Grid>}
+                </Grid> : <SpinnerLoader header={"טבלה בטעינה"}> </SpinnerLoader>}
             </Grid>
+
             <br/><br/>
+
             <Grid container justify="center">
                 <Grid item xs={8} >
                 {!isLoading_sumLessons && !isLoading_budget && 
                         <AnnualStatistics annual_budget={annual_budget} sum_lessons={sum_lessons}/>}
                 </Grid>
             </Grid>
+
         </div>
 
     )

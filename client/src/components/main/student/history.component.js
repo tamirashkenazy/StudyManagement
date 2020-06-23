@@ -76,6 +76,9 @@ const make_rows_of_lessons_history = (lessons, args) => {
     }
 }
 
+/**
+ * history dialog of the lessons of the same course
+ */
 export default function History({ _id, courseID, setCardOpen, setUser, setTeacher }) {
     const args = { setCardOpen, setUser, setTeacher };
     const [data, setData] = useState(null);
@@ -114,7 +117,6 @@ export default function History({ _id, courseID, setCardOpen, setUser, setTeache
         return (
             <GenericTable table_data={{ data: table_rows, title: "היסטוריית שיעורים" }} />
         )
-
     } else {
         return (
             <GenericTable table_data={{ data: [{ "אין מידע בנוגע להיסטוריית שיעורים": "" }], title: "היסטוריית שיעורים" }} />

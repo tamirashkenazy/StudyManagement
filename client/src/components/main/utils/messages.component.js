@@ -1,6 +1,5 @@
 import React, {useState} from 'react';
 import { Tab, Form } from 'semantic-ui-react'
-// import GenericTable from './generic_table.component';
 import get_mongo_api from '../../mongo/paths.component'
 import axios from 'axios'
 
@@ -19,7 +18,9 @@ const httpPostRequestSendMessage = (user, msg, close_popup) => {
     })
 }
 
-
+/**
+ *  The dialog to send a message
+ */
 export function SendMessage({user, close_popup}) {
     const [msg, setMsg] = useState("")
     const message_box = () => {
@@ -30,13 +31,8 @@ export function SendMessage({user, close_popup}) {
             </Form>
         )
     }
-
-    let panes = [
-        { menuItem: 'שליחת הודעה למנהל', render: () => <Tab.Pane>{message_box()}</Tab.Pane> },
-    ]
+    let panes = [{ menuItem: 'שליחת הודעה למנהל', render: () => <Tab.Pane>{message_box()}</Tab.Pane> }]
     return (
-        <>
-        {panes &&  <Tab panes={panes}/>}
-        </>
+        panes &&  <Tab panes={panes}/>
     )
 }

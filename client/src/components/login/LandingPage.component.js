@@ -21,6 +21,9 @@ function ImagesLogin() {
     )
 }
 
+/**
+ * contains the images and the text boxes to login, with the buttons
+ */
 function LoginBox() {
     return(
         <Container id="login-box">

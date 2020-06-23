@@ -22,7 +22,6 @@ const SignupConatainer = ({ handleSubmit, formValues }) => {
             setErrors(local_errors)
             let validForm = validateForm(local_errors)
             if (validForm) {
-                // TODO - need to check if all of the http request returned OK and if no - delete the new student/teacher/user that was uploaded and send error msg
                 let is_user_added = await httpPostRequestToAddUser(formValues, history)
                 if (is_user_added) {
                     if (formValues.isStudent) {
@@ -46,7 +45,6 @@ const SignupConatainer = ({ handleSubmit, formValues }) => {
                     <Icon size='big' name='arrow right' style={{ margin: "0 2% 2% 2%" }}></Icon>
                 </Link>
                 <Typography variant="h3" color="primary" display="inline" style={{margin:"0 30%"}} >טופס הרשמה</Typography>
-                
                 <SignupFormRedux onSubmit={submitForm} handleSubmit={handleSubmit} errors={errors} formValues={formValues} formSubmitButtonName="הרשמה" />
             </Container>
         </div>
@@ -58,7 +56,6 @@ const emptyUser = {
     _id: "", password: "", email: "", first_name: "", last_name: "", tel_number: "", gender: "",
     isTeacher: false, isStudent: false, isAdmin: false, study_year: ""
 }
-//bank_account_name : "", bank_account_number : "", bank_branch : "", bank_name : ""
 
 const mapStateToProps = state => ({
     formValues: getFormValues('sign-up-form')(state),

@@ -50,6 +50,9 @@ const AnnualStatisticsText = ({ percentage }) => {
   )
 }
 
+/**
+ * will add show the statistics bar
+ */
 export const AnnualStatistics = ({ annual_budget, sum_lessons }) => {
   const mainClasses = useStyles();
   let percentage = Math.round(sum_lessons * 10000.0 / annual_budget) / 100
