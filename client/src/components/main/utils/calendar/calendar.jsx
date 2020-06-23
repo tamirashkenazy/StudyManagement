@@ -20,10 +20,8 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableCell from '@material-ui/core/TableCell';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-var DATES_COUNTER = 0;
-var disabled = true
 export function Calendar(props) {
-    
+    const [dates_counter, setDatesCounter] = useState(0);
     let buttonText = props.isTeacher? "עדכן": "קבע";
     // Alldate keeps each week with unique key (year + week number) with weekID() function.
     // Inside that it keeps checkbox value for get next 4 weeks and all the selected dates.
@@ -48,7 +46,7 @@ export function Calendar(props) {
         for (let item of $(".active")) {
             $(item).removeClass("active");
         }
-        
+        setDatesCounter(0);
         // Fills first row with date, month and week name.
         fillWeekDays();
         // Adds date attribute(month,day and hour) to each pickable cells in the table.
@@ -115,8 +113,8 @@ export function Calendar(props) {
         const { target } = e;
         if (target.classList.contains("pickable") && !target.classList.contains("disabled")) {
             $(target).toggleClass("active");
-            DATES_COUNTER = target.classList.contains("active") ? DATES_COUNTER + 1 : DATES_COUNTER - 1;
-            disabled = ((DATES_COUNTER <= 0) || (DATES_COUNTER > props.maxNumber)) ? true : false;
+            var counter = target.classList.contains("active") ? dates_counter + 1 : dates_counter - 1;
+            setDatesCounter(counter);
         }
 
         // Setting state on every click from user 
@@ -290,7 +288,7 @@ export function Calendar(props) {
                     label="בחר 4 שבועות קדימה"
                 />
                 <label className="comment">  המספר המופיע על יד כל מורה הינו מספר השעות המקסימלי שניתן לקבוע עם מורה זה באותו השבוע <InfoOutlinedIcon fontSize="small" color="disabled" /> </label>
-                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={disabled} >{buttonText}</button>
+                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={(dates_counter <= 0) || (dates_counter > props.maxNumber)} >{buttonText}</button>
             </div>
         </div>
     )
