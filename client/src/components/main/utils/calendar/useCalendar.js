@@ -150,7 +150,9 @@ export const disableDatesBeforeToday = (isTeacher, dates) => {
                     inputDate.setMilliseconds(0);
 
                     if (cellDate.getTime() === inputDate.getTime()) {
-                        $(item).addClass("disabled");
+                        if (dates[key] === 'שיעור שלי') {
+                            $(item).addClass("disabled");
+                        }
                         $(item).html(dates[key])
                     }
                 }

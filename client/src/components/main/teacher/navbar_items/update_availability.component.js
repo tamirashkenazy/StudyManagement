@@ -4,7 +4,7 @@ import { Calendar } from '../../utils/calendar/calendar';
 import get_mongo_api, { useAsyncHook } from '../../../mongo/paths.component'
 
 const make_available_hours_list = (arr_of_hours, lessons) => {
-    if (arr_of_hours && arr_of_hours !== undefined &&Array.isArray(arr_of_hours) && arr_of_hours.length > 0) {
+    if (arr_of_hours && arr_of_hours !== undefined && Array.isArray(arr_of_hours) && arr_of_hours.length > 0) {
         let datesDict = arr_of_hours.map(date_obj => {
             var date = date_obj.slice(0, -1)
             return (
@@ -37,7 +37,7 @@ const set_lessons = (lessons, array) => {
         var today = Date.now();
         var date = lesson.date.slice(0, -1)
         var newDate = new Date(date);
-        if (today < newDate && lesson.status !== "canceled" ) {
+        if (today < newDate && lesson.status !== "canceled") {
             return (
                 {
                     date: [newDate],
@@ -56,19 +56,64 @@ const set_lessons = (lessons, array) => {
     return array;
 }
 
+const two_functions_parallel = async (func1, func2) => {
+    return axios.all([func1, func2]).then(axios.spread((...responses) => {
+        const responseOne = responses[0]
+        const responseTwo = responses[1]
+        if (responseOne && responseTwo) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    })).catch(() => {
+        return false;
+    })
+}
+
+const addHoursAvailable = async (id, addHours) => {
+    if (addHours && Array.isArray(addHours) && addHours.length > 0) {
+        var data = { dates: addHours };
+        return await axios.post(get_mongo_api(`teachers/add/hoursAvailable/${id}`), data).then((response => {
+            if (response.data.success) {
+                return response.data.success;
+            }
+            else {
+                return false;
+            }
+        }))
+    }
+    return true;
+}
+
+const deleteHoursAvailable = async (id, deleteHours) => {
+    if (deleteHours && Array.isArray(deleteHours) && deleteHours.length > 0) {
+        var data = { hours_available: deleteHours };
+        return await axios.post(get_mongo_api(`teachers/delete/hoursAvailable/${id}`), data).then((response => {
+            if (response.data.success) {
+                return response.data.success;
+            }
+            else {
+                return false;
+            }
+        }))
+    }
+    return true;
+}
+
 export default function UpdateAvailability({ id, lessons }) {
     const [hours_available, loading] = useAsyncHook(`teachers/hoursAvailable/byID/${id}`, make_available_hours_list, lessons);
     const [isTeacher] = useState(true);
 
-    const sendHours = (selectedHours, id) => {
-        if (Array.isArray(selectedHours) && selectedHours.length > 0) {
-            axios.post(get_mongo_api(`teachers/add/hoursAvailable/${id}`), { dates: selectedHours }).then(response => {
-                if (!response.data.success) {
-                    alert(response.data.message);
-                } else {
-                    alert(response.data.message);
+    const sendHours = (addHours, deleteHours, id) => {
+        if ((Array.isArray(addHours) && addHours.length > 0) || (Array.isArray(deleteHours) && deleteHours.length > 0)) {
+            two_functions_parallel(addHoursAvailable(id, addHours), deleteHoursAvailable(id, deleteHours)).then((returnValue) => {
+                if (returnValue) {
+                    alert("השעות עודכנו בהצלחה");
                     window.location.reload(true);
-
+                } else {
+                    alert('אירעה שגיאה במהלך עדכון השעות');
+                    window.location.reload(true);
                 }
             })
         }
@@ -78,11 +123,12 @@ export default function UpdateAvailability({ id, lessons }) {
         !loading &&
         <div className="teacherCalendar">
             <div> <label>  נא לבחור את השעות הפנויות עבורך על מנת שתלמידים יוכלו לקבוע עמך שיעור </label> </div>
+            <div> <label>  על מנת למחוק שעה פנויה, אנא לחץ עליה ולאחר מכן לחץ על עדכן </label> </div>
             <Calendar
                 isTeacher={isTeacher}
                 datesDict={hours_available}
                 maxNumber={1000}
-                confirmHandler={(selectedHours) => sendHours(selectedHours, id)} />
+                confirmHandler={(addHours, deleteHours) => sendHours(addHours, deleteHours, id)} />
         </div>
     )
 }

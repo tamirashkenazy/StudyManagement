@@ -20,11 +20,10 @@ import TableContainer from '@material-ui/core/TableContainer';
 import TableCell from '@material-ui/core/TableCell';
 import InfoOutlinedIcon from '@material-ui/icons/InfoOutlined';
 
-var DATES_COUNTER = 0;
-var disabled = true
+
 export function Calendar(props) {
-    
-    let buttonText = props.isTeacher? "עדכן": "קבע";
+    const [dates_counter, setDatesCounter] = useState(0);
+    let buttonText = props.isTeacher ? "עדכן" : "קבע";
     // Alldate keeps each week with unique key (year + week number) with weekID() function.
     // Inside that it keeps checkbox value for get next 4 weeks and all the selected dates.
     const [allDate, setAllDate] = useState({
@@ -45,10 +44,13 @@ export function Calendar(props) {
             $('.comment').css('display', 'none');
         }
 
-        for (let item of $(".active")) {
-            $(item).removeClass("active");
+        if ($(".active")) {
+            for (let item of $(".active")) {
+                $(item).removeClass("active");
+            }
         }
-        
+        setDatesCounter(0);
+
         // Fills first row with date, month and week name.
         fillWeekDays();
         // Adds date attribute(month,day and hour) to each pickable cells in the table.
@@ -115,8 +117,8 @@ export function Calendar(props) {
         const { target } = e;
         if (target.classList.contains("pickable") && !target.classList.contains("disabled")) {
             $(target).toggleClass("active");
-            DATES_COUNTER = target.classList.contains("active") ? DATES_COUNTER + 1 : DATES_COUNTER - 1;
-            disabled = ((DATES_COUNTER <= 0) || (DATES_COUNTER > props.maxNumber)) ? true : false;
+            var counter = target.classList.contains("active") ? dates_counter + 1 : dates_counter - 1;
+            setDatesCounter(counter);
         }
 
         // Setting state on every click from user 
@@ -183,7 +185,22 @@ export function Calendar(props) {
                     const itemMonth = itemMonthOld < 10 ? "0" + itemMonthOld : itemMonthOld;
                     const itemHour = itemHourOld < 10 ? "0" + itemHourOld : itemHourOld;
 
+
                     if (props.isTeacher) {
+                        let pickedDates = new Date(`${itemYear} ${itemMonth} ${itemDay} ${itemHour}`)
+                        if (props.datesDict && Object.keys(props.datesDict) && Array.isArray(Object.keys(props.datesDict))) {
+                            for (let key of Object.keys(props.datesDict)) {
+                                const dictDate = new Date(key)
+
+                                if (pickedDates.getTime() === dictDate.getTime()) {
+                                    const day = dictDate.getDate() < 10 ? "0" + dictDate.getDate() : dictDate.getDate();
+                                    const month = ((dictDate.getMonth() + 1) < 10) ? "0" + (dictDate.getMonth() + 1) : (dictDate.getMonth() + 1);
+                                    const hour = dictDate.getHours() < 10 ? "0" + dictDate.getHours() : dictDate.getHours();
+
+                                    pickedDictionary[`${dictDate.getFullYear()}-${month}-${day}T${hour}:00`] = props.datesDict[key]
+                                }
+                            }
+                        }
 
                         if (prop.checkbox === true) {
                             let addedWeekDate = new Date(itemYear, itemMonth - 1, itemDay);
@@ -239,12 +256,16 @@ export function Calendar(props) {
             }
         }
         if (props.isTeacher) {
+            var toDeleteDates = Object.keys(pickedDictionary);
             const uniqueDates = new Set(newPickedDates);
-            props.confirmHandler(Array.from(uniqueDates));
+            var toAddDates = Array.from(uniqueDates)
+            let difference = toAddDates.filter(x => !toDeleteDates.includes(x));
+            props.confirmHandler(difference, toDeleteDates);
         } else {
             props.confirmHandler(pickedDictionary);
         }
     };
+
 
     const onClickHandlerSubmit = () => {
         getPickedDays();
@@ -290,7 +311,9 @@ export function Calendar(props) {
                     label="בחר 4 שבועות קדימה"
                 />
                 <label className="comment">  המספר המופיע על יד כל מורה הינו מספר השעות המקסימלי שניתן לקבוע עם מורה זה באותו השבוע <InfoOutlinedIcon fontSize="small" color="disabled" /> </label>
-                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={disabled} >{buttonText}</button>
+                <button className="confirm btn" onClick={onClickHandlerSubmit} disabled={(dates_counter <= 0) || (dates_counter > props.maxNumber)} >
+                    {buttonText}
+                </button>
             </div>
         </div>
     )
